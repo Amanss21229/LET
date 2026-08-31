@@ -1,0 +1,1 @@
+export default function Enquiry(){const msg=encodeURIComponent("Hello Aman, I want to enquire about LET - Learn Earn Teach.");return <a className="float" title="Enquire on WhatsApp" href={`https://wa.me/919153021229?text=${msg}`} target="_blank">🤖</a>}
