@@ -2,18 +2,21 @@
 
 import { useRef, useState } from "react";
 
-type FileUploadProps = {
+type Props = {
   accept?: string;
   label?: string;
-  onUploadComplete: (url: string, type: string) => void;
+  onUploadComplete: (
+    url: string,
+    type: string,
+    name: string
+  ) => void;
 };
 
 export default function FileUpload({
-  accept = "image/*,application/pdf,audio/*",
+  accept = "image/*,audio/*,application/pdf",
   label = "Upload File",
   onUploadComplete,
-}: FileUploadProps) {
-
+}: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [uploading, setUploading] =
@@ -22,104 +25,61 @@ export default function FileUpload({
   const [message, setMessage] =
     useState("");
 
-  const [preview, setPreview] =
-    useState("");
-
-  const handleFile = async (
+  const uploadFile = async (
     file?: File
   ) => {
-
     if (!file) return;
 
     setUploading(true);
-
     setMessage("Uploading...");
 
     try {
-
       const formData = new FormData();
 
-      formData.append(
-        "file",
-        file
-      );
+      formData.append("file", file);
 
-      const response =
-        await fetch(
-          "/api/upload",
-          {
-            method: "POST",
-            body: formData,
-          }
-        );
+      const response = await fetch(
+        "/api/upload",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       const data =
         await response.json();
 
       if (!response.ok) {
-
         throw new Error(
-          data.error ||
-          "Upload failed"
+          data.error || "Upload failed"
         );
-
       }
 
-      setMessage(
-        "Upload successful!"
-      );
-
-      if (
-        file.type.startsWith(
-          "image/"
-        )
-      ) {
-
-        setPreview(
-          data.url
-        );
-
-      } else {
-
-        setPreview("");
-
-      }
+      setMessage("Upload successful!");
 
       onUploadComplete(
         data.url,
-        data.type
+        data.type,
+        file.name
       );
-
     } catch (error: any) {
-
       setMessage(
-        error.message ||
-        "Upload failed"
+        error.message || "Upload failed"
       );
-
     } finally {
-
       setUploading(false);
-
     }
-
   };
 
   return (
-
     <div className="file-upload">
-
       <input
         ref={inputRef}
         type="file"
         accept={accept}
-        style={{
-          display: "none",
-        }}
+        style={{ display: "none" }}
         onChange={(e) =>
-          handleFile(
-            e.target.files?.[0]
-          )
+          uploadFile(e.target.files?.[0])
         }
       />
 
@@ -131,57 +91,22 @@ export default function FileUpload({
           inputRef.current?.click()
         }
       >
-
-        <span
-          className="file-upload-icon"
-        >
+        <span className="file-upload-icon">
           +
         </span>
 
         <span>
-
           {uploading
             ? "Uploading..."
             : label}
-
         </span>
-
       </button>
 
       {message && (
-
-        <p
-          className={
-            message.includes(
-              "successful"
-            )
-              ? "upload-status upload-success"
-              : message.includes(
-                  "failed"
-                )
-              ? "upload-status upload-error"
-              : "upload-status"
-          }
-        >
-
+        <p className="upload-status">
           {message}
-
         </p>
-
       )}
-
-      {preview && (
-
-        <img
-          src={preview}
-          alt="Uploaded preview"
-          className="upload-preview"
-        />
-
-      )}
-
     </div>
-
   );
-
 }
