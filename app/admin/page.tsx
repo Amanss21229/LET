@@ -1881,19 +1881,564 @@ useEffect(() => {
             ===================== */}
 
             {tab ===
-              "About Tutor" && (
-              <>
-                <h2>
-                  About Tutor
-                </h2>
+  "About Tutor" && (
 
-                <p className="muted">
-                  Phase 4 will create
-                  the complete visual
-                  About Tutor editor.
-                </p>
-              </>
-            )}
+  <>
+
+    <h2>
+      👨‍🏫 About Tutor
+    </h2>
+
+
+    <p className="muted">
+
+      Edit the tutor information
+      visible to students inside
+      every batch.
+
+    </p>
+
+
+    {/* =====================
+        TUTOR IMAGE
+    ===================== */}
+
+    <div className="card">
+
+      <h3>
+        Tutor Image
+      </h3>
+
+
+      <FileUpload
+
+        accept="image/*"
+
+        label="+ Upload Tutor Image"
+
+        onUploadComplete={(
+          url
+        ) =>
+          setTutorForm({
+            ...tutorForm,
+
+            imageUrl:
+              url,
+          })
+        }
+
+      />
+
+
+      {tutorForm.imageUrl && (
+
+        <img
+
+          src={
+            tutorForm.imageUrl
+          }
+
+          alt="Tutor"
+
+          className="upload-preview"
+
+        />
+
+      )}
+
+    </div>
+
+
+    {/* =====================
+        HEADING
+    ===================== */}
+
+    <div className="card">
+
+      <h3>
+        Main Heading
+      </h3>
+
+
+      <input
+
+        className="input"
+
+        placeholder="Heading"
+
+        value={
+          tutorForm.heading
+        }
+
+        onChange={(e) =>
+          setTutorForm({
+            ...tutorForm,
+
+            heading:
+              e.target.value,
+          })
+        }
+
+      />
+
+
+      <label>
+        Heading Font Size
+      </label>
+
+
+      <select
+
+        className="input"
+
+        value={
+          tutorForm.headingSize
+        }
+
+        onChange={(e) =>
+          setTutorForm({
+            ...tutorForm,
+
+            headingSize:
+              e.target.value,
+          })
+        }
+
+      >
+
+        <option value="24px">
+          Small
+        </option>
+
+        <option value="32px">
+          Medium
+        </option>
+
+        <option value="40px">
+          Large
+        </option>
+
+        <option value="48px">
+          Extra Large
+        </option>
+
+      </select>
+
+    </div>
+
+
+    {/* =====================
+        SUBHEADING
+    ===================== */}
+
+    <div className="card">
+
+      <h3>
+        Subheading
+      </h3>
+
+
+      <input
+
+        className="input"
+
+        placeholder="Subheading"
+
+        value={
+          tutorForm.subheading
+        }
+
+        onChange={(e) =>
+          setTutorForm({
+            ...tutorForm,
+
+            subheading:
+              e.target.value,
+          })
+        }
+
+      />
+
+
+      <label>
+        Subheading Font Size
+      </label>
+
+
+      <select
+
+        className="input"
+
+        value={
+          tutorForm.subheadingSize
+        }
+
+        onChange={(e) =>
+          setTutorForm({
+            ...tutorForm,
+
+            subheadingSize:
+              e.target.value,
+          })
+        }
+
+      >
+
+        <option value="16px">
+          Small
+        </option>
+
+        <option value="20px">
+          Medium
+        </option>
+
+        <option value="24px">
+          Large
+        </option>
+
+        <option value="28px">
+          Extra Large
+        </option>
+
+      </select>
+
+    </div>
+
+
+    {/* =====================
+        TEXT
+    ===================== */}
+
+    <div className="card">
+
+      <h3>
+        About Tutor Text
+      </h3>
+
+
+      <textarea
+
+        className="input"
+
+        placeholder="Write about the tutor..."
+
+        rows={8}
+
+        value={
+          tutorForm.text
+        }
+
+        onChange={(e) =>
+          setTutorForm({
+            ...tutorForm,
+
+            text:
+              e.target.value,
+          })
+        }
+
+      />
+
+
+      <label>
+        Text Font Size
+      </label>
+
+
+      <select
+
+        className="input"
+
+        value={
+          tutorForm.textSize
+        }
+
+        onChange={(e) =>
+          setTutorForm({
+            ...tutorForm,
+
+            textSize:
+              e.target.value,
+          })
+        }
+
+      >
+
+        <option value="14px">
+          Small
+        </option>
+
+        <option value="16px">
+          Medium
+        </option>
+
+        <option value="18px">
+          Large
+        </option>
+
+        <option value="20px">
+          Extra Large
+        </option>
+
+      </select>
+
+    </div>
+
+
+    {/* =====================
+        LINKS
+    ===================== */}
+
+    <div className="card">
+
+      <h3>
+        Tutor Links
+      </h3>
+
+
+      {tutorForm.links.map(
+        (
+          link: any,
+          index: number
+        ) => (
+
+          <div
+            key={index}
+            className="msg"
+          >
+
+            <input
+
+              className="input"
+
+              placeholder="Link Title"
+
+              value={
+                link.title || ""
+              }
+
+              onChange={(e) => {
+
+                const links = [
+                  ...tutorForm.links,
+                ];
+
+
+                links[index] = {
+                  ...links[index],
+
+                  title:
+                    e.target.value,
+                };
+
+
+                setTutorForm({
+                  ...tutorForm,
+
+                  links,
+                });
+
+              }}
+
+            />
+
+
+            <input
+
+              className="input"
+
+              placeholder="https://..."
+
+              value={
+                link.url || ""
+              }
+
+              onChange={(e) => {
+
+                const links = [
+                  ...tutorForm.links,
+                ];
+
+
+                links[index] = {
+                  ...links[index],
+
+                  url:
+                    e.target.value,
+                };
+
+
+                setTutorForm({
+                  ...tutorForm,
+
+                  links,
+                });
+
+              }}
+
+            />
+
+
+            <button
+
+              className="btn"
+
+              onClick={() => {
+
+                const links =
+                  tutorForm.links.filter(
+                    (
+                      _: any,
+                      i: number
+                    ) =>
+                      i !== index
+                  );
+
+
+                setTutorForm({
+                  ...tutorForm,
+
+                  links,
+                });
+
+              }}
+
+            >
+
+              Remove Link
+
+            </button>
+
+          </div>
+
+        )
+      )}
+
+
+      <button
+
+        className="btn"
+
+        onClick={() =>
+          setTutorForm({
+            ...tutorForm,
+
+            links: [
+
+              ...tutorForm.links,
+
+              {
+                title: "",
+                url: "",
+              },
+
+            ],
+          })
+        }
+
+      >
+
+        + Add Link
+
+      </button>
+
+    </div>
+
+
+    {/* =====================
+        PREVIEW
+    ===================== */}
+
+    <div className="card">
+
+      <h3>
+        Live Preview
+      </h3>
+
+
+      {tutorForm.imageUrl && (
+
+        <img
+
+          src={
+            tutorForm.imageUrl
+          }
+
+          alt="Tutor Preview"
+
+          className="tutor-image"
+
+        />
+
+      )}
+
+
+      <h2
+        style={{
+          fontSize:
+            tutorForm.headingSize,
+        }}
+      >
+
+        {tutorForm.heading}
+
+      </h2>
+
+
+      <h4
+        style={{
+          fontSize:
+            tutorForm.subheadingSize,
+        }}
+      >
+
+        {tutorForm.subheading}
+
+      </h4>
+
+
+      <p
+        style={{
+          fontSize:
+            tutorForm.textSize,
+        }}
+      >
+
+        {tutorForm.text}
+
+      </p>
+
+    </div>
+
+
+    {/* =====================
+        SAVE
+    ===================== */}
+
+    <button
+
+      className="btn primary"
+
+      onClick={saveTutor}
+
+    >
+
+      Save About Tutor
+
+    </button>
+
+
+    {tutorMessage && (
+
+      <p>
+        {tutorMessage}
+      </p>
+
+    )}
+
+  </>
+
+)}
 
             {/* =====================
                 CHATS
