@@ -10,13 +10,34 @@ import FileUpload from "@/components/FileUpload";
 
 const emptyBatch = {
   title: "",
+
   className: "",
+
   medium: "Hindi",
+
   teacherName: "Aman",
+
+  startDate: "",
+
+  endDate: "",
+
+  syllabusDate: "",
+
   price: 0,
+
   about: "",
+
   imageUrl: "",
-  customPoints: [] as string[],
+
+  customPoints: [
+    "",
+    "",
+    "",
+    "",
+    "",
+  ],
+
+  buyEnabled: true,
 };
 
 type Batch = {
@@ -117,9 +138,83 @@ export default function Admin() {
     }
   };
 
-  useEffect(() => {
-    loadBatches();
-  }, []);
+useEffect(() => {
+
+  loadBatches();
+
+  loadTutor();
+
+}, []);
+
+  /* =========================
+     LOAD TUTOR
+  ========================= */
+
+  const loadTutor =
+    async () => {
+
+      try {
+
+        const response =
+          await fetch(
+            "/api/tutor"
+          );
+
+
+        const data =
+          await response.json();
+
+
+        if (data?.content) {
+
+          setTutorForm({
+            heading:
+              data.content.heading ||
+              "About Aman",
+
+            subheading:
+              data.content.subheading ||
+              "",
+
+            text:
+              data.content.text ||
+              "",
+
+            imageUrl:
+              data.content.imageUrl ||
+              "",
+
+            headingSize:
+              data.content.headingSize ||
+              "32px",
+
+            subheadingSize:
+              data.content.subheadingSize ||
+              "20px",
+
+            textSize:
+              data.content.textSize ||
+              "16px",
+
+            links:
+              Array.isArray(
+                data.content.links
+              )
+                ? data.content.links
+                : [],
+          });
+
+        }
+
+      } catch (error) {
+
+        console.error(
+          "Unable to load tutor"
+        );
+
+      }
+
+    }; 
 
   /* =========================
      ADMIN LOGIN
@@ -149,6 +244,63 @@ export default function Admin() {
     }
   };
 
+    /* =========================
+     SAVE ABOUT TUTOR
+  ========================= */
+
+  const saveTutor =
+    async () => {
+
+      try {
+
+        setTutorMessage(
+          "Saving..."
+        );
+
+
+        const response =
+          await fetch(
+            "/api/tutor",
+            {
+              method: "PUT",
+
+              headers: {
+                "Content-Type":
+                  "application/json",
+              },
+
+              body:
+                JSON.stringify({
+                  content:
+                    tutorForm,
+                }),
+            }
+          );
+
+
+        if (!response.ok) {
+
+          throw new Error(
+            "Unable to save"
+          );
+
+        }
+
+
+        setTutorMessage(
+          "About Tutor updated successfully!"
+        );
+
+      } catch {
+
+        setTutorMessage(
+          "Unable to save About Tutor"
+        );
+
+      }
+
+    };
+  
   /* =========================
      CREATE BATCH
   ========================= */
@@ -723,6 +875,73 @@ export default function Admin() {
                   }
                 />
 
+                <h3>
+                  Important Dates
+                </h3>
+                
+                
+                <label>
+                  Batch Start Date
+                </label>
+
+                <input
+                  type="date"
+                  className="input"
+                  value={
+                    batchForm.startDate
+                  }
+                  onChange={(e) =>
+                    setBatchForm({
+                      ...batchForm,
+                      
+                      startDate:
+                        e.target.value,
+                    })
+                  }
+                  />
+
+
+                <label>
+                  Batch End Date
+                </label>
+                
+                <input
+                  type="date"
+                  className="input"
+                  value={
+                    batchForm.endDate
+                  }
+                  onChange={(e) =>
+                    setBatchForm({
+                      ...batchForm,
+                      
+                      endDate:
+                        e.target.value,
+                    })
+                  }
+                  />
+
+
+                <label>
+                  Syllabus Completion Date
+                </label>
+
+                <input
+                  type="date"
+                  className="input"
+                  value={
+                    batchForm.syllabusDate
+                  }
+                  onChange={(e) =>
+                    setBatchForm({
+                      ...batchForm,
+                      
+                      syllabusDate:
+                        e.target.value,
+                    })
+                  }
+                  />
+                
                 <input
                   className="input"
                   type="number"
@@ -783,20 +1002,96 @@ export default function Admin() {
                   />
                 )}
 
-                <input
-                  className="input"
-                  placeholder="Custom points separated by |"
-                  onChange={(e) =>
-                    setBatchForm({
-                      ...batchForm,
+                <h3>
+                  Batch Highlights
+                </h3>
 
-                      customPoints:
-                        e.target.value
-                          .split("|")
-                          .filter(Boolean),
-                    })
-                  }
-                />
+
+                <p className="muted">
+                  Add up to 5 custom points.
+                </p>
+
+
+                {batchForm.customPoints.map(
+                (
+                  point: string,
+                  index: number
+                ) => (
+                  
+                  <input
+
+                    key={index}
+
+                    className="input"
+
+                    placeholder={
+                      `Custom Point ${
+                        index + 1
+                      }`
+                    }
+
+                    value={point}
+
+                    onChange={(e) => {
+
+                      const points = [
+                        ...batchForm.customPoints,
+                      ];
+
+
+                      points[index] =
+                        e.target.value;
+
+
+                      setBatchForm({
+                        ...batchForm,
+
+                        customPoints:
+                          points,
+                      });
+
+                    }}
+
+                    />
+
+                )
+              )}
+
+                <div className="card">
+
+                  <h3>
+                    Purchase Settings
+                  </h3>
+
+                  
+                  <label>
+
+                    <input
+
+                      type="checkbox"
+
+                      checked={
+                        batchForm.buyEnabled
+                      }
+                      
+                      onChange={(e) =>
+                        setBatchForm({
+                          ...batchForm,
+
+                          buyEnabled:
+                            e.target.checked,
+                        })
+                      }
+                      
+                      />
+                    
+                    {" "}
+
+                    Enable Buy Now Button
+
+                  </label>
+
+                </div>
 
                 <button
                   className="btn primary"
@@ -1548,6 +1843,38 @@ export default function Admin() {
                 )}
               </>
             )}
+
+              /* =========================
+     ABOUT TUTOR STATES
+  ========================= */
+
+  const [
+    tutorForm,
+    setTutorForm,
+  ] = useState<any>({
+    heading: "About Aman",
+
+    subheading:
+      "LET - Learn Earn Teach",
+
+    text: "",
+
+    imageUrl: "",
+
+    headingSize: "32px",
+
+    subheadingSize: "20px",
+
+    textSize: "16px",
+
+    links: [],
+  });
+
+
+  const [
+    tutorMessage,
+    setTutorMessage,
+  ] = useState("");
 
             {/* =====================
                 ABOUT TUTOR
