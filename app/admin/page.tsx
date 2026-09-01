@@ -1844,37 +1844,37 @@ useEffect(() => {
               </>
             )}
 
-              /* =========================
-     ABOUT TUTOR STATES
-  ========================= */
+            /* =========================
+            ABOUT TUTOR STATES
+            ========================= */
+            
+            const [
+            tutorForm,
+            setTutorForm,
+            ] = useState<any>({
+              heading: "About Aman",
 
-  const [
-    tutorForm,
-    setTutorForm,
-  ] = useState<any>({
-    heading: "About Aman",
+                subheading:
+              "LET - Learn Earn Teach",
 
-    subheading:
-      "LET - Learn Earn Teach",
+              text: "",
 
-    text: "",
+              imageUrl: "",
 
-    imageUrl: "",
+              headingSize: "32px",
 
-    headingSize: "32px",
+              subheadingSize: "20px",
 
-    subheadingSize: "20px",
+              textSize: "16px",
 
-    textSize: "16px",
-
-    links: [],
-  });
+              links: [],
+              });
 
 
-  const [
-    tutorMessage,
-    setTutorMessage,
-  ] = useState("");
+              const [
+              tutorMessage,
+              setTutorMessage,
+              ] = useState("");
 
             {/* =====================
                 ABOUT TUTOR
