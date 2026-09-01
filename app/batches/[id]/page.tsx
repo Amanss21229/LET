@@ -275,7 +275,7 @@ export default async function Batch({
           </p>
 
 
-          {custompoints.length > 0 && (
+          {customPoints.length > 0 && (
 
             <div>
 
@@ -286,7 +286,7 @@ export default async function Batch({
 
               <ul>
 
-                {points.map(
+                {customPoints.map(
                   (
                     point,
                     index
