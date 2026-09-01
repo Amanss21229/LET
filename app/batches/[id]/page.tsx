@@ -367,7 +367,7 @@ export default async function Batch({
 
 
             <a
-              href="/api/auth/signin/google"
+              href="/api/auth/signin/google?callbackurl=/batches/"
               className="btn primary"
             >
 
