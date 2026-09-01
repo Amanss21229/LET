@@ -275,7 +275,7 @@ export default async function Batch({
           </p>
 
 
-          {points.length > 0 && (
+          {custompoints.length > 0 && (
 
             <div>
 
