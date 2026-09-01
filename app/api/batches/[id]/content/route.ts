@@ -2,18 +2,10 @@ import { NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma";
 
-import { cookies } from "next/headers";
+import {
+  verifyAdminSession,
+} from "@/lib/admin-auth";
 
-const isAdmin = async () => {
-  const cookieStore =
-    await cookies();
-
-  return (
-    cookieStore
-      .get("let_admin")
-      ?.value === "true"
-  );
-};
 
 export async function POST(
   req: Request,
@@ -27,7 +19,7 @@ export async function POST(
 ) {
   try {
     const admin =
-      await isAdmin();
+      await verifyAdminSession();
 
     if (!admin) {
       return NextResponse.json(
