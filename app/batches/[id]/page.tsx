@@ -1003,32 +1003,45 @@ export default async function Batch({
 
                 {tutorContent.heading && (
 
-                  <h2>
-
-                    {tutorContent.heading}
-
-                  </h2>
+              <h2
+                style={{
+                  fontSize:
+                    tutorContent.headingSize ||
+                    "32px",
+                }}
+                >
+                {tutorContent.heading}
+              </h2>
 
                 )}
 
 
                 {tutorContent.subheading && (
 
-                  <h4 className="muted">
-
-                    {tutorContent.subheading}
-
-                  </h4>
+              <h4
+                className="muted"
+                style={{
+                  fontSize:
+                    tutorContent.subheadingSize ||
+                    "20px",
+                }}
+                >
+                {tutorContent.subheading}
+              </h4>
 
                 )}
 
 
                 {tutorContent.text && (
 
-                  <p>
-
+                  <p
+                    style={{
+                      fontSize:
+                        tutorContent.textSize ||
+                        "16px",
+                    }}
+                    >
                     {tutorContent.text}
-
                   </p>
 
                 )}
