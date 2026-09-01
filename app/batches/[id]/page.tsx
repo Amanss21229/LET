@@ -115,10 +115,13 @@ export default async function Batch({
     );
 
 
-  const customPoints = 
-    Array.isArray(batch.customPoints)
-  ? batch.customPoints
-  : [];
+  const customPoints: string[] = Array.isArray(batch.customPoints)
+    ? batch.customPoints
+    .filter(
+      (point): point is string =>
+        typeof point === "string"
+    )
+    : [];
 
   const classSections =
     batch.sections.filter(
