@@ -118,6 +118,38 @@ export default function Admin() {
   ] = useState("");
 
   /* =========================
+  ABOUT TUTOR STATES
+  ========================= */
+
+  const [
+    tutorForm,
+    setTutorForm,
+  ] = useState<any>({
+    heading: "About Aman",
+
+    subheading:
+      "LET - Learn Earn Teach",
+
+    text: "",
+
+    imageUrl: "",
+
+    headingSize: "32px",
+
+    subheadingSize: "20px",
+
+    textSize: "16px",
+
+    links: [],
+  });
+
+
+  const [
+    tutorMessage,
+    setTutorMessage,
+  ] = useState("");
+  
+  /* =========================
      LOAD BATCHES
   ========================= */
 
@@ -1844,37 +1876,6 @@ useEffect(() => {
               </>
             )}
 
-            /* =========================
-            ABOUT TUTOR STATES
-            ========================= */
-            
-            const [
-            tutorForm,
-            setTutorForm,
-            ] = useState<any>({
-              heading: "About Aman",
-
-                subheading:
-              "LET - Learn Earn Teach",
-
-              text: "",
-
-              imageUrl: "",
-
-              headingSize: "32px",
-
-              subheadingSize: "20px",
-
-              textSize: "16px",
-
-              links: [],
-              });
-
-
-              const [
-              tutorMessage,
-              setTutorMessage,
-              ] = useState("");
 
             {/* =====================
                 ABOUT TUTOR
