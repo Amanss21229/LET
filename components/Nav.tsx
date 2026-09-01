@@ -58,19 +58,12 @@ export default async function Nav() {
 
         ) : (
 
-          <form
-            action="/api/auth/signout"
-            method="POST"
-          >
-
-            <button
-              className="btn primary"
-              type="submit"
-            >
-              Logout
-            </button>
-
-          </form>
+      <Link
+        className="btn primary"
+        href="/logout"
+      >
+        Logout
+      </Link>
 
         )}
 
