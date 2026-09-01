@@ -1,10 +1,8 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { cookies } from "next/headers";
-
-const ok = async () =>
-  (await cookies()).get("let_admin")?.value ===
-  "true";
+import {
+  verifyAdminSession,
+} from "@/lib/admin-auth";
 
 
 export async function GET(
@@ -69,7 +67,7 @@ export async function PATCH(
     }>;
   }
 ) {
-  if (!(await ok())) {
+  if (!(await verifyAdminSession())) {
     return NextResponse.json(
       {
         error: "Forbidden",
@@ -202,7 +200,7 @@ export async function DELETE(
     }>;
   }
 ) {
-  if (!(await ok())) {
+  if (!(await verifyAdminSession())) {
     return NextResponse.json(
       {
         error: "Forbidden",
