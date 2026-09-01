@@ -1,0 +1,3 @@
+import { NextResponse } from "next/server";import { prisma } from "@/lib/prisma";import { cookies } from "next/headers";
+export async function GET(){return NextResponse.json((await prisma.tutorPage.findUnique({where:{id:"main"}}))||{content:{heading:"About Aman",subheading:"LET - Learn Earn Teach",text:"Welcome to LET"}});}
+export async function PUT(req:Request){if((await cookies()).get("let_admin")?.value!=="true")return NextResponse.json({error:"Forbidden"},{status:403});const {content}=await req.json();return NextResponse.json(await prisma.tutorPage.upsert({where:{id:"main"},update:{content},create:{id:"main",content}}));}
