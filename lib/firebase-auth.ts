@@ -67,6 +67,60 @@ export async function syncFirebaseUser(
 }
 
 
+export async function createFirebaseSession(
+  user: User
+) {
+
+  const idToken =
+    await user.getIdToken();
+
+
+  const response =
+    await fetch(
+      "/api/auth/firebase/session",
+      {
+
+        method: "POST",
+
+        headers: {
+
+          "Content-Type":
+            "application/json",
+
+        },
+
+        body:
+          JSON.stringify({
+
+            idToken,
+
+          }),
+
+      }
+    );
+
+
+  const data =
+    await response.json();
+
+
+  if (!response.ok) {
+
+    throw new Error(
+
+      data?.error ||
+
+      "Unable to create Firebase session"
+
+    );
+
+  }
+
+
+  return data;
+
+}
+
 
 /*
   Google Login
@@ -98,6 +152,10 @@ export async function loginWithGoogle() {
       await syncFirebaseUser(
         firebaseUser
       );
+
+    await createFirebaseSession(
+      firebaseUser
+    );
 
 
     return {
@@ -159,6 +217,30 @@ export async function loginWithGoogle() {
 */
 
 export async function logoutFirebase() {
+
+  try {
+
+    await fetch(
+      "/api/auth/firebase/session",
+      {
+
+        method:
+          "DELETE",
+
+      }
+    );
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Unable to remove server session:",
+      error
+    );
+
+  }
+
 
   await signOut(
     firebaseAuth
