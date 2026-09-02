@@ -1,4 +1,8 @@
 import {
+  cookies,
+} from "next/headers";
+
+import {
   NextRequest,
   NextResponse,
 } from "next/server";
@@ -18,7 +22,69 @@ export async function GET(
 
   try {
 
+    const isAdmin =
+
+      (await cookies())
+        .get("let_admin")
+        ?.value === "true";
+
+
+    /*
+      ADMIN
+    */
+
+    if (isAdmin) {
+
+      const conversations =
+
+        await prisma.conversation.findMany({
+
+          include: {
+
+            user: true,
+
+            batch: true,
+
+            messages: {
+
+              orderBy: {
+
+                createdAt:
+                  "desc",
+
+              },
+
+              take:
+                1,
+
+            },
+
+          },
+
+
+          orderBy: {
+
+            updatedAt:
+              "desc",
+
+          },
+
+        });
+
+
+      return NextResponse.json(
+        conversations
+      );
+
+    }
+
+
+    /*
+      NORMAL USER
+    */
+
     const firebaseUser =
+
       await getFirebaseUser(
         request
       );
@@ -27,19 +93,28 @@ export async function GET(
     if (!firebaseUser) {
 
       return NextResponse.json(
+
         {
+
           error:
             "Unauthorized",
+
         },
+
         {
-          status: 401,
+
+          status:
+            401,
+
         }
+
       );
 
     }
 
 
     const conversations =
+
       await prisma.conversation.findMany({
 
         where: {
@@ -49,13 +124,17 @@ export async function GET(
 
         },
 
+
         include: {
 
-          batch: true,
+          batch:
+            true,
 
-          messages: true,
+          messages:
+            true,
 
         },
+
 
         orderBy: {
 
@@ -76,19 +155,30 @@ export async function GET(
   catch (error) {
 
     console.error(
+
       "Conversation GET error:",
+
       error
+
     );
 
 
     return NextResponse.json(
+
       {
+
         error:
           "Unable to load conversations",
+
       },
+
       {
-        status: 500,
+
+        status:
+          500,
+
       }
+
     );
 
   }
