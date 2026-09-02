@@ -148,6 +148,53 @@ export default function Admin() {
     tutorMessage,
     setTutorMessage,
   ] = useState("");
+
+  /* =========================
+  BATCH TUTOR STATES
+  ========================= */
+
+const [
+
+  batchTutorForm,
+
+  setBatchTutorForm,
+
+] = useState<any>({
+
+  heading:
+    "",
+
+  subheading:
+    "",
+
+  text:
+    "",
+
+  imageUrl:
+    "",
+
+  headingSize:
+    "32px",
+
+  subheadingSize:
+    "20px",
+
+  textSize:
+    "16px",
+
+  links:
+    [],
+
+});
+
+
+const [
+
+  batchTutorMessage,
+
+  setBatchTutorMessage,
+
+] = useState("");
   
   /* =========================
      LOAD BATCHES
