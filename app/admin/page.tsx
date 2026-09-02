@@ -5,7 +5,7 @@ import {
   useState,
 } from "react";
 
-import Nav from "@/components/Nav";
+import NavClient from "@/components/NavClient";
 import FileUpload from "@/components/FileUpload";
 
 const emptyBatch = {
@@ -699,7 +699,7 @@ useEffect(() => {
   if (!ok) {
     return (
       <>
-        <Nav />
+        <NavClient />
 
         <main
           className="wrap"
@@ -742,7 +742,7 @@ useEffect(() => {
 
   return (
     <>
-      <Nav />
+      <NavClient />
 
       <main className="wrap">
         <h1>
