@@ -2,8 +2,13 @@
 
 import {
   useEffect,
+  useRef,
   useState,
 } from "react";
+
+import {
+  getFirebaseAuthHeaders,
+} from "@/lib/firebase-client-auth";
 
 
 type Message = {
@@ -80,6 +85,18 @@ export default function BatchDoubtChat({
 
   const [
 
+    attachment,
+
+    setAttachment,
+
+  ] =
+    useState<File | null>(
+      null
+    );
+
+
+  const [
+
     loading,
 
     setLoading,
@@ -98,6 +115,22 @@ export default function BatchDoubtChat({
     useState(false);
 
 
+  const [
+
+    uploading,
+
+    setUploading,
+
+  ] =
+    useState(false);
+
+
+  const fileInputRef =
+    useRef<HTMLInputElement>(
+      null
+    );
+
+
   /* =====================
      LOAD CONVERSATION
   ===================== */
@@ -110,9 +143,21 @@ export default function BatchDoubtChat({
         setLoading(true);
 
 
+        const headers =
+          await getFirebaseAuthHeaders();
+
+
         const response =
           await fetch(
-            "/api/conversations"
+
+            "/api/conversations",
+
+            {
+
+              headers,
+
+            }
+
           );
 
 
@@ -181,10 +226,20 @@ export default function BatchDoubtChat({
 
       try {
 
+        const headers =
+          await getFirebaseAuthHeaders();
+
+
         const response =
           await fetch(
 
-            `/api/conversations/${conversationId}/messages`
+            `/api/conversations/${conversationId}/messages`,
+
+            {
+
+              headers,
+
+            }
 
           );
 
@@ -227,6 +282,97 @@ export default function BatchDoubtChat({
 
 
   /* =====================
+     UPLOAD ATTACHMENT
+  ===================== */
+
+  const uploadAttachment =
+    async () => {
+
+      if (!attachment) {
+
+        return null;
+
+      }
+
+
+      try {
+
+        setUploading(true);
+
+
+        const formData =
+          new FormData();
+
+
+        formData.append(
+          "file",
+          attachment
+        );
+
+
+        const headers =
+          await getFirebaseAuthHeaders();
+
+
+        const response =
+          await fetch(
+
+            "/api/upload",
+
+            {
+
+              method:
+                "POST",
+
+              headers,
+
+              body:
+                formData,
+
+            }
+
+          );
+
+
+        const data =
+          await response.json();
+
+
+        if (!response.ok) {
+
+          throw new Error(
+
+            data.error ||
+
+            "Unable to upload attachment"
+
+          );
+
+        }
+
+
+        return {
+
+          url:
+            data.url,
+
+          type:
+            data.type,
+
+        };
+
+      }
+
+      finally {
+
+        setUploading(false);
+
+      }
+
+    };
+
+
+  /* =====================
      SEND DOUBT
   ===================== */
 
@@ -235,7 +381,9 @@ export default function BatchDoubtChat({
 
       if (
 
-        !text.trim()
+        !text.trim() &&
+
+        !attachment
 
       ) {
 
@@ -249,9 +397,39 @@ export default function BatchDoubtChat({
         setSending(true);
 
 
+        let attachmentData:
+          | {
+              url: string;
+              type: string;
+            }
+          | null =
+          null;
+
+
+        if (attachment) {
+
+          attachmentData =
+            await uploadAttachment();
+
+        }
+
+
+        const headers =
+          await getFirebaseAuthHeaders();
+
+
+        const requestHeaders = {
+
+          ...headers,
+
+          "Content-Type":
+            "application/json",
+
+        };
+
+
         /*
-          First message
-          creates conversation.
+          FIRST MESSAGE
         */
 
         if (!conversation) {
@@ -266,20 +444,24 @@ export default function BatchDoubtChat({
                 method:
                   "POST",
 
-                headers: {
-
-                  "Content-Type":
-                    "application/json",
-
-                },
-
+                headers:
+                  requestHeaders,
 
                 body:
                   JSON.stringify({
 
                     batchId,
 
-                    text,
+                    text:
+                      text.trim() || null,
+
+                    attachmentUrl:
+                      attachmentData?.url ||
+                      null,
+
+                    attachmentType:
+                      attachmentData?.type ||
+                      null,
 
                   }),
 
@@ -288,16 +470,36 @@ export default function BatchDoubtChat({
             );
 
 
+          const data =
+            await response.json();
+
+
           if (!response.ok) {
 
             throw new Error(
+
+              data.error ||
+
               "Unable to send doubt"
+
             );
 
           }
 
 
           setText("");
+
+          setAttachment(null);
+
+
+          if (
+            fileInputRef.current
+          ) {
+
+            fileInputRef.current.value =
+              "";
+
+          }
 
 
           await loadConversation();
@@ -306,7 +508,7 @@ export default function BatchDoubtChat({
 
 
         /*
-          Existing conversation
+          EXISTING CONVERSATION
         */
 
         else {
@@ -321,18 +523,22 @@ export default function BatchDoubtChat({
                 method:
                   "POST",
 
-                headers: {
-
-                  "Content-Type":
-                    "application/json",
-
-                },
-
+                headers:
+                  requestHeaders,
 
                 body:
                   JSON.stringify({
 
-                    text,
+                    text:
+                      text.trim() || null,
+
+                    attachmentUrl:
+                      attachmentData?.url ||
+                      null,
+
+                    attachmentType:
+                      attachmentData?.type ||
+                      null,
 
                   }),
 
@@ -341,16 +547,36 @@ export default function BatchDoubtChat({
             );
 
 
+          const data =
+            await response.json();
+
+
           if (!response.ok) {
 
             throw new Error(
+
+              data.error ||
+
               "Unable to send doubt"
+
             );
 
           }
 
 
           setText("");
+
+          setAttachment(null);
+
+
+          if (
+            fileInputRef.current
+          ) {
+
+            fileInputRef.current.value =
+              "";
+
+          }
 
 
           await loadMessages(
@@ -361,7 +587,7 @@ export default function BatchDoubtChat({
 
       }
 
-      catch (error) {
+      catch (error: any) {
 
         console.error(
           error
@@ -369,7 +595,11 @@ export default function BatchDoubtChat({
 
 
         alert(
+
+          error.message ||
+
           "Unable to send doubt."
+
         );
 
       }
@@ -403,7 +633,9 @@ export default function BatchDoubtChat({
     <div className="doubt-chat">
 
 
-      {/* MESSAGES */}
+      {/* =====================
+          MESSAGES
+      ===================== */}
 
       <div
         className="chat-messages"
@@ -453,21 +685,77 @@ export default function BatchDoubtChat({
 
               {message.attachmentUrl && (
 
-                <a
+                <>
 
-                  href={
-                    message.attachmentUrl
-                  }
+                  {message.attachmentType?.startsWith(
+                    "image/"
+                  ) && (
 
-                  target="_blank"
+                    <img
 
-                  className="yellow"
+                      src={
+                        message.attachmentUrl
+                      }
 
-                >
+                      alt="Attachment"
 
-                  📎 Open Attachment
+                      className="chat-attachment-image"
 
-                </a>
+                    />
+
+                  )}
+
+
+                  {message.attachmentType?.startsWith(
+                    "audio/"
+                  ) && (
+
+                    <audio
+
+                      controls
+
+                      src={
+                        message.attachmentUrl
+                      }
+
+                    />
+
+                  )}
+
+
+                  {!message.attachmentType?.startsWith(
+                    "image/"
+                  ) &&
+
+                    !message.attachmentType?.startsWith(
+                      "audio/"
+                    ) && (
+
+                      <p>
+
+                        <a
+
+                          href={
+                            message.attachmentUrl
+                          }
+
+                          target="_blank"
+
+                          rel="noreferrer"
+
+                          className="yellow"
+
+                        >
+
+                          📎 Open PDF / Attachment
+
+                        </a>
+
+                      </p>
+
+                    )}
+
+                </>
 
               )}
 
@@ -490,7 +778,9 @@ export default function BatchDoubtChat({
       </div>
 
 
-      {/* INPUT */}
+      {/* =====================
+          INPUT
+      ===================== */}
 
       <textarea
 
@@ -513,29 +803,135 @@ export default function BatchDoubtChat({
       />
 
 
-      <button
+      {/* =====================
+          ATTACHMENT INPUT
+      ===================== */}
 
-        className="btn primary"
+      <input
 
-        disabled={
-          sending
+        ref={
+          fileInputRef
         }
 
-        onClick={
-          sendDoubt
+        type="file"
+
+        accept="
+          image/*,
+          audio/*,
+          application/pdf
+        "
+
+        style={{
+
+          display:
+            "none",
+
+        }}
+
+        onChange={(e) =>
+
+          setAttachment(
+
+            e.target.files?.[0] ||
+            null
+
+          )
+
         }
 
-      >
+      />
 
-        {sending
 
-          ? "Sending..."
+      <div className="row">
 
-          : "Send Doubt"
 
-        }
+        {/* PLUS BUTTON */}
 
-      </button>
+        <button
+
+          type="button"
+
+          className="btn"
+
+          disabled={
+            sending ||
+            uploading
+          }
+
+          onClick={() =>
+
+            fileInputRef.current?.click()
+
+          }
+
+        >
+
+          ➕
+
+        </button>
+
+
+        {/* FILE NAME */}
+
+        {attachment && (
+
+          <span
+            className="muted"
+          >
+
+            📎 {attachment.name}
+
+          </span>
+
+        )}
+
+
+        {/* SEND */}
+
+        <button
+
+          type="button"
+
+          className="btn primary"
+
+          disabled={
+
+            sending ||
+
+            uploading ||
+
+            (
+
+              !text.trim() &&
+
+              !attachment
+
+            )
+
+          }
+
+          onClick={
+            sendDoubt
+          }
+
+        >
+
+          {
+
+            sending ||
+
+            uploading
+
+              ? "Sending..."
+
+              : "Send Doubt"
+
+          }
+
+        </button>
+
+
+      </div>
 
 
     </div>
