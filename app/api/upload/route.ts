@@ -107,23 +107,35 @@ export async function POST(
     const dataUri =
       `data:${file.type};base64,${base64}`;
 
-    const result =
-      await cloudinary.uploader.upload(
-        dataUri,
-        {
+    const resourceType =
 
-          resource_type:
-            "auto",
+  file.type ===
+  "application/pdf"
 
-          folder:
-            "LET",
+    ? "raw"
 
-          use_filename: true,
+    : "auto";
 
-          unique_filename: true,
 
-        }
-      );
+const result =
+  await cloudinary.uploader.upload(
+    dataUri,
+    {
+
+      resource_type:
+        resourceType,
+
+      folder:
+        "LET",
+
+      use_filename:
+        true,
+
+      unique_filename:
+        true,
+
+    }
+  );
 
     return NextResponse.json(
       {
