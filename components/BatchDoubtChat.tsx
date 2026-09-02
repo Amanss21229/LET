@@ -39,6 +39,42 @@ type Conversation = {
 
 };
 
+/* =====================
+   SAFE AUTH HEADERS
+===================== */
+
+async function getAuthHeaders() {
+
+  const firebaseHeaders =
+    await getFirebaseAuthHeaders();
+
+
+  const headers =
+    new Headers();
+
+
+  if (
+
+    firebaseHeaders &&
+    firebaseHeaders.Authorization
+
+  ) {
+
+    headers.set(
+
+      "Authorization",
+
+      firebaseHeaders.Authorization
+
+    );
+
+  }
+
+
+  return headers;
+
+}
+
 
 export default function BatchDoubtChat({
 
@@ -143,8 +179,8 @@ export default function BatchDoubtChat({
         setLoading(true);
 
 
-        const firebaseHeaders =
-  await getFirebaseAuthHeaders();
+        const headers =
+  await getAuthHeaders();
 
 
 const headers =
@@ -232,8 +268,8 @@ const response =
 
       try {
 
-        const firebaseHeaders =
-  await getFirebaseAuthHeaders();
+        const headers =
+  await getAuthHeaders();
 
 
 const headers =
@@ -322,8 +358,8 @@ const response =
         );
 
 
-        const firebaseHeaders =
-  await getFirebaseAuthHeaders();
+        const headers =
+  await getAuthHeaders();
 
 
 const headers =
@@ -432,14 +468,8 @@ const response =
         }
 
 
-        const firebaseHeaders =
-          await getFirebaseAuthHeaders();
-
-
         const requestHeaders =
-          new Headers(
-            firebaseHeaders
-          );
+          await getAuthHeaders();
 
 
         requestHeaders.set(
@@ -450,7 +480,7 @@ const response =
 
         );
         
-
+        
         /*
           FIRST MESSAGE
         */
