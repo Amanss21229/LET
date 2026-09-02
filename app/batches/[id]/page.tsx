@@ -382,6 +382,8 @@ const tutorContent: any =
 
               target="_blank"
 
+              rel="noopener noreferrer"
+
             >
 
               Buy Now
@@ -423,7 +425,8 @@ const tutorContent: any =
 
 
         {/* =====================
-            LOGGED IN BUT LOCKED
+            LOGGED IN
+            BUT NO ACCESS
         ===================== */}
 
         {user &&
@@ -431,44 +434,58 @@ const tutorContent: any =
 
           <>
 
-            <div className="tabs">
+            <div
+              className="batch-tabs-grid locked-tabs"
+            >
 
-              <button className="btn">
+              <button
+                className="batch-tab-btn"
+              >
 
                 🔒 Classes
 
               </button>
 
 
-              <button className="btn">
+              <button
+                className="batch-tab-btn"
+              >
 
                 🔒 Notes
 
               </button>
 
 
-              <button className="btn">
+              <button
+                className="batch-tab-btn"
+              >
 
                 🔒 Practice Sheets
 
               </button>
 
 
-              <button className="btn">
+              <button
+                className="batch-tab-btn"
+              >
 
                 🔒 Notifications
 
               </button>
 
 
-              <button className="btn">
+              <button
+                className="batch-tab-btn"
+              >
 
                 🔒 Ask a Doubt
 
               </button>
 
 
-              <button className="btn">
+              <button
+                className="batch-tab-btn"
+              >
 
                 🔒 About Tutor
 
@@ -477,10 +494,14 @@ const tutorContent: any =
             </div>
 
 
-            <section className="card">
+            <section
+              className="card"
+            >
 
               <h2>
+
                 🔒 Batch Locked
+
               </h2>
 
 
@@ -493,10 +514,13 @@ const tutorContent: any =
               </p>
 
 
-              <p className="muted">
+              <p
+                className="muted"
+              >
 
-                Contact LET to purchase
-                or get access.
+                Contact LET to
+                purchase or get
+                access.
 
               </p>
 
@@ -507,46 +531,50 @@ const tutorContent: any =
         )}
 
 
+
         {/* =====================
             AUTHORISED CONTENT
         ===================== */}
 
         {access && (
 
-          <>
+          <BatchContentTabs
 
-  <BatchContentTabs
+            batchId={
+              batch.id
+            }
 
-    batchId={
-      batch.id
-    }
+            classSections={
+              classSections
+            }
 
-    classSections={
-      classSections
-    }
+            notesSections={
+              notesSections
+            }
 
-    notesSections={
-      notesSections
-    }
+            practiceSections={
+              practiceSections
+            }
 
-    practiceSections={
-      practiceSections
-    }
+            notifications={
+              batch.notifications
+            }
 
-    notifications={
-      batch.notifications
-    }
+            tutorContent={
+              tutorContent
+            }
 
-    tutorContent={
-      tutorContent
-    }
+          />
 
-  />
+        )}
 
-      </>
-    </main>
+      </main>
 
-    <Enquiry />
-  </>
-);
-    }
+
+      <Enquiry />
+
+    </>
+
+  );
+
+}
