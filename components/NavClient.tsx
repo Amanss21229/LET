@@ -2,7 +2,13 @@
 
 import Link from "next/link";
 
-import { useState } from "react";
+import {
+  useState,
+} from "react";
+
+import {
+  useRouter,
+} from "next/navigation";
 
 import ThemeToggle from "./ThemeToggle";
 
@@ -17,6 +23,9 @@ import {
 
 
 export default function NavClient() {
+
+    const router =
+    useRouter();
 
   const {
     firebaseUser,
@@ -33,36 +42,57 @@ export default function NavClient() {
     useState(false);
 
 
-  async function handleLogin() {
+async function handleLogin() {
 
-    try {
+  try {
 
-      setActionLoading(true);
+    setActionLoading(true);
 
+    const result =
       await loginWithGoogle();
 
-    }
 
-    catch (error) {
+    /*
+      Firebase popup login
+      completed successfully.
+    */
 
-      console.error(
-        "Login failed:",
-        error
-      );
+    if (result) {
 
-      alert(
-        "Google login failed. Please try again."
-      );
+      /*
+        Refresh server-rendered pages.
 
-    }
-
-    finally {
-
-      setActionLoading(false);
+        This allows pages such as
+        /batches/[id] to immediately
+        recognize the firebase-session
+        cookie.
+      */
+      router.refresh();
 
     }
 
   }
+
+  catch (error) {
+
+    console.error(
+      "Login failed:",
+      error
+    );
+
+    alert(
+      "Google login failed. Please try again."
+    );
+
+  }
+
+  finally {
+
+    setActionLoading(false);
+
+  }
+
+}
 
 
   async function handleLogout() {
