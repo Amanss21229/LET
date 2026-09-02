@@ -1,6 +1,12 @@
 import { prisma } from "@/lib/prisma";
 
-export async function currentUser() {
+type CurrentUser = {
+  id: string;
+  firebaseUid?: string | null;
+  email?: string | null;
+} | null;
+
+export async function currentUser(): Promise<CurrentUser> {
   return null;
 }
 
