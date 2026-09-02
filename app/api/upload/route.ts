@@ -13,7 +13,7 @@ cloudinary.config({
 });
 
 const MAX_FILE_SIZE =
-  20 * 1024 * 1024;
+  100 * 1024 * 1024;
 
 const ALLOWED_TYPES = [
 
@@ -85,7 +85,7 @@ export async function POST(
       return NextResponse.json(
         {
           error:
-            "File size must be less than 20MB",
+            "File size must be less than 100MB",
         },
         {
           status: 400,
@@ -133,6 +133,20 @@ const result =
 
       unique_filename:
         true,
+
+
+      /*
+            Important for PDFs
+          */
+
+          format:
+
+            file.type ===
+            "application/pdf"
+
+              ? "pdf"
+
+              : undefined,
 
     }
   );
