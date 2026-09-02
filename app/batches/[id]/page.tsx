@@ -72,15 +72,59 @@ export default async function Batch({
 
 
   const tutor =
-    await prisma.tutorPage.findUnique({
-      where: {
-        id: "main",
-      },
-    });
+      await prisma.tutorPage.findUnique({
+
+        where: {
+
+          id: "main",
+
+        },
+
+      });
 
 
-  const tutorContent: any =
-    tutor?.content || {
+  /*
+  Tutor priority:
+
+  1. Batch-specific tutor
+  2. Global tutor
+  3. Default fallback
+  */
+
+const tutorContent: any =
+
+  batch.tutorContent ||
+
+  tutor?.content ||
+
+  {
+
+    heading:
+      "About Aman",
+
+    subheading:
+      "LET - Learn Earn Teach",
+
+    text:
+      "Welcome to LET",
+
+    imageUrl:
+      "",
+
+    headingSize:
+      "32px",
+
+    subheadingSize:
+      "20px",
+
+    textSize:
+      "16px",
+
+    links:
+      [],
+
+  };    
+      
       heading:
         "About Aman",
 
