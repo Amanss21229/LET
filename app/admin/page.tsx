@@ -633,6 +633,13 @@ useEffect(() => {
     loadBatchData(batchId);
   };
 
+  
+  loadBatchTutor(
+      batchId
+    );
+
+};
+
   /* =========================
      CREATE SECTION
   ========================= */
