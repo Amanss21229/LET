@@ -1,24 +1,52 @@
 import {
+  NextRequest,
   NextResponse,
 } from "next/server";
 
 import {
-  requireUser,
-} from "@/lib/guards";
+  getFirebaseUser,
+} from "@/lib/firebase-server-auth";
 
 import {
   prisma,
 } from "@/lib/prisma";
 
 
-export async function GET() {
+export async function GET(
+  request: NextRequest
+) {
+
   try {
 
+    const firebaseUser =
+      await getFirebaseUser(
+        request
+      );
+
+
+    if (!firebaseUser) {
+
+      return NextResponse.json(
+        {
+          error:
+            "Unauthorized",
+        },
+        {
+          status: 401,
+        }
+      );
+
+    }
+
+
     const user =
-      await requireUser();
+      firebaseUser.user;
+
 
     return NextResponse.json({
-      id: user.id,
+
+      id:
+        user.id,
 
       name:
         user.name || "",
@@ -37,35 +65,63 @@ export async function GET() {
 
       profileComplete:
         user.profileComplete,
+
     });
 
-  } catch {
+  }
+
+  catch (error) {
+
+    console.error(
+      "Profile GET error:",
+      error
+    );
+
 
     return NextResponse.json(
       {
         error:
-          "Unauthorized",
+          "Unable to load profile",
       },
       {
-        status: 401,
+        status: 500,
       }
     );
 
   }
+
 }
 
 
 export async function PATCH(
-  req: Request
+  request: NextRequest
 ) {
 
   try {
 
-    const user =
-      await requireUser();
+    const firebaseUser =
+      await getFirebaseUser(
+        request
+      );
+
+
+    if (!firebaseUser) {
+
+      return NextResponse.json(
+        {
+          error:
+            "Unauthorized",
+        },
+        {
+          status: 401,
+        }
+      );
+
+    }
+
 
     const body =
-      await req.json();
+      await request.json();
 
 
     const name =
@@ -95,7 +151,7 @@ export async function PATCH(
       return NextResponse.json(
         {
           error:
-            "All profile fields are required",
+            "Name, class and mobile number are required.",
         },
         {
           status: 400,
@@ -109,7 +165,8 @@ export async function PATCH(
       await prisma.user.update({
 
         where: {
-          id: user.id,
+          id:
+            firebaseUser.user.id,
         },
 
         data: {
@@ -120,27 +177,56 @@ export async function PATCH(
 
           className,
 
-          profileComplete: true,
+          profileComplete:
+            true,
 
         },
 
       });
 
 
-    return NextResponse.json(
-      updatedUser
+    return NextResponse.json({
+
+      id:
+        updatedUser.id,
+
+      name:
+        updatedUser.name || "",
+
+      email:
+        updatedUser.email || "",
+
+      image:
+        updatedUser.image || "",
+
+      phone:
+        updatedUser.phone || "",
+
+      className:
+        updatedUser.className || "",
+
+      profileComplete:
+        updatedUser.profileComplete,
+
+    });
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Profile PATCH error:",
+      error
     );
 
-
-  } catch {
 
     return NextResponse.json(
       {
         error:
-          "Unauthorized",
+          "Unable to update profile",
       },
       {
-        status: 401,
+        status: 500,
       }
     );
 
