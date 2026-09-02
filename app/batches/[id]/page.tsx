@@ -91,53 +91,24 @@ export default async function Batch({
   3. Default fallback
   */
 
-const tutorContent: any =
+  const tutorContent: any =
+  tutor?.content || {
+    heading: "About Aman",
 
-  batch.tutorContent ||
+    subheading: "LET - Learn Earn Teach",
 
-  tutor?.content ||
+    text: "Welcome to LET",
 
-  {
+    imageUrl: "",
 
-    heading:
-      "About Aman",
+    links: [],
 
-    subheading:
-      "LET - Learn Earn Teach",
+    headingSize: "32px",
 
-    text:
-      "Welcome to LET",
+    subheadingSize: "20px",
 
-    imageUrl:
-      "",
-
-    headingSize:
-      "32px",
-
-    subheadingSize:
-      "20px",
-
-    textSize:
-      "16px",
-
-    links:
-      [],
-
-  };    
-      
-      heading:
-        "About Aman",
-
-      subheading:
-        "LET - Learn Earn Teach",
-
-      text:
-        "Welcome to LET",
-
-      imageUrl: "",
-
-      links: [],
-    };
+    textSize: "16px",
+  };
 
 
   const user =
