@@ -225,6 +225,139 @@ useEffect(() => {
 
 }, []);
 
+         const loadBatchTutor =
+           async (
+
+             batchId: string
+
+           ) => {
+
+             if (!batchId) {
+
+               return;
+
+             }
+
+
+             try {
+
+               const response =
+                 await fetch(
+
+                   `/api/batches/${batchId}`
+
+                 );
+
+
+               if (!response.ok) {
+
+                 return;
+
+               }
+
+
+               const data =
+                 await response.json();
+
+               
+               const content =
+                 data?.tutorContent;
+
+
+               if (content) {
+
+                 setBatchTutorForm({
+
+                   heading:
+                     content.heading ||
+                     "",
+
+                   subheading:
+                   content.subheading ||
+                   "",
+
+                   text:
+                     content.text ||
+                     "",
+
+                   imageUrl:
+                     content.imageUrl ||
+                     "",
+
+                   headingSize:
+                     content.headingSize ||
+                     "32px",
+
+                   subheadingSize:
+                     content.subheadingSize ||
+                     "20px",
+
+                   textSize:
+                     content.textSize ||
+                     "16px",
+
+                   links:
+                     Array.isArray(
+                       content.links
+                     )
+
+                     ? content.links
+
+                     : [],
+
+                 });
+
+               }
+
+               else {
+
+                 setBatchTutorForm({
+
+                   heading:
+                     "",
+
+                   subheading:
+                     "",
+
+                   text:
+                     "",
+
+                   imageUrl:
+                     "",
+
+                   headingSize:
+                     "32px",
+                   
+                   subheadingSize:
+                     "20px",
+
+                   textSize:
+                     "16px",
+
+                   links:
+                     [],
+                   
+                 });
+
+               }
+
+
+             }
+
+             catch (error) {
+
+               console.error(
+
+                 "Unable to load batch tutor:",
+
+                 error
+
+               );
+
+             }
+
+           };
+
   /* =========================
      LOAD TUTOR
   ========================= */
