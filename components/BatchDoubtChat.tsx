@@ -143,22 +143,28 @@ export default function BatchDoubtChat({
         setLoading(true);
 
 
-        const headers =
-          await getFirebaseAuthHeaders();
+        const firebaseHeaders =
+  await getFirebaseAuthHeaders();
 
 
-        const response =
-          await fetch(
+const headers =
+  new Headers(
+    firebaseHeaders
+  );
 
-            "/api/conversations",
 
-            {
+const response =
+  await fetch(
 
-              headers,
+    "/api/conversations",
 
-            }
+    {
 
-          );
+      headers,
+
+    }
+
+  );
 
 
         if (!response.ok) {
@@ -226,23 +232,29 @@ export default function BatchDoubtChat({
 
       try {
 
-        const headers =
-          await getFirebaseAuthHeaders();
+        const firebaseHeaders =
+  await getFirebaseAuthHeaders();
 
 
-        const response =
-          await fetch(
+const headers =
+  new Headers(
+    firebaseHeaders
+  );
 
-            `/api/conversations/${conversationId}/messages`,
 
-            {
+const response =
+  await fetch(
 
-              headers,
+    `/api/conversations/${conversationId}/messages`,
 
-            }
+    {
 
-          );
+      headers,
 
+    }
+
+  );
+        
 
         if (!response.ok) {
 
@@ -310,28 +322,34 @@ export default function BatchDoubtChat({
         );
 
 
-        const headers =
-          await getFirebaseAuthHeaders();
+        const firebaseHeaders =
+  await getFirebaseAuthHeaders();
 
 
-        const response =
-          await fetch(
+const headers =
+  new Headers(
+    firebaseHeaders
+  );
 
-            "/api/upload",
 
-            {
+const response =
+  await fetch(
 
-              method:
-                "POST",
+    "/api/upload",
 
-              headers,
+    {
 
-              body:
-                formData,
+      method:
+        "POST",
 
-            }
+      headers,
 
-          );
+      body:
+        formData,
+
+    }
+
+  );
 
 
         const data =
@@ -414,19 +432,24 @@ export default function BatchDoubtChat({
         }
 
 
-        const headers =
+        const firebaseHeaders =
           await getFirebaseAuthHeaders();
 
 
-        const requestHeaders = {
+        const requestHeaders =
+          new Headers(
+            firebaseHeaders
+          );
 
-          ...headers,
 
-          "Content-Type":
-            "application/json",
+        requestHeaders.set(
 
-        };
+          "Content-Type",
 
+          "application/json"
+
+        );
+        
 
         /*
           FIRST MESSAGE
