@@ -65,29 +65,60 @@ model VerificationToken {
 }
 
 model Batch {
+
   id           String    @id @default(cuid())
+
   title        String
+
   imageUrl     String?
+
   className    String
+
   medium       String
+
   teacherName  String    @default("Aman")
 
+
   startDate    DateTime?
+
   endDate      DateTime?
+
   syllabusDate DateTime?
 
+
   price        Int       @default(0)
+
   about        String    @db.Text
+
   customPoints Json?
+
   buyEnabled   Boolean   @default(true)
 
+
+  /*
+    Custom tutor information
+    for this specific batch.
+
+    If empty/null:
+    global tutor will be used.
+  */
+
+  tutorContent Json?
+
+
   createdAt DateTime @default(now())
+
   updatedAt DateTime @updatedAt
 
+
   accesses      BatchAccess[]
+
   sections      BatchSection[]
+
   notifications Notification[]
+
   conversations Conversation[]
+
 }
 
 model BatchAccess {
