@@ -63,7 +63,7 @@ export async function getFirebaseUser(
     ) {
 
       user =
-        await prisma.user.findUnique({
+        await prisma.user.findFirst({
 
           where: {
             email:
