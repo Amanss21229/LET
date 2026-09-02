@@ -543,4 +543,10 @@ const tutorContent: any =
 
   />
 
-</>
+      </>
+    </main>
+
+    <Enquiry />
+  </>
+);
+    }
