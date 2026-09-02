@@ -1,79 +1,59 @@
 import {
-
-  GoogleAuthProvider,
-
   signInWithPopup,
-
   signInWithRedirect,
-
   signOut,
-
 } from "firebase/auth";
-
 
 import {
   firebaseAuth,
+  googleProvider,
 } from "@/lib/firebase";
 
 
 export async function loginWithGoogle() {
 
-  const provider =
-    new GoogleAuthProvider();
-
-
-  provider.setCustomParameters({
-
-    prompt:
-      "select_account",
-
-  });
-
-
   try {
 
-    return await signInWithPopup(
+    const result =
+      await signInWithPopup(
+        firebaseAuth,
+        googleProvider
+      );
 
-      firebaseAuth,
 
-      provider
-
-    );
+    return result;
 
   } catch (error: any) {
 
     /*
-      Popup can sometimes be blocked
-      on mobile browsers.
+      Popup login can fail on some
+      mobile browsers.
     */
 
     if (
       error?.code ===
-      "auth/popup-blocked"
+        "auth/popup-blocked" ||
+
+      error?.code ===
+        "auth/popup-closed-by-user"
     ) {
 
-      return signInWithRedirect(
-
+      await signInWithRedirect(
         firebaseAuth,
-
-        provider
-
+        googleProvider
       );
 
+      return null;
     }
 
 
     throw error;
-
   }
-
 }
 
 
-export async function logout() {
+export async function logoutFirebase() {
 
-  return signOut(
-    firebaseAuth
-  );
+  await signOut(firebaseAuth);
 
-    }
+}
