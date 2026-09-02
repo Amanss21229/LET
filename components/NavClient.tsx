@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import ThemeToggle from "./ThemeToggle";
 
 export default function NavClient() {
   return (
     <nav className="nav wrap">
-
       <Link
         className="brand"
         href="/"
@@ -20,9 +20,7 @@ export default function NavClient() {
         </span>
       </Link>
 
-
       <div className="links">
-
         <Link href="/">
           All Batches
         </Link>
@@ -35,9 +33,21 @@ export default function NavClient() {
           My Profile
         </Link>
 
+        <Link href="/admin">
+          Admin
+        </Link>
       </div>
 
+      <div className="nav-actions">
+        <ThemeToggle />
 
+        <a
+          className="btn primary"
+          href="/api/auth/signin/google"
+        >
+          Continue with Google
+        </a>
+      </div>
     </nav>
   );
 }
