@@ -2,6 +2,9 @@ import Nav from "@/components/Nav";
 
 import Enquiry from "@/components/Enquiry";
 
+import BatchLoginButton from
+  "@/components/BatchLoginButton";
+
 import {
   prisma,
 } from "@/lib/prisma";
@@ -91,25 +94,50 @@ export default async function Batch({
   3. Default fallback
   */
 
-  const tutorContent: any =
-  tutor?.content || {
-    heading: "About Aman",
+  const defaultTutorContent = {
 
-    subheading: "LET - Learn Earn Teach",
+  heading:
+    "About Aman",
 
-    text: "Welcome to LET",
+  subheading:
+    "LET - Learn Earn Teach",
 
-    imageUrl: "",
+  text:
+    "Welcome to LET",
 
-    links: [],
+  imageUrl:
+    "",
 
-    headingSize: "32px",
+  links:
+    [],
 
-    subheadingSize: "20px",
+  headingSize:
+    "32px",
 
-    textSize: "16px",
-  };
+  subheadingSize:
+    "20px",
 
+  textSize:
+    "16px",
+
+};
+
+
+/*
+  Tutor priority:
+
+  1. Batch-specific tutor
+  2. Global tutor
+  3. Default fallback
+*/
+
+const tutorContent: any =
+
+  batch.tutorContent ||
+
+  tutor?.content ||
+
+  defaultTutorContent;
 
   const user =
     await currentUser();
@@ -381,15 +409,8 @@ export default async function Batch({
             </p>
 
 
-            <a
-              href="/api/auth/signin/google?callbackurl=/batches/"
-              className="btn primary"
-            >
-
-              Continue with Google
-
-            </a>
-
+            <BatchLoginButton />
+            
           </section>
 
         )}
