@@ -651,7 +651,7 @@ export default function BatchContentTabs({
                       <a
                         href={item.url}
                         target="_blank"
-                        rel="noopener noreferrer"
+                        rel="noreferrer"
                         className="yellow"
                       >
 
@@ -844,7 +844,7 @@ export default function BatchContentTabs({
                       <a
                         href={item.url}
                         target="_blank"
-                        rel="noopener noreferrer"
+                        rel="noreferrer"
                         className="yellow"
                       >
 
