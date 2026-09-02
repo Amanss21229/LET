@@ -16,13 +16,8 @@ export async function getFirebaseUser(
 
 
   if (
-
     !authorization ||
-
-    !authorization.startsWith(
-      "Bearer "
-    )
-
+    !authorization.startsWith("Bearer ")
   ) {
 
     return null;
@@ -39,36 +34,78 @@ export async function getFirebaseUser(
 
   try {
 
-    /*
-      Verify Firebase token.
-    */
-
     const decodedToken =
       await firebaseAdminAuth.verifyIdToken(
         idToken
       );
 
 
-    /*
-      Find user in Neon.
-    */
-
-    const user =
-      await prisma.user.findFirst({
+    let user =
+      await prisma.user.findUnique({
 
         where: {
-
           firebaseUid:
             decodedToken.uid,
-
         },
 
       });
 
 
+    /*
+      Extra safety:
+      If Firebase UID is not linked yet,
+      find the existing user by email.
+    */
+
+    if (
+      !user &&
+      decodedToken.email
+    ) {
+
+      user =
+        await prisma.user.findUnique({
+
+          where: {
+            email:
+              decodedToken.email,
+          },
+
+        });
+
+    }
+
+
     if (!user) {
 
       return null;
+
+    }
+
+
+    /*
+      Automatically link Firebase UID
+      with existing user if needed.
+    */
+
+    if (
+      user.firebaseUid !==
+      decodedToken.uid
+    ) {
+
+      user =
+        await prisma.user.update({
+
+          where: {
+            id:
+              user.id,
+          },
+
+          data: {
+            firebaseUid:
+              decodedToken.uid,
+          },
+
+        });
 
     }
 
@@ -90,11 +127,8 @@ export async function getFirebaseUser(
   catch (error) {
 
     console.error(
-
       "Firebase token verification failed:",
-
       error
-
     );
 
 
