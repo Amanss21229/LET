@@ -41,7 +41,7 @@ export async function getFirebaseUser(
 
 
     let user =
-      await prisma.user.findUnique({
+      await prisma.user.findFirst({
 
         where: {
           firebaseUid:
