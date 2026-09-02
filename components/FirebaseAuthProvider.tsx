@@ -19,6 +19,7 @@ import {
 
 import {
   syncFirebaseUser,
+  createFirebaseSession,
 } from "@/lib/firebase-auth";
 
 
@@ -275,13 +276,29 @@ export function FirebaseAuthProvider({
             */
 
             setFirebaseUser(
-              user
-            );
+  user
+);
 
+/*
+  Sync Firebase user
+  with Neon database.
+*/
+await syncUser(
+  user
+);
 
-            await syncUser(
-              user
-            );
+/*
+  Create/refresh the
+  server-side Firebase session.
+
+  This is required because
+  batch pages use the
+  firebase-session cookie
+  on the server.
+*/
+await createFirebaseSession(
+  user
+);
 
 
           }
