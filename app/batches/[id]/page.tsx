@@ -1,6 +1,4 @@
-"use client";
-
-import NavClient from "@/components/NavClient";
+import Nav from "@/components/Nav";
 
 import Enquiry from "@/components/Enquiry";
 
@@ -152,7 +150,7 @@ export default async function Batch({
   return (
     <>
 
-      <NavClient />
+      <Nav />
 
       <main className="wrap">
 
