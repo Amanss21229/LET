@@ -7,54 +7,142 @@ import {
 
 import NavClient from "@/components/NavClient";
 
+import {
+  useFirebaseAuth,
+} from "@/hooks/useFirebaseAuth";
+
+import {
+  firebaseFetch,
+} from "@/lib/firebase-api";
+
+import {
+  loginWithGoogle,
+} from "@/lib/firebase-auth";
+
 
 type ProfileData = {
+
+  id?: string;
+
   name: string;
+
   email: string;
+
   image: string;
+
   phone: string;
+
   className: string;
+
   profileComplete: boolean;
+
 };
 
 
 export default function Profile() {
 
+
+  const {
+
+    firebaseUser,
+
+    databaseUser,
+
+    loading:
+      authLoading,
+
+    refreshUser,
+
+  } =
+    useFirebaseAuth();
+
+
   const [
+
     profile,
+
     setProfile,
-  ] = useState<ProfileData | null>(
-    null
-  );
+
+  ] =
+    useState<ProfileData | null>(
+      null
+    );
 
 
   const [
+
     loading,
+
     setLoading,
-  ] = useState(true);
+
+  ] =
+    useState(true);
 
 
   const [
+
     message,
+
     setMessage,
-  ] = useState("");
+
+  ] =
+    useState("");
+
+
+  const [
+
+    loginLoading,
+
+    setLoginLoading,
+
+  ] =
+    useState(false);
 
 
   useEffect(() => {
 
+
     async function loadProfile() {
+
+
+      /*
+        Firebase is still loading.
+      */
+
+      if (authLoading) {
+
+        return;
+
+      }
+
+
+      /*
+        User is not logged in.
+      */
+
+      if (!firebaseUser) {
+
+        setProfile(null);
+
+        setLoading(false);
+
+        return;
+
+      }
+
 
       try {
 
+        setLoading(true);
+
+
         const response =
-          await fetch(
+          await firebaseFetch(
             "/api/profile"
           );
 
 
-        if (
-          !response.ok
-        ) {
+        if (!response.ok) {
 
           setProfile(null);
 
@@ -69,12 +157,21 @@ export default function Profile() {
 
         setProfile(data);
 
+      }
 
-      } catch {
+      catch (error) {
+
+        console.error(
+          "Profile load error:",
+          error
+        );
+
 
         setProfile(null);
 
-      } finally {
+      }
+
+      finally {
 
         setLoading(false);
 
@@ -85,18 +182,56 @@ export default function Profile() {
 
     loadProfile();
 
-  }, []);
+
+  }, [
+    firebaseUser,
+    authLoading,
+  ]);
+
+
+  async function handleLogin() {
+
+    try {
+
+      setLoginLoading(true);
+
+      await loginWithGoogle();
+
+    }
+
+    catch (error) {
+
+      console.error(
+        error
+      );
+
+      setMessage(
+        "Google login failed."
+      );
+
+    }
+
+    finally {
+
+      setLoginLoading(false);
+
+    }
+
+  }
 
 
   async function saveProfile(
-    event: React.FormEvent
+    event:
+      React.FormEvent
   ) {
 
     event.preventDefault();
 
 
     if (!profile) {
+
       return;
+
     }
 
 
@@ -108,15 +243,20 @@ export default function Profile() {
     try {
 
       const response =
-        await fetch(
+        await firebaseFetch(
+
           "/api/profile",
+
           {
 
-            method: "PATCH",
+            method:
+              "PATCH",
 
             headers: {
+
               "Content-Type":
                 "application/json",
+
             },
 
             body:
@@ -134,6 +274,7 @@ export default function Profile() {
               }),
 
           }
+
         );
 
 
@@ -141,13 +282,14 @@ export default function Profile() {
         await response.json();
 
 
-      if (
-        !response.ok
-      ) {
+      if (!response.ok) {
 
         setMessage(
+
           data.error ||
+
           "Unable to save profile."
+
         );
 
         return;
@@ -155,18 +297,24 @@ export default function Profile() {
       }
 
 
-      setProfile({
-        ...profile,
-        ...data,
-      });
+      setProfile(data);
+
+
+      await refreshUser();
 
 
       setMessage(
         "Profile saved successfully."
       );
 
+    }
 
-    } catch {
+    catch (error) {
+
+      console.error(
+        error
+      );
+
 
       setMessage(
         "Something went wrong."
@@ -177,35 +325,57 @@ export default function Profile() {
   }
 
 
-  if (loading) {
+  /*
+    Authentication loading
+  */
+
+  if (
+    authLoading ||
+    loading
+  ) {
 
     return (
+
       <>
+
         <NavClient />
 
-        <main className="wrap">
+        <main
+          className="wrap"
+        >
 
           <h1>
             My Profile
           </h1>
 
           <p>
-            Loading profile...
+            Loading...
           </p>
 
         </main>
 
       </>
+
     );
 
   }
 
 
-  if (!profile) {
+  /*
+    User not logged in
+  */
+
+  if (
+    !firebaseUser ||
+    !profile
+  ) {
 
     return (
+
       <>
+
         <NavClient />
+
 
         <main
           className="wrap"
@@ -218,27 +388,44 @@ export default function Profile() {
             My Profile
           </h1>
 
-          <p className="muted">
+
+          <p
+            className="muted"
+          >
 
             Please login with
             Google first.
 
           </p>
 
+
           <br />
 
-          <a
+
+          <button
             className="btn primary"
-            href="/api/auth/signin/google?callbackUrl=/profile"
+            onClick={
+              handleLogin
+            }
+            disabled={
+              loginLoading
+            }
           >
 
-            Continue with Google
+            {loginLoading
 
-          </a>
+              ? "Opening Google..."
+
+              : "Continue with Google"
+
+            }
+
+          </button>
 
         </main>
 
       </>
+
     );
 
   }
@@ -264,7 +451,9 @@ export default function Profile() {
         </h1>
 
 
-        <p className="muted">
+        <p
+          className="muted"
+        >
 
           Your profile information
           can be edited anytime.
@@ -286,6 +475,7 @@ export default function Profile() {
           {profile.image && (
 
             <img
+
               src={
                 profile.image
               }
@@ -307,15 +497,14 @@ export default function Profile() {
                 marginBottom: 15,
 
               }}
+
             />
 
           )}
 
 
           <label>
-
             Google Email
-
           </label>
 
 
@@ -336,9 +525,7 @@ export default function Profile() {
 
 
           <label>
-
             Name
-
           </label>
 
 
@@ -353,15 +540,16 @@ export default function Profile() {
             onChange={(
               event
             ) =>
+
               setProfile({
 
                 ...profile,
 
                 name:
-                  event.target
-                    .value,
+                  event.target.value,
 
               })
+
             }
 
             required
@@ -373,9 +561,7 @@ export default function Profile() {
 
 
           <label>
-
             Class
-
           </label>
 
 
@@ -390,15 +576,16 @@ export default function Profile() {
             onChange={(
               event
             ) =>
+
               setProfile({
 
                 ...profile,
 
                 className:
-                  event.target
-                    .value,
+                  event.target.value,
 
               })
+
             }
 
             placeholder="Example: Class 9"
@@ -412,9 +599,7 @@ export default function Profile() {
 
 
           <label>
-
             Mobile Number
-
           </label>
 
 
@@ -429,18 +614,21 @@ export default function Profile() {
             onChange={(
               event
             ) =>
+
               setProfile({
 
                 ...profile,
 
                 phone:
-                  event.target
-                    .value,
+                  event.target.value,
 
               })
+
             }
 
             placeholder="Mobile Number"
+
+            inputMode="numeric"
 
             required
 
@@ -451,8 +639,11 @@ export default function Profile() {
 
 
           <button
+
             className="btn primary"
+
             type="submit"
+
           >
 
             Save Profile
@@ -463,15 +654,14 @@ export default function Profile() {
           {message && (
 
             <p>
-
               {message}
-
             </p>
 
           )}
 
 
         </form>
+
 
       </main>
 
