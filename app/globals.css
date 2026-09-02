@@ -901,3 +901,37 @@ hr {
     var(--button-bg);
 
 }
+
+  /* =========================
+   BATCH IMAGES - 16:9
+========================= */
+
+.batch-image,
+
+.batch-banner {
+
+  width:
+    100%;
+
+  aspect-ratio:
+    16 / 9;
+
+  height:
+    auto;
+
+  object-fit:
+    cover;
+
+  object-position:
+    center;
+
+  display:
+    block;
+
+  border-radius:
+    12px;
+
+  background:
+    var(--button-bg);
+
+}
