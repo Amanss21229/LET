@@ -428,6 +428,106 @@ useEffect(() => {
 
     }; 
 
+  const saveBatchTutor =
+  async () => {
+
+    if (!selectedBatch) {
+
+      setBatchTutorMessage(
+
+        "Please select a batch first."
+
+      );
+
+      return;
+
+    }
+
+
+    try {
+
+      setBatchTutorMessage(
+
+        "Saving..."
+
+      );
+
+
+      const response =
+        await fetch(
+
+          `/api/batches/${selectedBatch}`,
+
+          {
+
+            method:
+              "PATCH",
+
+
+            headers: {
+
+              "Content-Type":
+                "application/json",
+
+            },
+
+
+            body:
+
+              JSON.stringify({
+
+                tutorContent:
+                  batchTutorForm,
+
+              }),
+
+          }
+
+        );
+
+
+      const data =
+        await response.json();
+
+
+      if (!response.ok) {
+
+        throw new Error(
+
+          data?.error ||
+
+          "Unable to save tutor"
+
+        );
+
+      }
+
+
+      setBatchTutorMessage(
+
+        "Batch tutor saved successfully!"
+
+      );
+
+    }
+
+    catch (error) {
+
+      console.error(
+        error
+      );
+
+
+      setBatchTutorMessage(
+
+        "Unable to save batch tutor."
+
+      );
+
+    }
+
+  };
+
   /* =========================
      ADMIN LOGIN
   ========================= */
@@ -1383,6 +1483,7 @@ useEffect(() => {
                         "Notes",
                         "Practice Sheets",
                         "Notifications",
+                        "Batch Tutor",                   
                       ].map((item) => (
                         <button
                           key={item}
@@ -2058,6 +2159,590 @@ useEffect(() => {
                       </>
                     )}
 
+                    {/* =====================
+    BATCH TUTOR
+===================== */}
+
+{manageTab ===
+  "Batch Tutor" && (
+
+  <>
+
+    <h2>
+
+      👨‍🏫 Batch Tutor
+
+    </h2>
+
+
+    <p className="muted">
+
+      Set a custom tutor for
+      this batch.
+
+      If no tutor information
+      is saved, the global
+      About Tutor will be shown.
+
+    </p>
+
+
+    {/* IMAGE */}
+
+    <div className="card">
+
+      <h3>
+
+        Tutor Image
+
+      </h3>
+
+
+      <FileUpload
+
+        accept="image/*"
+
+        label="+ Upload Tutor Image"
+
+        onUploadComplete={(
+          url
+        ) =>
+
+          setBatchTutorForm({
+
+            ...batchTutorForm,
+
+            imageUrl:
+              url,
+
+          })
+
+        }
+
+      />
+
+
+      {batchTutorForm.imageUrl && (
+
+        <img
+
+          src={
+            batchTutorForm.imageUrl
+          }
+
+          alt="Tutor"
+
+          className="upload-preview"
+
+        />
+
+      )}
+
+    </div>
+
+
+
+    {/* HEADING */}
+
+    <div className="card">
+
+      <h3>
+
+        Main Heading
+
+      </h3>
+
+
+      <input
+
+        className="input"
+
+        placeholder="Example: About Aman Sir"
+
+        value={
+          batchTutorForm.heading
+        }
+
+        onChange={(e) =>
+
+          setBatchTutorForm({
+
+            ...batchTutorForm,
+
+            heading:
+              e.target.value,
+
+          })
+
+        }
+
+      />
+
+
+      <label>
+
+        Heading Font Size
+
+      </label>
+
+
+      <select
+
+        className="input"
+
+        value={
+          batchTutorForm.headingSize
+        }
+
+        onChange={(e) =>
+
+          setBatchTutorForm({
+
+            ...batchTutorForm,
+
+            headingSize:
+              e.target.value,
+
+          })
+
+        }
+
+      >
+
+        <option value="24px">
+          Small
+        </option>
+
+        <option value="32px">
+          Medium
+        </option>
+
+        <option value="40px">
+          Large
+        </option>
+
+        <option value="48px">
+          Extra Large
+        </option>
+
+      </select>
+
+    </div>
+
+
+
+    {/* SUBHEADING */}
+
+    <div className="card">
+
+      <h3>
+
+        Subheading
+
+      </h3>
+
+
+      <input
+
+        className="input"
+
+        placeholder="Example: Mathematics Teacher"
+
+        value={
+          batchTutorForm.subheading
+        }
+
+        onChange={(e) =>
+
+          setBatchTutorForm({
+
+            ...batchTutorForm,
+
+            subheading:
+              e.target.value,
+
+          })
+
+        }
+
+      />
+
+
+      <label>
+
+        Subheading Font Size
+
+      </label>
+
+
+      <select
+
+        className="input"
+
+        value={
+          batchTutorForm.subheadingSize
+        }
+
+        onChange={(e) =>
+
+          setBatchTutorForm({
+
+            ...batchTutorForm,
+
+            subheadingSize:
+              e.target.value,
+
+          })
+
+        }
+
+      >
+
+        <option value="16px">
+          Small
+        </option>
+
+        <option value="20px">
+          Medium
+        </option>
+
+        <option value="24px">
+          Large
+        </option>
+
+        <option value="28px">
+          Extra Large
+        </option>
+
+      </select>
+
+    </div>
+
+
+
+    {/* DESCRIPTION */}
+
+    <div className="card">
+
+      <h3>
+
+        About Tutor
+
+      </h3>
+
+
+      <textarea
+
+        className="input"
+
+        rows={8}
+
+        placeholder="Write about this tutor..."
+
+        value={
+          batchTutorForm.text
+        }
+
+        onChange={(e) =>
+
+          setBatchTutorForm({
+
+            ...batchTutorForm,
+
+            text:
+              e.target.value,
+
+          })
+
+        }
+
+      />
+
+
+      <label>
+
+        Text Font Size
+
+      </label>
+
+
+      <select
+
+        className="input"
+
+        value={
+          batchTutorForm.textSize
+        }
+
+        onChange={(e) =>
+
+          setBatchTutorForm({
+
+            ...batchTutorForm,
+
+            textSize:
+              e.target.value,
+
+          })
+
+        }
+
+      >
+
+        <option value="14px">
+          Small
+        </option>
+
+        <option value="16px">
+          Medium
+        </option>
+
+        <option value="18px">
+          Large
+        </option>
+
+        <option value="20px">
+          Extra Large
+        </option>
+
+      </select>
+
+    </div>
+
+
+
+    {/* LINKS */}
+
+    <div className="card">
+
+      <h3>
+
+        Tutor Links
+
+      </h3>
+
+
+      {(batchTutorForm.links ||
+        []).map(
+
+          (
+            link: any,
+
+            index: number
+
+          ) => (
+
+            <div
+              key={index}
+              className="card"
+            >
+
+              <input
+
+                className="input"
+
+                placeholder="Link Title"
+
+                value={
+                  link.title ||
+                  ""
+                }
+
+                onChange={(e) => {
+
+                  const links =
+                    [
+                      ...batchTutorForm.links,
+                    ];
+
+
+                  links[index] = {
+
+                    ...links[index],
+
+                    title:
+                      e.target.value,
+
+                  };
+
+
+                  setBatchTutorForm({
+
+                    ...batchTutorForm,
+
+                    links,
+
+                  });
+
+                }}
+
+              />
+
+
+              <input
+
+                className="input"
+
+                placeholder="https://..."
+
+                value={
+                  link.url ||
+                  ""
+                }
+
+                onChange={(e) => {
+
+                  const links =
+                    [
+                      ...batchTutorForm.links,
+                    ];
+
+
+                  links[index] = {
+
+                    ...links[index],
+
+                    url:
+                      e.target.value,
+
+                  };
+
+
+                  setBatchTutorForm({
+
+                    ...batchTutorForm,
+
+                    links,
+
+                  });
+
+                }}
+
+              />
+
+
+              <button
+
+                className="btn"
+
+                onClick={() => {
+
+                  const links =
+                    batchTutorForm.links.filter(
+
+                      (
+                        _: any,
+
+                        i: number
+
+                      ) =>
+                        i !== index
+
+                    );
+
+
+                  setBatchTutorForm({
+
+                    ...batchTutorForm,
+
+                    links,
+
+                  });
+
+                }}
+
+              >
+
+                Remove Link
+
+              </button>
+
+            </div>
+
+          )
+
+        )}
+
+
+      <button
+
+        className="btn"
+
+        onClick={() =>
+
+          setBatchTutorForm({
+
+            ...batchTutorForm,
+
+            links: [
+
+              ...(
+                batchTutorForm.links ||
+                []
+              ),
+
+              {
+
+                title:
+                  "",
+
+                url:
+                  "",
+
+              },
+
+            ],
+
+          })
+
+        }
+
+      >
+
+        ➕ Add Link
+
+      </button>
+
+    </div>
+
+
+
+    {/* SAVE */}
+
+    <div className="card">
+
+      <button
+
+        className="btn primary"
+
+        onClick={
+          saveBatchTutor
+        }
+
+      >
+
+        💾 Save Batch Tutor
+
+      </button>
+
+
+      {batchTutorMessage && (
+
+        <p className="muted">
+
+          {batchTutorMessage}
+
+        </p>
+
+      )}
+
+    </div>
+
+  </>
+
+)}
+
+                    
                   </>
                 )}
               </>
