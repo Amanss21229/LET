@@ -1,3 +1,6 @@
+import BatchDoubtChat from
+  "@/components/BatchDoubtChat";
+
 import Nav from "@/components/Nav";
 
 import Enquiry from "@/components/Enquiry";
@@ -970,37 +973,35 @@ const tutorContent: any =
             ================= */}
 
             <section
-              className="content-section"
-            >
+  className="content-section"
+>
 
-              <h2>
-                💬 Ask a Doubt
-              </h2>
-
-
-              <div className="card">
-
-                <p className="muted">
-
-                  Private tutor chat
-                  will be available
-                  here.
-
-                </p>
+  <h2>
+    💬 Ask a Doubt
+  </h2>
 
 
-                <p>
+  <div className="card">
 
-                  💡 You will be able
-                  to send text, images,
-                  audio, PDF and links.
+    <p className="muted">
 
-                </p>
+      Ask your doubt directly
+      to your teacher.
 
-              </div>
+    </p>
 
-            </section>
 
+    <BatchDoubtChat
+
+      batchId={
+        batch.id
+      }
+
+    />
+
+  </div>
+
+</section>
 
             {/* =================
                 ABOUT TUTOR
