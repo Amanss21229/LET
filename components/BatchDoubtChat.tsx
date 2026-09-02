@@ -183,12 +183,6 @@ export default function BatchDoubtChat({
   await getAuthHeaders();
 
 
-const headers =
-  new Headers(
-    firebaseHeaders
-  );
-
-
 const response =
   await fetch(
 
@@ -271,11 +265,6 @@ const response =
         const headers =
   await getAuthHeaders();
 
-
-const headers =
-  new Headers(
-    firebaseHeaders
-  );
 
 
 const response =
@@ -361,11 +350,6 @@ const response =
         const headers =
   await getAuthHeaders();
 
-
-const headers =
-  new Headers(
-    firebaseHeaders
-  );
 
 
 const response =
