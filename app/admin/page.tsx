@@ -723,22 +723,24 @@ useEffect(() => {
     setBatchData(data);
   };
 
+
   const selectBatch = (
     batchId: string
   ) => {
+
     setSelectedBatch(batchId);
 
     setSelectedSection("");
 
-    loadBatchData(batchId);
-  };
-
-  
-  loadBatchTutor(
+    loadBatchData(
       batchId
     );
 
-};
+    loadBatchTutor(
+      batchId
+    );
+
+  };
 
   /* =========================
      CREATE SECTION
@@ -3314,27 +3316,22 @@ useEffect(() => {
 )}
 
             {/* =====================
-                CHATS
+            CHATS
             ===================== */}
 
-            {tab ===
-              "Chats" && (
-              <>
-                <h2>
-                  Chats
-                </h2>
+            {tab === "Chats" && (
 
-                <p className="muted">
-                  Phase 5 will create
-                  the complete admin
-                  chat interface.
-                </p>
-              </>
-            )}
+      <>
 
-          </section>
-        </div>
-      </main>
-    </>
-  );
-}
+        <h2>
+          Chats
+        </h2>
+
+        <p className="muted">
+          Chat management will be
+          available here.
+        </p>
+
+      </>
+
+    )}
