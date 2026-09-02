@@ -7,6 +7,8 @@ import {
 
 import NavClient from "@/components/NavClient";
 import FileUpload from "@/components/FileUpload";
+import AdminChatPanel from
+  "@/components/AdminChatPanel";
 
 const emptyBatch = {
   title: "",
@@ -3319,29 +3321,28 @@ useEffect(() => {
             CHATS
             ===================== */}
 
-            {tab === "Chats" && (
+            {tab ===
+              "Chats" && (
 
-      <>
+                <>
 
-        <h2>
-          Chats
-        </h2>
+                  <h2>
 
-        <p className="muted">
-          Chat management will be
-          available here.
-        </p>
+                    💬 Student Chats
 
-      </>
+                  </h2>
 
-    )}
 
-          </section>
+                  <p className="muted">
 
-        </div>
+                    View student doubts
+                    and reply directly.
 
-      </main>
+                  </p>
 
-    </>
-  );
-}
+
+                  <AdminChatPanel />
+
+                </>
+
+              )}
