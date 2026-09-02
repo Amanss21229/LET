@@ -147,6 +147,15 @@ export async function PATCH(
   }
 
   if (
+    body.tutorContent !== undefined
+  ) {
+
+    data.tutorContent =
+      body.tutorContent;
+
+  }
+
+  if (
     body.startDate !== undefined
   ) {
     data.startDate =
