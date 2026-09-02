@@ -9,6 +9,9 @@ datasource db {
 
 model User {
   id              String         @id @default(cuid())
+
+  firebaseUid     String?        @unique
+
   name            String?
   email           String?        @unique
   image           String?
