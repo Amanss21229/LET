@@ -5,7 +5,7 @@ import {
   useState,
 } from "react";
 
-import Nav from "@/components/Nav";
+import NavClient from "@/components/NavClient";
 
 
 type ProfileData = {
@@ -181,7 +181,7 @@ export default function Profile() {
 
     return (
       <>
-        <Nav />
+        <NavClient />
 
         <main className="wrap">
 
@@ -205,7 +205,7 @@ export default function Profile() {
 
     return (
       <>
-        <Nav />
+        <NavClient />
 
         <main
           className="wrap"
@@ -248,7 +248,7 @@ export default function Profile() {
 
     <>
 
-      <Nav />
+      <NavClient />
 
 
       <main
