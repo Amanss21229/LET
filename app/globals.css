@@ -565,47 +565,66 @@ select:focus {
     padding: 9px;
   }
 
-  .content-section {
-  margin-top: 28px;
 }
+
+/* =========================
+   CONTENT SECTIONS
+========================= */
+
+.content-section {
+
+  margin-top:
+    28px;
+
+}
+
 
 .content-section h2 {
-  margin-bottom: 14px;
+
+  margin-bottom:
+    14px;
+
 }
+
 
 .content-section .card {
-  margin-bottom: 14px;
+
+  margin-bottom:
+    14px;
+
 }
 
-.notification-image {
-  width: 100%;
-  max-width: 500px;
 
-  display: block;
-
-  margin: 12px 0;
-
-  border-radius: 12px;
-
-  border:
-    1px solid var(--line);
-}
+/* =========================
+   AUDIO
+========================= */
 
 audio {
-  width: 100%;
 
-  margin: 12px 0;
+  width:
+    100%;
+
+  margin:
+    12px 0;
+
 }
 
+
+/* =========================
+   HORIZONTAL LINE
+========================= */
+
 hr {
-  border: 0;
+
+  border:
+    0;
 
   border-top:
     1px solid var(--line);
 
-  margin: 25px 0;
-}
-  
+  margin:
+    25px 0;
+
 }
 
 /* =========================
@@ -777,11 +796,12 @@ hr {
 ========================= */
 
 .notification-image {
+
   width:
     100%;
 
   max-width:
-    500px;
+    100%;
 
   height:
     auto;
@@ -799,7 +819,11 @@ hr {
     12px auto;
 
   border-radius:
-    10px;
+    12px;
+
+  border:
+    1px solid var(--line);
+
 }
 
 
