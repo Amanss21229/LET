@@ -1,13 +1,62 @@
 "use client";
 
-import {
-
-  useState,
-
-} from "react";
+import { useState } from "react";
 
 import BatchDoubtChat from
   "@/components/BatchDoubtChat";
+
+
+type Item = {
+  id: string;
+  title: string;
+  url: string;
+  scheduledAt: Date | string | null;
+};
+
+
+type Section = {
+  id: string;
+  title: string;
+  items: Item[];
+};
+
+
+type Notification = {
+  id: string;
+  text: string | null;
+  attachmentUrl: string | null;
+  attachmentType: string | null;
+  createdAt: Date | string;
+};
+
+
+type TutorContent = {
+  heading?: string;
+  subheading?: string;
+  text?: string;
+  imageUrl?: string;
+  links?: any[];
+  headingSize?: string;
+  subheadingSize?: string;
+  textSize?: string;
+};
+
+
+type Props = {
+
+  batchId: string;
+
+  classSections: Section[];
+
+  notesSections: Section[];
+
+  practiceSections: Section[];
+
+  notifications: Notification[];
+
+  tutorContent: TutorContent;
+
+};
 
 
 export default function BatchContentTabs({
@@ -24,18 +73,80 @@ export default function BatchContentTabs({
 
   tutorContent,
 
-}: any) {
+}: Props) {
 
 
   const [
-
     activeTab,
-
     setActiveTab,
+  ] = useState("Classes");
 
-  ] =
-    useState(
-      ""
+
+  const [
+    selectedCategory,
+    setSelectedCategory,
+  ] = useState<string | null>(
+    null
+  );
+
+
+  const changeTab = (
+    tab: string
+  ) => {
+
+    setActiveTab(tab);
+
+    setSelectedCategory(null);
+
+  };
+
+
+  const getSections = () => {
+
+    if (
+      activeTab === "Classes"
+    ) {
+
+      return classSections;
+
+    }
+
+
+    if (
+      activeTab === "Notes"
+    ) {
+
+      return notesSections;
+
+    }
+
+
+    if (
+      activeTab ===
+      "Practice Sheets"
+    ) {
+
+      return practiceSections;
+
+    }
+
+
+    return [];
+
+  };
+
+
+  const currentSections =
+    getSections();
+
+
+  const currentSection =
+    currentSections.find(
+      (
+        section
+      ) =>
+        section.id ===
+        selectedCategory
     );
 
 
@@ -43,226 +154,159 @@ export default function BatchContentTabs({
 
     <>
 
-
       {/* =====================
-          DASHBOARD BUTTONS
+          MAIN TAB BUTTONS
       ===================== */}
 
       <div
-        className="batch-dashboard"
+        className="batch-tabs-grid"
       >
 
-
         <button
-
           className={
-            `batch-dashboard-button ${
-              activeTab === "classes"
+            `batch-tab-btn ${
+              activeTab === "Classes"
                 ? "active"
                 : ""
             }`
           }
-
           onClick={() =>
-
-            setActiveTab(
-              "classes"
-            )
-
+            changeTab("Classes")
           }
-
         >
 
           <span>
-
             📚
-
           </span>
 
-          <b>
-
-            Classes
-
-          </b>
+          Classes
 
         </button>
 
 
         <button
-
           className={
-            `batch-dashboard-button ${
-              activeTab === "notes"
+            `batch-tab-btn ${
+              activeTab === "Notes"
                 ? "active"
                 : ""
             }`
           }
-
           onClick={() =>
-
-            setActiveTab(
-              "notes"
-            )
-
+            changeTab("Notes")
           }
-
         >
 
           <span>
-
             📄
-
           </span>
 
-          <b>
-
-            Notes
-
-          </b>
+          Notes
 
         </button>
 
 
         <button
-
           className={
-            `batch-dashboard-button ${
-              activeTab === "practice"
+            `batch-tab-btn ${
+              activeTab ===
+              "Practice Sheets"
                 ? "active"
                 : ""
             }`
           }
-
           onClick={() =>
-
-            setActiveTab(
-              "practice"
+            changeTab(
+              "Practice Sheets"
             )
-
           }
-
         >
 
           <span>
-
             📝
-
           </span>
 
-          <b>
-
-            Practice Sheets
-
-          </b>
+          Practice Sheets
 
         </button>
 
 
         <button
-
           className={
-            `batch-dashboard-button ${
-              activeTab === "notifications"
+            `batch-tab-btn ${
+              activeTab ===
+              "Notifications"
                 ? "active"
                 : ""
             }`
           }
-
           onClick={() =>
-
-            setActiveTab(
-              "notifications"
+            changeTab(
+              "Notifications"
             )
-
           }
-
         >
 
           <span>
-
             🔔
-
           </span>
 
-          <b>
-
-            Notifications
-
-          </b>
+          Notifications
 
         </button>
 
 
         <button
-
           className={
-            `batch-dashboard-button ${
-              activeTab === "doubt"
+            `batch-tab-btn ${
+              activeTab ===
+              "Ask a Doubt"
                 ? "active"
                 : ""
             }`
           }
-
           onClick={() =>
-
-            setActiveTab(
-              "doubt"
+            changeTab(
+              "Ask a Doubt"
             )
-
           }
-
         >
 
           <span>
-
             💬
-
           </span>
 
-          <b>
-
-            Ask a Doubt
-
-          </b>
+          Ask a Doubt
 
         </button>
 
 
         <button
-
           className={
-            `batch-dashboard-button ${
-              activeTab === "tutor"
+            `batch-tab-btn ${
+              activeTab ===
+              "About Tutor"
                 ? "active"
                 : ""
             }`
           }
-
           onClick={() =>
-
-            setActiveTab(
-              "tutor"
+            changeTab(
+              "About Tutor"
             )
-
           }
-
         >
 
           <span>
-
             👨‍🏫
-
           </span>
 
-          <b>
-
-            About Tutor
-
-          </b>
+          About Tutor
 
         </button>
 
       </div>
+
 
 
       {/* =====================
@@ -270,69 +314,137 @@ export default function BatchContentTabs({
       ===================== */}
 
       {activeTab ===
-        "classes" && (
+        "Classes" && (
 
         <section
           className="content-section"
         >
 
           <h2>
-
             📚 Classes
-
           </h2>
 
 
-          {classSections.length ===
-            0 && (
+          {!selectedCategory && (
 
-            <p className="muted">
+            <>
 
-              No classes available
-              yet.
+              {classSections.length ===
+                0 ? (
 
-            </p>
+                <p className="muted">
+
+                  No classes available yet.
+
+                </p>
+
+              ) : (
+
+                <div
+                  className="category-grid"
+                >
+
+                  {classSections.map(
+                    (
+                      section
+                    ) => (
+
+                      <button
+                        key={section.id}
+                        className="category-btn"
+                        onClick={() =>
+                          setSelectedCategory(
+                            section.id
+                          )
+                        }
+                      >
+
+                        📁
+
+                        <span>
+
+                          {section.title}
+
+                        </span>
+
+
+                        <small>
+
+                          {
+                            section.items
+                              .length
+                          }{" "}
+
+                          Classes
+
+                        </small>
+
+                      </button>
+
+                    )
+                  )}
+
+                </div>
+
+              )}
+
+            </>
 
           )}
 
 
-          {classSections.map(
-            (
-              section: any
-            ) => (
+          {selectedCategory &&
+            currentSection && (
 
-              <div
+            <>
 
-                className="card"
-
-                key={
-                  section.id
+              <button
+                className="btn"
+                onClick={() =>
+                  setSelectedCategory(
+                    null
+                  )
                 }
-
               >
+
+                ← Back to Categories
+
+              </button>
+
+
+              <div className="card">
 
                 <h3>
 
                   📁{" "}
 
-                  {section.title}
+                  {
+                    currentSection.title
+                  }
 
                 </h3>
 
 
-                {section.items.map(
+                {currentSection.items
+                  .length === 0 && (
+
+                  <p className="muted">
+
+                    No classes added.
+
+                  </p>
+
+                )}
+
+
+                {currentSection.items.map(
                   (
-                    item: any
+                    item
                   ) => (
 
                     <div
-
                       className="msg"
-
-                      key={
-                        item.id
-                      }
-
+                      key={item.id}
                     >
 
                       <b>
@@ -346,20 +458,30 @@ export default function BatchContentTabs({
 
 
                       <a
-
-                        href={
-                          item.url
-                        }
-
+                        href={item.url}
                         target="_blank"
-
+                        rel="noopener noreferrer"
                         className="yellow"
-
                       >
 
                         ▶ Join Live Class
 
                       </a>
+
+
+                      {item.scheduledAt && (
+
+                        <p>
+
+                          📅{" "}
+
+                          {new Date(
+                            item.scheduledAt
+                          ).toLocaleString()}
+
+                        </p>
+
+                      )}
 
                     </div>
 
@@ -368,12 +490,14 @@ export default function BatchContentTabs({
 
               </div>
 
-            )
+            </>
+
           )}
 
         </section>
 
       )}
+
 
 
       {/* =====================
@@ -381,56 +505,137 @@ export default function BatchContentTabs({
       ===================== */}
 
       {activeTab ===
-        "notes" && (
+        "Notes" && (
 
         <section
           className="content-section"
         >
 
           <h2>
-
             📄 Notes
-
           </h2>
 
 
-          {notesSections.map(
-            (
-              section: any
-            ) => (
+          {!selectedCategory && (
 
-              <div
+            <>
 
-                className="card"
+              {notesSections.length ===
+                0 ? (
 
-                key={
-                  section.id
+                <p className="muted">
+
+                  No notes available yet.
+
+                </p>
+
+              ) : (
+
+                <div
+                  className="category-grid"
+                >
+
+                  {notesSections.map(
+                    (
+                      section
+                    ) => (
+
+                      <button
+                        key={section.id}
+                        className="category-btn"
+                        onClick={() =>
+                          setSelectedCategory(
+                            section.id
+                          )
+                        }
+                      >
+
+                        📁
+
+                        <span>
+
+                          {section.title}
+
+                        </span>
+
+
+                        <small>
+
+                          {
+                            section.items
+                              .length
+                          }{" "}
+
+                          Notes
+
+                        </small>
+
+                      </button>
+
+                    )
+                  )}
+
+                </div>
+
+              )}
+
+            </>
+
+          )}
+
+
+          {selectedCategory &&
+            currentSection && (
+
+            <>
+
+              <button
+                className="btn"
+                onClick={() =>
+                  setSelectedCategory(
+                    null
+                  )
                 }
-
               >
+
+                ← Back to Categories
+
+              </button>
+
+
+              <div className="card">
 
                 <h3>
 
                   📁{" "}
 
-                  {section.title}
+                  {
+                    currentSection.title
+                  }
 
                 </h3>
 
 
-                {section.items.map(
+                {currentSection.items
+                  .length === 0 && (
+
+                  <p className="muted">
+
+                    No notes available.
+
+                  </p>
+
+                )}
+
+
+                {currentSection.items.map(
                   (
-                    item: any
+                    item
                   ) => (
 
                     <div
-
                       className="msg"
-
-                      key={
-                        item.id
-                      }
-
+                      key={item.id}
                     >
 
                       <b>
@@ -444,23 +649,31 @@ export default function BatchContentTabs({
 
 
                       <a
-
-                        href={
-                          item.url
-                        }
-
+                        href={item.url}
                         target="_blank"
-
                         rel="noopener noreferrer"
-
                         className="yellow"
-
                       >
 
                         📄 Open PDF
 
                       </a>
 
+
+                      {item.scheduledAt && (
+
+                        <p>
+
+                          📅{" "}
+
+                          {new Date(
+                            item.scheduledAt
+                          ).toLocaleString()}
+
+                        </p>
+
+                      )}
+
                     </div>
 
                   )
@@ -468,7 +681,8 @@ export default function BatchContentTabs({
 
               </div>
 
-            )
+            </>
+
           )}
 
         </section>
@@ -476,61 +690,145 @@ export default function BatchContentTabs({
       )}
 
 
+
       {/* =====================
-          PRACTICE
+          PRACTICE SHEETS
       ===================== */}
 
       {activeTab ===
-        "practice" && (
+        "Practice Sheets" && (
 
         <section
           className="content-section"
         >
 
           <h2>
-
             📝 Practice Sheets
-
           </h2>
 
 
-          {practiceSections.map(
-            (
-              section: any
-            ) => (
+          {!selectedCategory && (
 
-              <div
+            <>
 
-                className="card"
+              {practiceSections
+                .length === 0 ? (
 
-                key={
-                  section.id
+                <p className="muted">
+
+                  No practice sheets
+                  available yet.
+
+                </p>
+
+              ) : (
+
+                <div
+                  className="category-grid"
+                >
+
+                  {practiceSections.map(
+                    (
+                      section
+                    ) => (
+
+                      <button
+                        key={section.id}
+                        className="category-btn"
+                        onClick={() =>
+                          setSelectedCategory(
+                            section.id
+                          )
+                        }
+                      >
+
+                        📁
+
+                        <span>
+
+                          {section.title}
+
+                        </span>
+
+
+                        <small>
+
+                          {
+                            section.items
+                              .length
+                          }{" "}
+
+                          Sheets
+
+                        </small>
+
+                      </button>
+
+                    )
+                  )}
+
+                </div>
+
+              )}
+
+            </>
+
+          )}
+
+
+          {selectedCategory &&
+            currentSection && (
+
+            <>
+
+              <button
+                className="btn"
+                onClick={() =>
+                  setSelectedCategory(
+                    null
+                  )
                 }
-
               >
+
+                ← Back to Categories
+
+              </button>
+
+
+              <div className="card">
 
                 <h3>
 
                   📁{" "}
 
-                  {section.title}
+                  {
+                    currentSection.title
+                  }
 
                 </h3>
 
 
-                {section.items.map(
+                {currentSection.items
+                  .length === 0 && (
+
+                  <p className="muted">
+
+                    No practice sheets
+                    available.
+
+                  </p>
+
+                )}
+
+
+                {currentSection.items.map(
                   (
-                    item: any
+                    item
                   ) => (
 
                     <div
-
                       className="msg"
-
-                      key={
-                        item.id
-                      }
-
+                      key={item.id}
                     >
 
                       <b>
@@ -544,22 +842,30 @@ export default function BatchContentTabs({
 
 
                       <a
-
-                        href={
-                          item.url
-                        }
-
+                        href={item.url}
                         target="_blank"
-
                         rel="noopener noreferrer"
-
                         className="yellow"
-
                       >
 
                         📝 Open Practice Sheet
 
                       </a>
+
+
+                      {item.scheduledAt && (
+
+                        <p>
+
+                          📅{" "}
+
+                          {new Date(
+                            item.scheduledAt
+                          ).toLocaleString()}
+
+                        </p>
+
+                      )}
 
                     </div>
 
@@ -568,12 +874,14 @@ export default function BatchContentTabs({
 
               </div>
 
-            )
+            </>
+
           )}
 
         </section>
 
       )}
+
 
 
       {/* =====================
@@ -581,16 +889,14 @@ export default function BatchContentTabs({
       ===================== */}
 
       {activeTab ===
-        "notifications" && (
+        "Notifications" && (
 
         <section
           className="content-section"
         >
 
           <h2>
-
             🔔 Notifications
-
           </h2>
 
 
@@ -608,17 +914,14 @@ export default function BatchContentTabs({
 
           {notifications.map(
             (
-              notification: any
+              notification
             ) => (
 
               <div
-
                 className="msg"
-
                 key={
                   notification.id
                 }
-
               >
 
                 {notification.text && (
@@ -632,52 +935,75 @@ export default function BatchContentTabs({
                 )}
 
 
-                {notification.attachmentUrl &&
+                {notification.attachmentUrl && (
 
-                  notification.attachmentType?.startsWith(
-                    "image/"
-                  ) && (
+                  <>
 
-                    <img
+                    {notification.attachmentType?.startsWith(
+                      "image/"
+                    ) && (
 
-                      src={
-                        notification.attachmentUrl
-                      }
+                      <img
+                        src={
+                          notification.attachmentUrl
+                        }
+                        alt="Notification"
+                        className="notification-image"
+                      />
 
-                      alt="Notification"
-
-                      className="notification-image"
-
-                    />
-
-                  )}
+                    )}
 
 
-                {notification.attachmentUrl &&
+                    {notification.attachmentType?.startsWith(
+                      "audio/"
+                    ) && (
 
-                  notification.attachmentType?.startsWith(
-                    "audio/"
-                  ) && (
+                      <audio
+                        controls
+                        src={
+                          notification.attachmentUrl
+                        }
+                      />
 
-                    <audio
+                    )}
 
-                      controls
 
-                      src={
-                        notification.attachmentUrl
-                      }
+                    {!notification.attachmentType?.startsWith(
+                      "image/"
+                    ) &&
 
-                    />
+                      !notification.attachmentType?.startsWith(
+                        "audio/"
+                      ) && (
 
-                  )}
+                        <p>
+
+                          <a
+                            href={
+                              notification.attachmentUrl
+                            }
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="yellow"
+                          >
+
+                            📎 Open Attachment
+
+                          </a>
+
+                        </p>
+
+                      )}
+
+                  </>
+
+                )}
 
 
                 <small>
 
                   {new Date(
-
                     notification.createdAt
-
                   ).toLocaleString()}
 
                 </small>
@@ -692,128 +1018,134 @@ export default function BatchContentTabs({
       )}
 
 
+
       {/* =====================
-          ASK DOUBT
+          ASK A DOUBT
       ===================== */}
 
       {activeTab ===
-        "doubt" && (
+        "Ask a Doubt" && (
 
         <section
           className="content-section"
         >
 
           <h2>
-
             💬 Ask a Doubt
-
           </h2>
 
 
-          <BatchDoubtChat
+          <div className="card">
 
-            batchId={
-              batchId
-            }
+            <p className="muted">
 
-          />
+              Ask your doubt directly
+              to your teacher.
+
+            </p>
+
+
+            <BatchDoubtChat
+              batchId={batchId}
+            />
+
+          </div>
 
         </section>
 
       )}
 
 
+
       {/* =====================
-          TUTOR
+          ABOUT TUTOR
       ===================== */}
 
       {activeTab ===
-        "tutor" && (
+        "About Tutor" && (
 
         <section
           className="content-section"
         >
 
           <h2>
-
             👨‍🏫 About Tutor
-
           </h2>
 
 
           <div
-            className="card"
+            className="card tutor-card"
           >
 
             {tutorContent.imageUrl && (
 
               <img
-
                 src={
                   tutorContent.imageUrl
                 }
-
                 alt="Tutor"
-
                 className="tutor-image"
-
               />
 
             )}
 
 
-            <h2
+            {tutorContent.heading && (
 
-              style={{
+              <h2
+                style={{
+                  fontSize:
+                    tutorContent.headingSize ||
+                    "32px",
+                }}
+              >
 
-                fontSize:
+                {
+                  tutorContent.heading
+                }
 
-                  tutorContent.headingSize ||
-                  "32px",
+              </h2>
 
-              }}
-
-            >
-
-              {tutorContent.heading}
-
-            </h2>
-
-
-            <h4
-
-              style={{
-
-                fontSize:
-
-                  tutorContent.subheadingSize ||
-                  "20px",
-
-              }}
-
-            >
-
-              {tutorContent.subheading}
-
-            </h4>
+            )}
 
 
-            <p
+            {tutorContent.subheading && (
 
-              style={{
+              <h4
+                className="muted"
+                style={{
+                  fontSize:
+                    tutorContent.subheadingSize ||
+                    "20px",
+                }}
+              >
 
-                fontSize:
+                {
+                  tutorContent.subheading
+                }
 
-                  tutorContent.textSize ||
-                  "16px",
+              </h4>
 
-              }}
+            )}
 
-            >
 
-              {tutorContent.text}
+            {tutorContent.text && (
 
-            </p>
+              <p
+                style={{
+                  fontSize:
+                    tutorContent.textSize ||
+                    "16px",
+                }}
+              >
+
+                {
+                  tutorContent.text
+                }
+
+              </p>
+
+            )}
 
 
             {Array.isArray(
@@ -823,7 +1155,6 @@ export default function BatchContentTabs({
               tutorContent.links.map(
                 (
                   link: any,
-
                   index: number
                 ) => (
 
@@ -832,18 +1163,15 @@ export default function BatchContentTabs({
                   >
 
                     <a
-
-                      href={
-                        link.url
-                      }
-
+                      href={link.url}
                       target="_blank"
-
+                      rel="noopener noreferrer"
                       className="yellow"
-
                     >
 
-                      🔗 {link.title}
+                      🔗 {
+                        link.title
+                      }
 
                     </a>
 
