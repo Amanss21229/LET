@@ -648,16 +648,46 @@ export default function BatchContentTabs({
                       <br />
 
 
-                      <a
-                        href={item.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="yellow"
-                      >
+                      <div className="pdf-actions">
 
-                        📄 Open PDF
+  <a
 
-                      </a>
+    href={
+      `/api/pdf?url=${encodeURIComponent(
+        item.url
+      )}`
+    }
+
+    target="_blank"
+
+    rel="noopener noreferrer"
+
+    className="yellow"
+
+  >
+
+    📄 Open PDF
+
+  </a>
+
+
+  <a
+
+    href={
+      `/api/pdf?download=1&url=${encodeURIComponent(
+        item.url
+      )}`
+    }
+
+    className="yellow"
+
+  >
+
+    ⬇️ Download PDF
+
+  </a>
+
+</div>
 
 
                       {item.scheduledAt && (
@@ -841,16 +871,46 @@ export default function BatchContentTabs({
                       <br />
 
 
-                      <a
-                        href={item.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="yellow"
-                      >
+                      <div className="pdf-actions">
 
-                        📝 Open Practice Sheet
+  <a
 
-                      </a>
+    href={
+      `/api/pdf?url=${encodeURIComponent(
+        item.url
+      )}`
+    }
+
+    target="_blank"
+
+    rel="noopener noreferrer"
+
+    className="yellow"
+
+  >
+
+    📝 Open Practice Sheet
+
+  </a>
+
+
+  <a
+
+    href={
+      `/api/pdf?download=1&url=${encodeURIComponent(
+        item.url
+      )}`
+    }
+
+    className="yellow"
+
+  >
+
+    ⬇️ Download PDF
+
+  </a>
+
+</div>
 
 
                       {item.scheduledAt && (
