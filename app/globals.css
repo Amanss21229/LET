@@ -1003,3 +1003,332 @@ hr {
     1px solid var(--line);
 
 }
+
+
+/* =========================
+   HOME HERO IMAGE SLIDER
+========================= */
+
+.hero-with-slider {
+
+  display:
+    grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(360px, 520px);
+
+  align-items:
+    center;
+
+  gap:
+    32px;
+
+}
+
+
+.hero-copy {
+
+  min-width:
+    0;
+
+}
+
+
+/* =========================
+   HERO CARD
+========================= */
+
+.hero-slider-card {
+
+  width:
+    100%;
+
+  max-width:
+    520px;
+
+  justify-self:
+    end;
+
+  background:
+    var(--card);
+
+  border:
+    1px solid var(--line);
+
+  border-radius:
+    18px;
+
+  padding:
+    10px;
+
+  overflow:
+    hidden;
+
+  box-shadow:
+    0 12px 35px
+    var(--shadow);
+
+}
+
+
+/* =========================
+   SLIDER VIEWPORT
+========================= */
+
+.hero-slider-viewport {
+
+  width:
+    100%;
+
+  aspect-ratio:
+    16 / 9;
+
+  overflow:
+    hidden;
+
+  border-radius:
+    12px;
+
+  background:
+    var(--button-bg);
+
+}
+
+
+.hero-slider-track {
+
+  width:
+    100%;
+
+  height:
+    100%;
+
+  display:
+    flex;
+
+  transition:
+    transform
+    0.7s ease-in-out;
+
+}
+
+
+.hero-slide {
+
+  flex:
+    0 0 100%;
+
+  width:
+    100%;
+
+  height:
+    100%;
+
+}
+
+
+.hero-slide img {
+
+  width:
+    100%;
+
+  height:
+    100%;
+
+  display:
+    block;
+
+  object-fit:
+    cover;
+
+  object-position:
+    center;
+
+}
+
+
+/* =========================
+   SLIDER DOTS
+========================= */
+
+.hero-slider-dots {
+
+  display:
+    flex;
+
+  justify-content:
+    center;
+
+  align-items:
+    center;
+
+  gap:
+    7px;
+
+  padding:
+    10px 4px 2px;
+
+}
+
+
+.hero-slider-dots button {
+
+  width:
+    8px;
+
+  height:
+    8px;
+
+  padding:
+    0;
+
+  border:
+    0;
+
+  border-radius:
+    999px;
+
+  background:
+    var(--line);
+
+  cursor:
+    pointer;
+
+  transition:
+    width 0.2s ease,
+    background 0.2s ease;
+
+}
+
+
+.hero-slider-dots button.active {
+
+  width:
+    24px;
+
+  background:
+    var(--yellow);
+
+}
+
+
+/* =========================
+   HERO SLIDER ADMIN
+========================= */
+
+.hero-slide-admin-list {
+
+  display:
+    grid;
+
+  gap:
+    12px;
+
+  margin-top:
+    14px;
+
+}
+
+
+.hero-slide-admin-item {
+
+  display:
+    grid;
+
+  grid-template-columns:
+    160px 1fr auto;
+
+  align-items:
+    center;
+
+  gap:
+    14px;
+
+}
+
+
+.hero-slide-admin-item img {
+
+  width:
+    160px;
+
+  aspect-ratio:
+    16 / 9;
+
+  object-fit:
+    cover;
+
+  border-radius:
+    10px;
+
+  border:
+    1px solid var(--line);
+
+}
+
+
+/* =========================
+   TABLET / SMALL DESKTOP
+========================= */
+
+@media (
+  max-width: 850px
+) {
+
+  .hero-with-slider {
+
+    grid-template-columns:
+      1fr;
+
+    gap:
+      20px;
+
+  }
+
+
+  .hero-slider-card {
+
+    max-width:
+      620px;
+
+    justify-self:
+      start;
+
+  }
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (
+  max-width: 600px
+) {
+
+  .hero-slider-card {
+
+    max-width:
+      none;
+
+  }
+
+
+  .hero-slide-admin-item {
+
+    grid-template-columns:
+      1fr;
+
+  }
+
+
+  .hero-slide-admin-item img {
+
+    width:
+      100%;
+
+  }
+
+}
