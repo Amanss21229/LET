@@ -49,10 +49,15 @@ export async function GET(
       );
 
 
-    const isAdmin =
+    const adminSession =
       await verifyAdminSession();
 
 
+    const isAdmin =
+      !firebaseUser &&
+      adminSession;
+
+    
     if (
 
       !firebaseUser &&
@@ -326,8 +331,13 @@ export async function POST(
       );
 
 
-    const isAdmin =
+    const adminSession =
       await verifyAdminSession();
+
+
+    const isAdmin =
+      !firebaseUser &&
+      adminSession;
 
 
     if (
