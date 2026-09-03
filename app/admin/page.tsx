@@ -4519,7 +4519,7 @@ const deleteBatch =
 
                 <p className="muted">
 
-                  Upload up to 5 images.
+                  Upload up to 15 images.
 
                   They will automatically change
                   every 3 seconds on the home page.
@@ -4531,14 +4531,14 @@ const deleteBatch =
 
                   {heroSlides.length}
 
-                  {" / 5 images added."}
+                  {" / 15 images added."}
 
                 </p>
 
 
                 {/* UPLOAD */}
 
-                {heroSlides.length < 5 && (
+                {heroSlides.length < 15 && (
 
                   <FileUpload
 
