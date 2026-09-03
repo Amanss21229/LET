@@ -1250,6 +1250,7 @@ const deleteBatch =
             {[
               "All Users",
               "Create Batch",
+              "Edit / Delete Batch",    
               "Manage Batch",
               "About Tutor",
               "Chats",
