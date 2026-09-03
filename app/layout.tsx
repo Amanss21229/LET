@@ -1,3 +1,6 @@
+import ProfileCompletionPopup
+  from "@/components/ProfileCompletionPopup";
+
 import "./globals.css";
 
 import type {
@@ -38,8 +41,11 @@ export default function Layout({
       <body>
 
         <FirebaseAuthProvider>
-
+          
           {children}
+
+
+          <ProfileCompletionPopup />
 
         </FirebaseAuthProvider>
 
