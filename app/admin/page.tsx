@@ -406,12 +406,12 @@ const [
 
 
       if (
-        heroSlides.length >= 5
+        heroSlides.length >= 15
       ) {
 
         setHeroMessage(
 
-          "Maximum 5 hero images are allowed."
+          "Maximum 15 hero images are allowed."
 
         );
 
