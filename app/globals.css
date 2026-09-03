@@ -1386,3 +1386,707 @@ hr {
     translateY(-1px);
 
 }
+
+/* =====================================
+   ADVANCED TUTOR CHAT
+===================================== */
+
+.tg-page {
+
+  min-height: 100vh;
+
+  display: flex;
+
+  flex-direction: column;
+
+  background:
+    var(--bg, #0b0b0c);
+
+}
+
+
+.tg-header {
+
+  position: sticky;
+
+  top: 0;
+
+  z-index: 20;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 14px;
+
+  padding: 14px 16px;
+
+  border-bottom:
+    1px solid rgba(255,255,255,.1);
+
+  background:
+    rgba(15,15,17,.96);
+
+  backdrop-filter:
+    blur(12px);
+
+}
+
+
+.tg-header div {
+
+  display: flex;
+
+  flex-direction: column;
+
+}
+
+
+.tg-header small {
+
+  opacity: .6;
+
+  margin-top: 3px;
+
+}
+
+
+.tg-back {
+
+  border: none;
+
+  background: transparent;
+
+  color: inherit;
+
+  font-size: 28px;
+
+  cursor: pointer;
+
+}
+
+
+.tg-messages {
+
+  flex: 1;
+
+  width: min(900px, 100%);
+
+  margin: auto;
+
+  padding:
+    20px 14px 110px;
+
+}
+
+
+.tg-date {
+
+  width: fit-content;
+
+  margin:
+    18px auto;
+
+  padding:
+    5px 12px;
+
+  font-size: 12px;
+
+  border-radius: 20px;
+
+  background:
+    rgba(255,255,255,.1);
+
+  opacity: .8;
+
+}
+
+
+.tg-row {
+
+  display: flex;
+
+  margin:
+    8px 0;
+
+}
+
+
+.tg-user-row {
+
+  justify-content:
+    flex-end;
+
+}
+
+
+.tg-tutor-row {
+
+  justify-content:
+    flex-start;
+
+}
+
+
+.tg-bubble {
+
+  max-width: 78%;
+
+  padding:
+    10px 12px;
+
+  border-radius:
+    18px;
+
+  word-break:
+    break-word;
+
+}
+
+
+.tg-user-bubble {
+
+  background:
+    #ffe600;
+
+  color:
+    #111;
+
+  border-bottom-right-radius:
+    4px;
+
+}
+
+
+.tg-tutor-bubble {
+
+  background:
+    rgba(255,255,255,.09);
+
+  border:
+    1px solid rgba(255,255,255,.08);
+
+  border-bottom-left-radius:
+    4px;
+
+}
+
+
+.tg-bubble p {
+
+  margin:
+    4px 0 8px;
+
+}
+
+
+.tg-bubble small {
+
+  display: block;
+
+  text-align: right;
+
+  opacity: .65;
+
+  font-size: 11px;
+
+}
+
+
+.tg-sender {
+
+  display: block;
+
+  font-size: 12px;
+
+  margin-bottom: 5px;
+
+}
+
+
+.tg-image {
+
+  display: block;
+
+  width: 100%;
+
+  max-width: 350px;
+
+  max-height: 350px;
+
+  object-fit: cover;
+
+  border-radius: 12px;
+
+  margin:
+    6px 0;
+
+}
+
+
+.tg-video {
+
+  width: 100%;
+
+  max-width: 400px;
+
+  border-radius: 12px;
+
+  margin:
+    6px 0;
+
+}
+
+
+.tg-audio {
+
+  width: 100%;
+
+  max-width: 320px;
+
+}
+
+
+.tg-file {
+
+  display: inline-block;
+
+  margin:
+    6px 0;
+
+  padding:
+    9px 12px;
+
+  border-radius: 10px;
+
+  background:
+    rgba(255,255,255,.1);
+
+  color: inherit;
+
+  text-decoration: none;
+
+}
+
+
+.tg-empty {
+
+  text-align: center;
+
+  margin: auto;
+
+  padding: 50px 20px;
+
+  opacity: .8;
+
+}
+
+
+.tg-composer {
+
+  position: fixed;
+
+  bottom: 0;
+
+  left: 0;
+
+  right: 0;
+
+  z-index: 30;
+
+  padding:
+    10px;
+
+  background:
+    rgba(15,15,17,.97);
+
+  border-top:
+    1px solid rgba(255,255,255,.1);
+
+}
+
+
+.tg-input-row {
+
+  display: flex;
+
+  gap: 8px;
+
+  align-items: flex-end;
+
+  width: min(900px, 100%);
+
+  margin: auto;
+
+}
+
+
+.tg-input-row textarea {
+
+  flex: 1;
+
+  resize: none;
+
+  min-height: 44px;
+
+  max-height: 120px;
+
+  padding:
+    12px;
+
+  border-radius: 14px;
+
+}
+
+
+.tg-attach {
+
+  width: 44px;
+
+  height: 44px;
+
+  border-radius: 50%;
+
+  border: none;
+
+  cursor: pointer;
+
+  font-size: 20px;
+
+}
+
+
+.tg-send {
+
+  width: 44px;
+
+  height: 44px;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background:
+    #ffe600;
+
+  color:
+    #111;
+
+  font-size: 20px;
+
+  cursor: pointer;
+
+}
+
+
+.tg-selected-file {
+
+  width: min(900px, 100%);
+
+  margin:
+    0 auto 8px;
+
+  padding:
+    8px 12px;
+
+  border-radius: 10px;
+
+  background:
+    rgba(255,255,255,.08);
+
+}
+
+
+.tg-selected-file button {
+
+  float: right;
+
+  border: none;
+
+  background: transparent;
+
+  color: inherit;
+
+  cursor: pointer;
+
+  font-size: 18px;
+
+}
+
+
+/* =====================================
+   UNREAD BADGE
+===================================== */
+
+.doubt-badge {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  min-width: 21px;
+
+  height: 21px;
+
+  padding:
+    0 6px;
+
+  margin-left: 6px;
+
+  border-radius: 20px;
+
+  background:
+    #ff3b30;
+
+  color:
+    white;
+
+  font-size: 11px;
+
+}
+
+
+/* =====================================
+   ADMIN CHAT
+===================================== */
+
+.tg-admin {
+
+  display: grid;
+
+  grid-template-columns:
+    300px 1fr;
+
+  min-height:
+    650px;
+
+  border:
+    1px solid rgba(255,255,255,.1);
+
+  border-radius:
+    14px;
+
+  overflow:
+    hidden;
+
+}
+
+
+.tg-admin-list {
+
+  border-right:
+    1px solid rgba(255,255,255,.1);
+
+  overflow-y:
+    auto;
+
+}
+
+
+.tg-admin-list h2 {
+
+  padding:
+    15px;
+
+  margin: 0;
+
+}
+
+
+.tg-conversation {
+
+  width: 100%;
+
+  display: block;
+
+  text-align: left;
+
+  padding:
+    14px;
+
+  border: none;
+
+  border-top:
+    1px solid rgba(255,255,255,.06);
+
+  background:
+    transparent;
+
+  color: inherit;
+
+  cursor: pointer;
+
+}
+
+
+.tg-conversation:hover,
+
+.tg-conversation.selected {
+
+  background:
+    rgba(255,230,0,.1);
+
+}
+
+
+.tg-conversation-top {
+
+  display: flex;
+
+  justify-content:
+    space-between;
+
+  align-items: center;
+
+}
+
+
+.tg-conversation p {
+
+  margin:
+    5px 0 0;
+
+  font-size: 12px;
+
+  opacity: .6;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow:
+    ellipsis;
+
+}
+
+
+.tg-unread {
+
+  min-width: 22px;
+
+  height: 22px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background:
+    #ff3b30;
+
+  color:
+    white;
+
+  font-size: 11px;
+
+}
+
+
+.tg-admin-window {
+
+  display: flex;
+
+  flex-direction: column;
+
+  min-width: 0;
+
+  min-height: 650px;
+
+}
+
+
+.tg-admin-header {
+
+  padding:
+    15px;
+
+  border-bottom:
+    1px solid rgba(255,255,255,.1);
+
+}
+
+
+.tg-admin-header div {
+
+  display: flex;
+
+  flex-direction: column;
+
+}
+
+
+.tg-admin-header small {
+
+  opacity: .6;
+
+}
+
+
+.tg-admin-messages {
+
+  flex: 1;
+
+  overflow-y: auto;
+
+  padding:
+    15px;
+
+  padding-bottom:
+    100px;
+
+}
+
+
+.tg-admin-window .tg-composer {
+
+  position: sticky;
+
+  bottom: 0;
+
+}
+
+
+@media (
+  max-width: 700px
+) {
+
+  .tg-admin {
+
+    display: block;
+
+    min-height: auto;
+
+  }
+
+
+  .tg-admin-list {
+
+    max-height: 350px;
+
+    border-right: none;
+
+    border-bottom:
+      1px solid rgba(255,255,255,.1);
+
+  }
+
+
+  .tg-admin-window {
+
+    min-height: 600px;
+
+  }
+
+
+  .tg-bubble {
+
+    max-width: 88%;
+
+  }
+
+}
