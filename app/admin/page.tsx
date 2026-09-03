@@ -72,6 +72,13 @@ export default function Admin() {
   const [batchForm, setBatchForm] =
     useState<any>(emptyBatch);
 
+
+  const [
+  editingBatch,
+  setEditingBatch,
+] =
+  useState("");
+
   const [message, setMessage] =
     useState("");
 
@@ -657,6 +664,201 @@ useEffect(() => {
         "Unable to create batch"
       );
     }
+  };
+
+
+  /* =========================
+   UPDATE BATCH
+========================= */
+
+const updateBatch =
+  async () => {
+
+    if (!editingBatch) {
+
+      return;
+
+    }
+
+
+    if (!batchForm.title) {
+
+      setMessage(
+        "Please enter batch title"
+      );
+
+      return;
+
+    }
+
+
+    try {
+
+      const response =
+        await fetch(
+
+          `/api/batches/${editingBatch}`,
+
+          {
+
+            method:
+              "PATCH",
+
+            headers: {
+
+              "Content-Type":
+                "application/json",
+
+            },
+
+            body:
+              JSON.stringify(
+                batchForm
+              ),
+
+          }
+
+        );
+
+
+      if (!response.ok) {
+
+        throw new Error(
+          "Unable to update batch"
+        );
+
+      }
+
+
+      setMessage(
+        "Batch updated successfully!"
+      );
+
+
+      setEditingBatch("");
+
+
+      setBatchForm(
+        emptyBatch
+      );
+
+
+      await loadBatches();
+
+    }
+
+    catch (error) {
+
+      console.error(
+        error
+      );
+
+
+      setMessage(
+        "Unable to update batch"
+      );
+
+    }
+
+  };
+
+  /* =========================
+   DELETE BATCH
+========================= */
+
+const deleteBatch =
+  async (
+    batchId: string,
+    batchTitle: string
+  ) => {
+
+    const confirmed =
+      window.confirm(
+
+        `Are you sure you want to permanently delete "${batchTitle}"?`
+
+      );
+
+
+    if (!confirmed) {
+
+      return;
+
+    }
+
+
+    try {
+
+      const response =
+        await fetch(
+
+          `/api/batches/${batchId}`,
+
+          {
+
+            method:
+              "DELETE",
+
+          }
+
+        );
+
+
+      if (!response.ok) {
+
+        throw new Error(
+          "Unable to delete batch"
+        );
+
+      }
+
+
+      if (
+        selectedBatch === batchId
+      ) {
+
+        setSelectedBatch("");
+
+        setBatchData(null);
+
+      }
+
+
+      if (
+        editingBatch === batchId
+      ) {
+
+        setEditingBatch("");
+
+        setBatchForm(
+          emptyBatch
+        );
+
+      }
+
+
+      setMessage(
+        "Batch deleted successfully!"
+      );
+
+
+      await loadBatches();
+
+    }
+
+    catch (error) {
+
+      console.error(
+        error
+      );
+
+
+      setMessage(
+        "Unable to delete batch"
+      );
+
+    }
+
   };
 
   /* =========================
