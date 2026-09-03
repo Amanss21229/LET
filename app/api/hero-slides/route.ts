@@ -68,7 +68,7 @@ function normalizeSlides(
 
     .slice(
       0,
-      5
+      15
     );
 
 }
@@ -183,7 +183,7 @@ export async function PUT(
       body?.slides
     ) &&
 
-    body.slides.length > 5
+    body.slides.length > 15
 
   ) {
 
@@ -192,7 +192,7 @@ export async function PUT(
       {
 
         error:
-          "Maximum 5 hero images are allowed",
+          "Maximum 15 hero images are allowed",
 
       },
 
