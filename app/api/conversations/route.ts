@@ -16,24 +16,27 @@ import {
 } from "@/lib/admin-auth";
 
 
+/* =====================
+   GET CONVERSATIONS
+===================== */
+
 export async function GET(
   request: NextRequest
 ) {
 
   try {
 
-   const isAdmin =
-  await verifyAdminSession(); 
+    const isAdmin =
+      await verifyAdminSession();
 
 
-    /*
-      ADMIN
-    */
+    /* =====================
+       ADMIN CONVERSATIONS
+    ===================== */
 
     if (isAdmin) {
 
       const conversations =
-
         await prisma.conversation.findMany({
 
           include: {
@@ -41,6 +44,7 @@ export async function GET(
             user: true,
 
             batch: true,
+
 
             messages: {
 
@@ -53,6 +57,29 @@ export async function GET(
 
               take:
                 1,
+
+            },
+
+
+            _count: {
+
+              select: {
+
+                messages: {
+
+                  where: {
+
+                    senderRole:
+                      "USER",
+
+                    readAt:
+                      null,
+
+                  },
+
+                },
+
+              },
 
             },
 
@@ -69,19 +96,40 @@ export async function GET(
         });
 
 
+      const formatted =
+        conversations.map(
+          (
+            conversation
+          ) => ({
+
+            ...conversation,
+
+            unreadCount:
+
+              conversation._count
+                .messages,
+
+            lastMessage:
+
+              conversation.messages[0] ||
+              null,
+
+          })
+        );
+
+
       return NextResponse.json(
-        conversations
+        formatted
       );
 
     }
 
 
-    /*
-      NORMAL USER
-    */
+    /* =====================
+       NORMAL USER
+    ===================== */
 
     const firebaseUser =
-
       await getFirebaseUser(
         request
       );
@@ -111,7 +159,6 @@ export async function GET(
 
 
     const conversations =
-
       await prisma.conversation.findMany({
 
         where: {
@@ -127,8 +174,43 @@ export async function GET(
           batch:
             true,
 
-          messages:
-            true,
+
+          messages: {
+
+            orderBy: {
+
+              createdAt:
+                "desc",
+
+            },
+
+            take:
+              1,
+
+          },
+
+
+          _count: {
+
+            select: {
+
+              messages: {
+
+                where: {
+
+                  senderRole:
+                    "TUTOR",
+
+                  readAt:
+                    null,
+
+                },
+
+              },
+
+            },
+
+          },
 
         },
 
@@ -143,8 +225,30 @@ export async function GET(
       });
 
 
+    const formatted =
+      conversations.map(
+        (
+          conversation
+        ) => ({
+
+          ...conversation,
+
+          unreadCount:
+
+            conversation._count
+              .messages,
+
+          lastMessage:
+
+            conversation.messages[0] ||
+            null,
+
+        })
+      );
+
+
     return NextResponse.json(
-      conversations
+      formatted
     );
 
   }
@@ -152,11 +256,8 @@ export async function GET(
   catch (error) {
 
     console.error(
-
       "Conversation GET error:",
-
       error
-
     );
 
 
@@ -183,6 +284,11 @@ export async function GET(
 }
 
 
+/* =====================
+   CREATE CONVERSATION
+   + FIRST MESSAGE
+===================== */
+
 export async function POST(
   request: NextRequest
 ) {
@@ -198,13 +304,21 @@ export async function POST(
     if (!firebaseUser) {
 
       return NextResponse.json(
+
         {
+
           error:
             "Unauthorized",
+
         },
+
         {
-          status: 401,
+
+          status:
+            401,
+
         }
+
       );
 
     }
@@ -231,13 +345,98 @@ export async function POST(
     if (!batchId) {
 
       return NextResponse.json(
+
         {
+
           error:
             "Batch ID is required",
+
         },
+
         {
-          status: 400,
+
+          status:
+            400,
+
         }
+
+      );
+
+    }
+
+
+    if (
+
+      !text?.trim() &&
+
+      !attachmentUrl
+
+    ) {
+
+      return NextResponse.json(
+
+        {
+
+          error:
+            "Message cannot be empty",
+
+        },
+
+        {
+
+          status:
+            400,
+
+        }
+
+      );
+
+    }
+
+
+    /*
+      Security:
+      User must have access
+      to this batch.
+    */
+
+    const access =
+      await prisma.batchAccess.findUnique({
+
+        where: {
+
+          userId_batchId: {
+
+            userId:
+              firebaseUser.user.id,
+
+            batchId,
+
+          },
+
+        },
+
+      });
+
+
+    if (!access) {
+
+      return NextResponse.json(
+
+        {
+
+          error:
+            "You do not have access to this batch",
+
+        },
+
+        {
+
+          status:
+            403,
+
+        }
+
       );
 
     }
@@ -259,12 +458,14 @@ export async function POST(
 
         },
 
+
         update: {
 
           updatedAt:
             new Date(),
 
         },
+
 
         create: {
 
@@ -286,26 +487,60 @@ export async function POST(
           conversationId:
             conversation.id,
 
+
           senderId:
             firebaseUser.user.id,
 
+
+          senderRole:
+            "USER",
+
+
           text:
-            text || null,
+            text?.trim() ||
+            null,
+
 
           attachmentUrl:
-            attachmentUrl || null,
+            attachmentUrl ||
+            null,
+
 
           attachmentType:
-            attachmentType || null,
+            attachmentType ||
+            null,
 
         },
 
       });
 
 
-    return NextResponse.json(
-      message
-    );
+    await prisma.conversation.update({
+
+      where: {
+
+        id:
+          conversation.id,
+
+      },
+
+      data: {
+
+        updatedAt:
+          new Date(),
+
+      },
+
+    });
+
+
+    return NextResponse.json({
+
+      conversation,
+
+      message,
+
+    });
 
   }
 
@@ -318,13 +553,21 @@ export async function POST(
 
 
     return NextResponse.json(
+
       {
+
         error:
           "Unable to send message",
+
       },
+
       {
-        status: 500,
+
+        status:
+          500,
+
       }
+
     );
 
   }
