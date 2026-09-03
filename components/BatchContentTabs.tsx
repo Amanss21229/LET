@@ -653,9 +653,7 @@ export default function BatchContentTabs({
   <a
 
     href={
-      `/api/pdf?url=${encodeURIComponent(
-        item.url
-      )}`
+      item.url
     }
 
     target="_blank"
@@ -674,16 +672,21 @@ export default function BatchContentTabs({
   <a
 
     href={
-      `/api/pdf?download=1&url=${encodeURIComponent(
-        item.url
-      )}`
+      item.url.replace(
+        "/upload/",
+        "/upload/fl_attachment/"
+      )
     }
+
+    target="_blank"
+
+    rel="noopener noreferrer"
 
     className="yellow"
 
   >
 
-    ⬇️ Download PDF
+    ⬇ Download PDF
 
   </a>
 
@@ -876,9 +879,7 @@ export default function BatchContentTabs({
   <a
 
     href={
-      `/api/pdf?url=${encodeURIComponent(
-        item.url
-      )}`
+      item.url
     }
 
     target="_blank"
@@ -897,16 +898,21 @@ export default function BatchContentTabs({
   <a
 
     href={
-      `/api/pdf?download=1&url=${encodeURIComponent(
-        item.url
-      )}`
+      item.url.replace(
+        "/upload/",
+        "/upload/fl_attachment/"
+      )
     }
+
+    target="_blank"
+
+    rel="noopener noreferrer"
 
     className="yellow"
 
   >
 
-    ⬇️ Download PDF
+    ⬇ Download PDF
 
   </a>
 
