@@ -4,8 +4,8 @@ import {
 } from "next/server";
 
 import {
-  cookies,
-} from "next/headers";
+  verifyAdminSession,
+} from "@/lib/admin-auth";
 
 import {
   prisma,
@@ -44,9 +44,7 @@ export async function GET(
 
 
     const isAdmin =
-      (await cookies())
-        .get("let_admin")
-        ?.value === "true";
+  await verifyAdminSession();
 
 
     if (
@@ -200,9 +198,7 @@ export async function POST(
 
 
     const isAdmin =
-      (await cookies())
-        .get("let_admin")
-        ?.value === "true";
+      await verifyAdminSession();
 
 
     if (
