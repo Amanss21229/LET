@@ -31,6 +31,8 @@ function isAllowedFile(
 
     type.startsWith("audio/") ||
 
+    type.startsWith("video/") ||
+
     ALLOWED_TYPES.includes(type)
 
   );
@@ -68,7 +70,7 @@ export async function POST(
       return NextResponse.json(
         {
           error:
-            "Only images, audio and PDF files are allowed",
+            "Only images, audio, video and PDF files are allowed",
         },
         {
           status: 400,
