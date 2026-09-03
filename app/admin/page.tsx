@@ -1632,6 +1632,715 @@ const deleteBatch =
             )}
 
             {/* =====================
+    EDIT / DELETE BATCH
+===================== */}
+
+{tab ===
+  "Edit / Delete Batch" && (
+
+  <>
+
+    <h2>
+      Edit / Delete Batch
+    </h2>
+
+
+    <p className="muted">
+
+      Update batch information
+      or permanently delete
+      a batch.
+
+    </p>
+
+
+    {/* BATCH LIST */}
+
+    {batches.length === 0 && (
+
+      <p className="muted">
+
+        No batches available.
+
+      </p>
+
+    )}
+
+
+    {batches.map(
+      (batch) => (
+
+        <div
+          className="msg"
+          key={batch.id}
+        >
+
+          <h3>
+
+            {batch.title}
+
+          </h3>
+
+
+          <p className="muted">
+
+            Class {batch.className}
+
+            {" • "}
+
+            {batch.medium}
+
+          </p>
+
+
+          <div className="row">
+
+
+            <button
+
+              className="btn primary"
+
+              onClick={async () => {
+
+                try {
+
+                  const response =
+                    await fetch(
+
+                      `/api/batches/${batch.id}`
+
+                    );
+
+
+                  if (!response.ok) {
+
+                    throw new Error(
+                      "Unable to load batch"
+                    );
+
+                  }
+
+
+                  const data =
+                    await response.json();
+
+
+                  setEditingBatch(
+                    batch.id
+                  );
+
+
+                  setBatchForm({
+
+                    title:
+                      data.title || "",
+
+                    className:
+                      data.className || "",
+
+                    medium:
+                      data.medium || "Hindi",
+
+                    teacherName:
+                      data.teacherName || "Aman",
+
+                    startDate:
+                      data.startDate
+                        ? new Date(
+                            data.startDate
+                          )
+                            .toISOString()
+                            .split("T")[0]
+                        : "",
+
+                    endDate:
+                      data.endDate
+                        ? new Date(
+                            data.endDate
+                          )
+                            .toISOString()
+                            .split("T")[0]
+                        : "",
+
+                    syllabusDate:
+                      data.syllabusDate
+                        ? new Date(
+                            data.syllabusDate
+                          )
+                            .toISOString()
+                            .split("T")[0]
+                        : "",
+
+                    price:
+                      data.price || 0,
+
+                    about:
+                      data.about || "",
+
+                    imageUrl:
+                      data.imageUrl || "",
+
+                    customPoints:
+                      Array.isArray(
+                        data.customPoints
+                      )
+                        ? [
+
+                            ...data.customPoints,
+
+                            "",
+                            "",
+                            "",
+                            "",
+                            "",
+
+                          ].slice(0, 5)
+                        : [
+                            "",
+                            "",
+                            "",
+                            "",
+                            "",
+                          ],
+
+                    buyEnabled:
+                      data.buyEnabled !==
+                      false,
+
+                  });
+
+
+                  setMessage("");
+
+                }
+
+                catch (error) {
+
+                  console.error(
+                    error
+                  );
+
+
+                  setMessage(
+                    "Unable to load batch for editing"
+                  );
+
+                }
+
+              }}
+
+            >
+
+              ✏️ Edit
+
+            </button>
+
+
+            <button
+
+              className="btn"
+
+              onClick={() =>
+
+                deleteBatch(
+
+                  batch.id,
+
+                  batch.title
+
+                )
+
+              }
+
+            >
+
+              🗑️ Delete
+
+            </button>
+
+
+          </div>
+
+        </div>
+
+      )
+    )}
+
+
+    {/* =====================
+        EDIT FORM
+    ===================== */}
+
+    {editingBatch && (
+
+      <div
+        className="card"
+        style={{
+          marginTop: "20px",
+        }}
+      >
+
+        <h2>
+
+          ✏️ Edit Batch
+
+        </h2>
+
+
+        <input
+
+          className="input"
+
+          placeholder="Batch Title"
+
+          value={
+            batchForm.title
+          }
+
+          onChange={(e) =>
+
+            setBatchForm({
+
+              ...batchForm,
+
+              title:
+                e.target.value,
+
+            })
+
+          }
+
+        />
+
+
+        <input
+
+          className="input"
+
+          placeholder="Class"
+
+          value={
+            batchForm.className
+          }
+
+          onChange={(e) =>
+
+            setBatchForm({
+
+              ...batchForm,
+
+              className:
+                e.target.value,
+
+            })
+
+          }
+
+        />
+
+
+        <input
+
+          className="input"
+
+          placeholder="Medium"
+
+          value={
+            batchForm.medium
+          }
+
+          onChange={(e) =>
+
+            setBatchForm({
+
+              ...batchForm,
+
+              medium:
+                e.target.value,
+
+            })
+
+          }
+
+        />
+
+
+        <input
+
+          className="input"
+
+          placeholder="Teacher Name"
+
+          value={
+            batchForm.teacherName
+          }
+
+          onChange={(e) =>
+
+            setBatchForm({
+
+              ...batchForm,
+
+              teacherName:
+                e.target.value,
+
+            })
+
+          }
+
+        />
+
+
+        <label>
+          Batch Start Date
+        </label>
+
+        <input
+
+          type="date"
+
+          className="input"
+
+          value={
+            batchForm.startDate
+          }
+
+          onChange={(e) =>
+
+            setBatchForm({
+
+              ...batchForm,
+
+              startDate:
+                e.target.value,
+
+            })
+
+          }
+
+        />
+
+
+        <label>
+          Batch End Date
+        </label>
+
+        <input
+
+          type="date"
+
+          className="input"
+
+          value={
+            batchForm.endDate
+          }
+
+          onChange={(e) =>
+
+            setBatchForm({
+
+              ...batchForm,
+
+              endDate:
+                e.target.value,
+
+            })
+
+          }
+
+        />
+
+
+        <label>
+          Syllabus Completion Date
+        </label>
+
+        <input
+
+          type="date"
+
+          className="input"
+
+          value={
+            batchForm.syllabusDate
+          }
+
+          onChange={(e) =>
+
+            setBatchForm({
+
+              ...batchForm,
+
+              syllabusDate:
+                e.target.value,
+
+            })
+
+          }
+
+        />
+
+
+        <input
+
+          className="input"
+
+          type="number"
+
+          placeholder="Price"
+
+          value={
+            batchForm.price
+          }
+
+          onChange={(e) =>
+
+            setBatchForm({
+
+              ...batchForm,
+
+              price:
+                Number(
+                  e.target.value
+                ),
+
+            })
+
+          }
+
+        />
+
+
+        <textarea
+
+          className="input"
+
+          placeholder="About Batch"
+
+          value={
+            batchForm.about
+          }
+
+          onChange={(e) =>
+
+            setBatchForm({
+
+              ...batchForm,
+
+              about:
+                e.target.value,
+
+            })
+
+          }
+
+        />
+
+
+        <h3>
+
+          Batch Image
+
+        </h3>
+
+
+        <FileUpload
+
+          accept="image/*"
+
+          label="Change Batch Image"
+
+          onUploadComplete={(url) =>
+
+            setBatchForm({
+
+              ...batchForm,
+
+              imageUrl:
+                url,
+
+            })
+
+          }
+
+        />
+
+
+        {batchForm.imageUrl && (
+
+          <img
+
+            src={
+              batchForm.imageUrl
+            }
+
+            alt="Batch"
+
+            className="upload-preview"
+
+          />
+
+        )}
+
+
+        <h3>
+
+          Batch Highlights
+
+        </h3>
+
+
+        {batchForm.customPoints.map(
+
+          (
+            point: string,
+            index: number
+          ) => (
+
+            <input
+
+              key={index}
+
+              className="input"
+
+              placeholder={
+                `Highlight ${index + 1}`
+              }
+
+              value={
+                point
+              }
+
+              onChange={(e) => {
+
+                const points = [
+
+                  ...batchForm.customPoints,
+
+                ];
+
+
+                points[index] =
+                  e.target.value;
+
+
+                setBatchForm({
+
+                  ...batchForm,
+
+                  customPoints:
+                    points,
+
+                });
+
+              }}
+
+            />
+
+          )
+
+        )}
+
+
+        <label>
+
+          <input
+
+            type="checkbox"
+
+            checked={
+              batchForm.buyEnabled
+            }
+
+            onChange={(e) =>
+
+              setBatchForm({
+
+                ...batchForm,
+
+                buyEnabled:
+                  e.target.checked,
+
+              })
+
+            }
+
+          />
+
+          {" "}
+
+          Enable Buy Now Button
+
+        </label>
+
+
+        <div
+          className="row"
+          style={{
+            marginTop: "20px",
+          }}
+        >
+
+          <button
+
+            className="btn primary"
+
+            onClick={
+              updateBatch
+            }
+
+          >
+
+            💾 Save Changes
+
+          </button>
+
+
+          <button
+
+            className="btn"
+
+            onClick={() => {
+
+              setEditingBatch("");
+
+              setBatchForm(
+                emptyBatch
+              );
+
+            }}
+
+          >
+
+            Cancel
+
+          </button>
+
+
+        </div>
+
+
+        {message && (
+
+          <p>
+
+            {message}
+
+          </p>
+
+        )}
+
+
+      </div>
+
+    )}
+
+
+  </>
+
+)}
+          
+            {/* =====================
                 MANAGE BATCH
             ===================== */}
 
