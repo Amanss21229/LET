@@ -1656,6 +1656,7 @@ const deleteBatch =
           <aside className="card">
             {[
               "All Users",
+              "User Details",
               "Create Batch",
               "Edit / Delete Batch",    
               "Manage Batch",
@@ -1666,9 +1667,21 @@ const deleteBatch =
               <p key={item}>
                 <button
                   className="btn"
-                  onClick={() =>
-                    setTab(item)
-                  }
+                  onClick={() => {
+                    
+                    setTab(item);
+
+
+                    if (
+                      item ===
+                      "User Details"
+                    ) {
+
+                      loadUsers();
+
+                    }
+                    
+                  }}
                 >
                   {item}
                 </button>
@@ -4815,6 +4828,280 @@ const deleteBatch =
               </>
 
             )}
+
+            {/* =====================
+            USER DETAILS
+            ===================== */}
+
+{tab ===
+  "User Details" && (
+
+  <>
+
+    <div
+      className="row"
+      style={{
+        justifyContent:
+          "space-between",
+        marginBottom:
+          20,
+      }}
+    >
+
+      <div>
+
+        <h2>
+
+          👥 User Details
+
+        </h2>
+
+
+        <p className="muted">
+
+          View all registered
+          users and their
+          batch access.
+
+        </p>
+
+      </div>
+
+
+      <button
+
+        className="btn"
+
+        onClick={
+          loadUsers
+        }
+
+        disabled={
+          usersLoading
+        }
+
+      >
+
+        🔄 Refresh
+
+      </button>
+
+    </div>
+
+
+    {usersMessage && (
+
+      <p>
+
+        {usersMessage}
+
+      </p>
+
+    )}
+
+
+    {usersLoading ? (
+
+      <p className="muted">
+
+        Loading users...
+
+      </p>
+
+    ) : (
+
+      <div
+        style={{
+
+          width:
+            "100%",
+
+
+          overflowX:
+            "auto",
+
+        }}
+      >
+
+        <table
+          className="user-details-table"
+        >
+
+          <thead>
+
+            <tr>
+
+              <th>
+                Name
+              </th>
+
+
+              <th>
+                Gmail
+              </th>
+
+
+              <th>
+                Class
+              </th>
+
+
+              <th>
+                Mobile No.
+              </th>
+
+
+              <th>
+                Account Created
+              </th>
+
+
+              <th>
+                Access Batches
+              </th>
+
+
+            </tr>
+
+          </thead>
+
+
+          <tbody>
+
+            {users.length ===
+              0 ? (
+
+              <tr>
+
+                <td
+                  colSpan={6}
+                >
+
+                  No users found.
+
+                </td>
+
+              </tr>
+
+            ) : (
+
+              users.map(
+
+                (user) => (
+
+                  <tr
+                    key={
+                      user.id
+                    }
+                  >
+
+                    <td>
+
+                      <b>
+
+                        {user.name}
+
+                      </b>
+
+                    </td>
+
+
+                    <td>
+
+                      {user.email}
+
+                    </td>
+
+
+                    <td>
+
+                      {user.className}
+
+                    </td>
+
+
+                    <td>
+
+                      {user.phone}
+
+                    </td>
+
+
+                    <td>
+
+                      {new Date(
+
+                        user.createdAt
+
+                      ).toLocaleString()}
+
+                    </td>
+
+
+                    <td>
+
+                      {user.batches
+                        .length ===
+                        0
+
+                        ? (
+
+                          <span
+                            className="muted"
+                          >
+
+                            No batch access
+
+                          </span>
+
+                        )
+
+                        : (
+
+                          user.batches.map(
+
+                            (
+                              batch,
+                              index
+                            ) => (
+
+                              <span
+                                key={index}
+                                className="batch-access-tag"
+                              >
+
+                                {batch}
+
+                              </span>
+
+                            )
+
+                          )
+
+                        )}
+
+                    </td>
+
+
+                  </tr>
+
+                )
+
+              )
+
+            )}
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    )}
+
+  </>
+
+)}
 
             {/* =====================
             CHATS
