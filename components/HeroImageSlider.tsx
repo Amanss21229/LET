@@ -26,6 +26,15 @@ export default function HeroImageSlider({
 }) {
 
 
+  /*
+    We start from 0.
+
+    When we reach the cloned
+    first image, we immediately
+    reset back to the real first
+    image without animation.
+  */
+
   const [
 
     activeIndex,
@@ -36,9 +45,47 @@ export default function HeroImageSlider({
     useState(0);
 
 
+  const [
+
+    transitionEnabled,
+
+    setTransitionEnabled,
+
+  ] =
+    useState(true);
+
+
+  /*
+    Add the first image again
+    at the end.
+
+    Example:
+
+    1 → 2 → 3 → 4 → 5 → 1
+
+    The final 1 is a clone.
+  */
+
+  const sliderSlides =
+
+    slides.length > 1
+
+      ? [
+
+          ...slides,
+
+          slides[0],
+
+        ]
+
+      : slides;
+
+
   useEffect(() => {
 
     setActiveIndex(0);
+
+    setTransitionEnabled(true);
 
   }, [
     slides.length
@@ -62,15 +109,18 @@ export default function HeroImageSlider({
 
     const interval =
       window.setInterval(
+
         () => {
 
-          setActiveIndex(
-            (current) =>
+          setTransitionEnabled(
+            true
+          );
 
-              (
-                current + 1
-              ) %
-              slides.length
+
+          setActiveIndex(
+
+            (current) =>
+              current + 1
 
           );
 
@@ -92,6 +142,69 @@ export default function HeroImageSlider({
   }, [
     slides.length
   ]);
+
+
+  /* =====================
+     SEAMLESS LOOP
+  ===================== */
+
+  const handleTransitionEnd =
+    () => {
+
+
+      /*
+        If we reached the
+        cloned first image,
+        instantly move back
+        to the real first image.
+      */
+
+      if (
+
+        activeIndex ===
+        slides.length
+
+      ) {
+
+
+        setTransitionEnabled(
+          false
+        );
+
+
+        setActiveIndex(
+          0
+        );
+
+
+        /*
+          Re-enable animation
+          after the instant reset.
+        */
+
+        requestAnimationFrame(
+
+          () => {
+
+            requestAnimationFrame(
+
+              () => {
+
+                setTransitionEnabled(
+                  true
+                );
+
+              }
+
+            );
+
+          }
+
+        );
+
+      }
+
+    };
 
 
   if (
@@ -123,31 +236,54 @@ export default function HeroImageSlider({
 
           className="hero-slider-track"
 
+          onTransitionEnd={
+            handleTransitionEnd
+          }
+
           style={{
 
             transform:
 
               `translateX(-${activeIndex * 100}%)`,
 
+
+            transition:
+
+              transitionEnabled
+
+                ? "transform 0.7s ease-in-out"
+
+                : "none",
+
           }}
 
         >
 
 
-          {slides.map(
-            (slide) => (
+          {sliderSlides.map(
+
+            (
+              slide,
+              index
+            ) => (
 
               <div
 
                 className="hero-slide"
 
-                key={slide.id}
+                key={
+
+                  `${slide.id}-${index}`
+
+                }
 
               >
 
                 <img
 
-                  src={slide.imageUrl}
+                  src={
+                    slide.imageUrl
+                  }
 
                   alt="LET featured learning banner"
 
@@ -156,6 +292,7 @@ export default function HeroImageSlider({
               </div>
 
             )
+
           )}
 
 
@@ -165,7 +302,9 @@ export default function HeroImageSlider({
       </div>
 
 
-      {/* DOTS */}
+      {/* =====================
+          DOTS
+      ===================== */}
 
       {slides.length > 1 && (
 
@@ -173,7 +312,9 @@ export default function HeroImageSlider({
           className="hero-slider-dots"
         >
 
+
           {slides.map(
+
             (
               slide,
               index
@@ -187,7 +328,16 @@ export default function HeroImageSlider({
 
                 className={
 
-                  index === activeIndex
+                  index ===
+
+                  (
+                    activeIndex ===
+                    slides.length
+
+                      ? 0
+
+                      : activeIndex
+                  )
 
                     ? "active"
 
@@ -201,18 +351,27 @@ export default function HeroImageSlider({
 
                 }
 
-                onClick={() =>
+                onClick={() => {
+
+
+                  setTransitionEnabled(
+                    true
+                  );
+
 
                   setActiveIndex(
                     index
-                  )
+                  );
 
-                }
+
+                }}
 
               />
 
             )
+
           )}
+
 
         </div>
 
