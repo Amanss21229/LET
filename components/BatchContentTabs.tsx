@@ -140,8 +140,19 @@ export default function BatchContentTabs({
 
         try {
 
-          const headers =
+          const firebaseHeaders =
             await getFirebaseAuthHeaders();
+          
+          const headers = new Headers();
+
+          if (firebaseHeaders.Authorization) {
+
+            headers.set(
+              "Authorization",
+              firebaseHeaders.Authorization
+            );
+            
+          }
 
 
           const response =
