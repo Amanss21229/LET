@@ -1332,3 +1332,57 @@ hr {
   }
 
 }
+
+  /* =========================
+   PDF ACTIONS
+========================= */
+
+.pdf-actions {
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  gap:
+    14px;
+
+  flex-wrap:
+    wrap;
+
+  margin-top:
+    10px;
+
+}
+
+
+.pdf-actions a {
+
+  padding:
+    8px 12px;
+
+  border:
+    1px solid var(--line);
+
+  border-radius:
+    10px;
+
+  background:
+    var(--button-bg);
+
+  transition:
+    0.2s ease;
+
+}
+
+
+.pdf-actions a:hover {
+
+  border-color:
+    var(--yellow);
+
+  transform:
+    translateY(-1px);
+
+}
