@@ -16,7 +16,12 @@ import {
 } from "@/lib/firebase-server-auth";
 
 
+/* =====================
+   GET MESSAGES
+===================== */
+
 export async function GET(
+
   request: NextRequest,
 
   {
@@ -29,6 +34,7 @@ export async function GET(
       }>;
 
   }
+
 ) {
 
   try {
@@ -44,22 +50,33 @@ export async function GET(
 
 
     const isAdmin =
-  await verifyAdminSession();
+      await verifyAdminSession();
 
 
     if (
+
       !firebaseUser &&
+
       !isAdmin
+
     ) {
 
       return NextResponse.json(
+
         {
+
           error:
             "Unauthorized",
+
         },
+
         {
-          status: 401,
+
+          status:
+            401,
+
         }
+
       );
 
     }
@@ -69,7 +86,9 @@ export async function GET(
       await prisma.conversation.findUnique({
 
         where: {
+
           id,
+
         },
 
       });
@@ -78,39 +97,132 @@ export async function GET(
     if (!conversation) {
 
       return NextResponse.json(
+
         {
+
           error:
             "Conversation not found",
+
         },
+
         {
-          status: 404,
+
+          status:
+            404,
+
         }
+
       );
 
     }
 
 
     /*
-      Normal user can only
-      read own conversation.
+      Student can only open
+      their own conversation.
     */
 
     if (
+
       firebaseUser &&
+
       !isAdmin &&
+
       conversation.userId !==
         firebaseUser.user.id
+
     ) {
 
       return NextResponse.json(
+
         {
+
           error:
             "Forbidden",
+
         },
+
         {
-          status: 403,
+
+          status:
+            403,
+
         }
+
       );
+
+    }
+
+
+    /*
+      MARK MESSAGES AS READ
+
+      Admin opens chat:
+      USER messages become read.
+
+      User opens chat:
+      TUTOR messages become read.
+    */
+
+    if (isAdmin) {
+
+      await prisma.message.updateMany({
+
+        where: {
+
+          conversationId:
+            id,
+
+
+          senderRole:
+            "USER",
+
+
+          readAt:
+            null,
+
+        },
+
+
+        data: {
+
+          readAt:
+            new Date(),
+
+        },
+
+      });
+
+    }
+
+    else {
+
+      await prisma.message.updateMany({
+
+        where: {
+
+          conversationId:
+            id,
+
+
+          senderRole:
+            "TUTOR",
+
+
+          readAt:
+            null,
+
+        },
+
+
+        data: {
+
+          readAt:
+            new Date(),
+
+        },
+
+      });
 
     }
 
@@ -125,11 +237,14 @@ export async function GET(
 
         },
 
+
         include: {
 
-          sender: true,
+          sender:
+            true,
 
         },
+
 
         orderBy: {
 
@@ -156,13 +271,21 @@ export async function GET(
 
 
     return NextResponse.json(
+
       {
+
         error:
           "Unable to load messages",
+
       },
+
       {
-        status: 500,
+
+        status:
+          500,
+
       }
+
     );
 
   }
@@ -170,7 +293,12 @@ export async function GET(
 }
 
 
+/* =====================
+   SEND MESSAGE
+===================== */
+
 export async function POST(
+
   request: NextRequest,
 
   {
@@ -183,6 +311,7 @@ export async function POST(
       }>;
 
   }
+
 ) {
 
   try {
@@ -202,18 +331,29 @@ export async function POST(
 
 
     if (
+
       !firebaseUser &&
+
       !isAdmin
+
     ) {
 
       return NextResponse.json(
+
         {
+
           error:
             "Unauthorized",
+
         },
+
         {
-          status: 401,
+
+          status:
+            401,
+
         }
+
       );
 
     }
@@ -223,7 +363,9 @@ export async function POST(
       await prisma.conversation.findUnique({
 
         where: {
+
           id,
+
         },
 
       });
@@ -232,38 +374,58 @@ export async function POST(
     if (!conversation) {
 
       return NextResponse.json(
+
         {
+
           error:
             "Conversation not found",
+
         },
+
         {
-          status: 404,
+
+          status:
+            404,
+
         }
+
       );
 
     }
 
 
     /*
-      User can only reply
-      to own conversation.
+      Student can only send
+      to their own chat.
     */
 
     if (
+
       firebaseUser &&
+
       !isAdmin &&
+
       conversation.userId !==
         firebaseUser.user.id
+
     ) {
 
       return NextResponse.json(
+
         {
+
           error:
             "Forbidden",
+
         },
+
         {
-          status: 403,
+
+          status:
+            403,
+
         }
+
       );
 
     }
@@ -273,46 +435,47 @@ export async function POST(
       await request.json();
 
 
-    let senderId;
-
-
-    /*
-      Firebase user message
-    */
-
     if (
-      firebaseUser &&
-      !isAdmin
+
+      !body.text?.trim() &&
+
+      !body.attachmentUrl
+
     ) {
 
-      senderId =
-        firebaseUser.user.id;
+      return NextResponse.json(
+
+        {
+
+          error:
+            "Message cannot be empty",
+
+        },
+
+        {
+
+          status:
+            400,
+
+        }
+
+      );
 
     }
 
 
     /*
-      Admin message
+      CREATE MESSAGE
 
-      Current database schema
-      requires a senderId.
+      USER:
+      senderId = actual student
 
-      We use conversation owner
-      as database sender reference
-      temporarily.
+      TUTOR:
+      senderId = null
 
-      Admin UI can still
-      identify admin message
-      through the admin workflow.
+      This prevents the
+      wrong-name problem.
     */
-
-    else {
-
-      senderId =
-        conversation.userId;
-
-    }
-
 
     const message =
       await prisma.message.create({
@@ -322,16 +485,47 @@ export async function POST(
           conversationId:
             id,
 
-          senderId,
+
+          senderId:
+
+            isAdmin
+
+              ? null
+
+              : firebaseUser?.user.id ||
+                null,
+
+
+          senderRole:
+
+            isAdmin
+
+              ? "TUTOR"
+
+              : "USER",
+
 
           text:
-            body.text || null,
+            body.text?.trim() ||
+            null,
+
 
           attachmentUrl:
-            body.attachmentUrl || null,
+            body.attachmentUrl ||
+            null,
+
 
           attachmentType:
-            body.attachmentType || null,
+            body.attachmentType ||
+            null,
+
+        },
+
+
+        include: {
+
+          sender:
+            true,
 
         },
 
@@ -341,8 +535,11 @@ export async function POST(
     await prisma.conversation.update({
 
       where: {
+
         id,
+
       },
+
 
       data: {
 
@@ -369,13 +566,21 @@ export async function POST(
 
 
     return NextResponse.json(
+
       {
+
         error:
           "Unable to send message",
+
       },
+
       {
-        status: 500,
+
+        status:
+          500,
+
       }
+
     );
 
   }
