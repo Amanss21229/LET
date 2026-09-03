@@ -49,6 +49,26 @@ type Batch = {
   medium: string;
 };
 
+type UserDetails = {
+
+  id: string;
+
+  name: string;
+
+  email: string;
+
+  phone: string;
+
+  className: string;
+
+  createdAt: string;
+
+  profileComplete: boolean;
+
+  batches: string[];
+
+};
+
 type Section = {
   id: string;
   title: string;
@@ -68,6 +88,35 @@ export default function Admin() {
 
   const [batches, setBatches] =
     useState<Batch[]>([]);
+
+  const [
+
+  users,
+
+  setUsers,
+
+] =
+  useState<UserDetails[]>([]);
+
+
+const [
+
+  usersLoading,
+
+  setUsersLoading,
+
+] =
+  useState(false);
+
+
+const [
+
+  usersMessage,
+
+  setUsersMessage,
+
+] =
+  useState("");
 
   const [batchForm, setBatchForm] =
     useState<any>(emptyBatch);
@@ -125,6 +174,94 @@ export default function Admin() {
     notificationType,
     setNotificationType,
   ] = useState("");
+
+  /* =========================
+   LOAD USER DETAILS
+========================= */
+
+const loadUsers =
+  async () => {
+
+    try {
+
+      setUsersLoading(
+        true
+      );
+
+
+      setUsersMessage(
+        ""
+      );
+
+
+      const response =
+        await fetch(
+
+          "/api/admin/users",
+
+          {
+
+            cache:
+              "no-store",
+
+          }
+
+        );
+
+
+      const data =
+        await response.json();
+
+
+      if (!response.ok) {
+
+        throw new Error(
+
+          data.error ||
+
+          "Unable to load users"
+
+        );
+
+      }
+
+
+      setUsers(
+
+        data.users ||
+
+        []
+
+      );
+
+    }
+
+    catch (error: any) {
+
+      console.error(
+        error
+      );
+
+
+      setUsersMessage(
+
+        error.message ||
+
+        "Unable to load users"
+
+      );
+
+    }
+
+    finally {
+
+      setUsersLoading(
+        false
+      );
+
+    }
+
+  };
 
   /* =========================
   ABOUT TUTOR STATES
