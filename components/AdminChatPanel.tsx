@@ -102,16 +102,26 @@ export default function AdminChatPanel() {
      LOAD CONVERSATIONS
   ===================== */
 
-  const loadConversations =
-    async () => {
+const loadConversations =
+  async () => {
+
+    try {
 
       const response =
         await fetch(
-          "/api/conversations"
+          "/api/conversations",
+          {
+            cache:
+              "no-store",
+          }
         );
 
 
       if (!response.ok) {
+
+        console.error(
+          "Unable to load conversations"
+        );
 
         return;
 
@@ -126,7 +136,18 @@ export default function AdminChatPanel() {
         data
       );
 
-    };
+    }
+
+    catch (error) {
+
+      console.error(
+        "Conversation loading error:",
+        error
+      );
+
+    }
+
+  };
 
 
   /* =====================
