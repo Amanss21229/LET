@@ -198,13 +198,6 @@ model Message {
 
   conversationId String
 
-  /*
-    Student messages have senderId.
-
-    Tutor messages do not need
-    to fake a student sender ID.
-  */
-
   senderId       String?
 
   senderRole     MessageSenderRole
@@ -216,30 +209,23 @@ model Message {
 
   attachmentType String?
 
-  /*
-    Null = receiver has not
-    opened/viewed this message.
-  */
-
   readAt         DateTime?
 
   createdAt      DateTime @default(now())
 
 
-  conversation Conversation
-    @relation(
-      fields: [conversationId],
-      references: [id],
-      onDelete: Cascade
-    )
+  conversation Conversation @relation(
+    fields: [conversationId],
+    references: [id],
+    onDelete: Cascade
+  )
 
 
-  sender User?
-    @relation(
-      fields: [senderId],
-      references: [id],
-      onDelete: SetNull
-    )
+  sender User? @relation(
+    fields: [senderId],
+    references: [id],
+    onDelete: SetNull
+  )
 
 }
 
