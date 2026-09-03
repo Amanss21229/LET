@@ -139,6 +139,11 @@ enum ContentKind {
   PRACTICE
 }
 
+enum MessageSenderRole {
+  USER
+  TUTOR
+}
+
 model BatchSection {
   id        String      @id @default(cuid())
   batchId   String
@@ -188,16 +193,54 @@ model Conversation {
 }
 
 model Message {
+
   id             String   @id @default(cuid())
+
   conversationId String
-  senderId       String
+
+  /*
+    Student messages have senderId.
+
+    Tutor messages do not need
+    to fake a student sender ID.
+  */
+
+  senderId       String?
+
+  senderRole     MessageSenderRole
+    @default(USER)
+
   text           String?  @db.Text
+
   attachmentUrl  String?
+
   attachmentType String?
+
+  /*
+    Null = receiver has not
+    opened/viewed this message.
+  */
+
+  readAt         DateTime?
+
   createdAt      DateTime @default(now())
 
-  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  sender       User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  conversation Conversation
+    @relation(
+      fields: [conversationId],
+      references: [id],
+      onDelete: Cascade
+    )
+
+
+  sender User?
+    @relation(
+      fields: [senderId],
+      references: [id],
+      onDelete: SetNull
+    )
+
 }
 
 model TutorPage {
