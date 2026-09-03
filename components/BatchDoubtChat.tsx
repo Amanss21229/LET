@@ -1,19 +1,32 @@
 "use client";
 
 import {
+
   useEffect,
+
   useRef,
+
   useState,
+
 } from "react";
 
 import {
+
+  useRouter,
+
+} from "next/navigation";
+
+import {
+
   getFirebaseAuthHeaders,
+
 } from "@/lib/firebase-client-auth";
 
 
 type Message = {
 
-  id: string;
+  id:
+    string;
 
   text:
     string | null;
@@ -24,8 +37,9 @@ type Message = {
   attachmentType:
     string | null;
 
-  senderId:
-    string;
+  senderRole:
+    "USER" |
+    "TUTOR";
 
   createdAt:
     string;
@@ -35,12 +49,28 @@ type Message = {
 
 type Conversation = {
 
-  id: string;
+  id:
+    string;
+
+  batchId:
+    string;
 
 };
 
+
+type Props = {
+
+  batchId:
+    string;
+
+  batchTitle:
+    string;
+
+};
+
+
 /* =====================
-   SAFE AUTH HEADERS
+   AUTH HEADERS
 ===================== */
 
 async function getAuthHeaders() {
@@ -55,7 +85,6 @@ async function getAuthHeaders() {
 
   if (
 
-    firebaseHeaders &&
     firebaseHeaders.Authorization
 
   ) {
@@ -76,15 +105,75 @@ async function getAuthHeaders() {
 }
 
 
+/* =====================
+   DATE LABEL
+===================== */
+
+function getDateLabel(
+
+  dateValue:
+    string
+
+) {
+
+  const date =
+    new Date(
+      dateValue
+    );
+
+
+  const today =
+    new Date();
+
+
+  const yesterday =
+    new Date();
+
+  yesterday.setDate(
+    today.getDate() - 1
+  );
+
+
+  if (
+
+    date.toDateString() ===
+    today.toDateString()
+
+  ) {
+
+    return "Today";
+
+  }
+
+
+  if (
+
+    date.toDateString() ===
+    yesterday.toDateString()
+
+  ) {
+
+    return "Yesterday";
+
+  }
+
+
+  return date.toLocaleDateString();
+
+}
+
+
 export default function BatchDoubtChat({
 
   batchId,
 
-}: {
+  batchTitle,
 
-  batchId: string;
+}: Props) {
 
-}) {
+
+  const router =
+    useRouter();
 
 
   const [
@@ -167,88 +256,29 @@ export default function BatchDoubtChat({
     );
 
 
+  const bottomRef =
+    useRef<HTMLDivElement>(
+      null
+    );
+
+
   /* =====================
-     LOAD CONVERSATION
+     SCROLL TO BOTTOM
   ===================== */
 
-  const loadConversation =
-    async () => {
+  useEffect(() => {
 
-      try {
+    bottomRef.current
+      ?.scrollIntoView({
 
-        setLoading(true);
+        behavior:
+          "smooth",
 
+      });
 
-        const headers =
-  await getAuthHeaders();
-
-
-const response =
-  await fetch(
-
-    "/api/conversations",
-
-    {
-
-      headers,
-
-    }
-
-  );
-
-
-        if (!response.ok) {
-
-          throw new Error(
-            "Unable to load chat"
-          );
-
-        }
-
-
-        const conversations =
-          await response.json();
-
-
-        const current =
-          conversations.find(
-            (item: any) =>
-
-              item.batchId ===
-              batchId
-          );
-
-
-        if (current) {
-
-          setConversation(
-            current
-          );
-
-
-          await loadMessages(
-            current.id
-          );
-
-        }
-
-      }
-
-      catch (error) {
-
-        console.error(
-          error
-        );
-
-      }
-
-      finally {
-
-        setLoading(false);
-
-      }
-
-    };
+  }, [
+    messages
+  ]);
 
 
   /* =====================
@@ -257,29 +287,34 @@ const response =
 
   const loadMessages =
     async (
-      conversationId: string
+
+      conversationId:
+        string
+
     ) => {
 
       try {
 
         const headers =
-  await getAuthHeaders();
+          await getAuthHeaders();
 
 
+        const response =
+          await fetch(
 
-const response =
-  await fetch(
+            `/api/conversations/${conversationId}/messages`,
 
-    `/api/conversations/${conversationId}/messages`,
+            {
 
-    {
+              headers,
 
-      headers,
+              cache:
+                "no-store",
 
-    }
+            }
 
-  );
-        
+          );
+
 
         if (!response.ok) {
 
@@ -309,9 +344,142 @@ const response =
     };
 
 
+  /* =====================
+     LOAD CONVERSATION
+  ===================== */
+
+  const loadConversation =
+    async (
+
+      showLoading =
+        true
+
+    ) => {
+
+      try {
+
+        if (showLoading) {
+
+          setLoading(true);
+
+        }
+
+
+        const headers =
+          await getAuthHeaders();
+
+
+        const response =
+          await fetch(
+
+            "/api/conversations",
+
+            {
+
+              headers,
+
+              cache:
+                "no-store",
+
+            }
+
+          );
+
+
+        if (!response.ok) {
+
+          return;
+
+        }
+
+
+        const conversations =
+          await response.json();
+
+
+        const current =
+          conversations.find(
+
+            (
+              item:
+                Conversation
+            ) =>
+
+              item.batchId ===
+              batchId
+
+          );
+
+
+        if (current) {
+
+          setConversation(
+            current
+          );
+
+
+          await loadMessages(
+            current.id
+          );
+
+        }
+
+      }
+
+      catch (error) {
+
+        console.error(
+          error
+        );
+
+      }
+
+      finally {
+
+        if (showLoading) {
+
+          setLoading(false);
+
+        }
+
+      }
+
+    };
+
+
+  /* =====================
+     INITIAL LOAD
+     + AUTO REFRESH
+  ===================== */
+
   useEffect(() => {
 
     loadConversation();
+
+
+    const interval =
+      setInterval(
+
+        () => {
+
+          loadConversation(
+            false
+          );
+
+        },
+
+        5000
+
+      );
+
+
+    return () => {
+
+      clearInterval(
+        interval
+      );
+
+    };
 
   }, [
     batchId
@@ -319,7 +487,7 @@ const response =
 
 
   /* =====================
-     UPLOAD ATTACHMENT
+     UPLOAD FILE
   ===================== */
 
   const uploadAttachment =
@@ -342,34 +510,30 @@ const response =
 
 
         formData.append(
+
           "file",
+
           attachment
+
         );
 
 
-        const headers =
-  await getAuthHeaders();
+        const response =
+          await fetch(
 
+            "/api/upload",
 
+            {
 
-const response =
-  await fetch(
+              method:
+                "POST",
 
-    "/api/upload",
+              body:
+                formData,
 
-    {
+            }
 
-      method:
-        "POST",
-
-      headers,
-
-      body:
-        formData,
-
-    }
-
-  );
+          );
 
 
         const data =
@@ -382,7 +546,7 @@ const response =
 
             data.error ||
 
-            "Unable to upload attachment"
+            "Unable to upload file"
 
           );
 
@@ -411,10 +575,10 @@ const response =
 
 
   /* =====================
-     SEND DOUBT
+     SEND MESSAGE
   ===================== */
 
-  const sendDoubt =
+  const sendMessage =
     async () => {
 
       if (
@@ -437,9 +601,15 @@ const response =
 
         let attachmentData:
           | {
-              url: string;
-              type: string;
+
+              url:
+                string;
+
+              type:
+                string;
+
             }
+
           | null =
           null;
 
@@ -452,24 +622,24 @@ const response =
         }
 
 
-        const requestHeaders =
-          await getAuthHeaders();
-
-
-        requestHeaders.set(
-
-          "Content-Type",
-
-          "application/json"
-
-        );
-        
-        
         /*
           FIRST MESSAGE
         */
 
         if (!conversation) {
+
+          const headers =
+            await getAuthHeaders();
+
+
+          headers.set(
+
+            "Content-Type",
+
+            "application/json"
+
+          );
+
 
           const response =
             await fetch(
@@ -481,20 +651,23 @@ const response =
                 method:
                   "POST",
 
-                headers:
-                  requestHeaders,
+                headers,
 
                 body:
                   JSON.stringify({
 
                     batchId,
 
+
                     text:
-                      text.trim() || null,
+                      text.trim() ||
+                      null,
+
 
                     attachmentUrl:
                       attachmentData?.url ||
                       null,
+
 
                     attachmentType:
                       attachmentData?.type ||
@@ -517,38 +690,53 @@ const response =
 
               data.error ||
 
-              "Unable to send doubt"
+              "Unable to send message"
 
             );
 
           }
 
 
-          setText("");
-
-          setAttachment(null);
-
-
-          if (
-            fileInputRef.current
-          ) {
-
-            fileInputRef.current.value =
-              "";
-
-          }
+          setConversation(
+            data.conversation
+          );
 
 
-          await loadConversation();
+          setMessages(
+
+            (
+              current
+            ) => [
+
+              ...current,
+
+              data.message,
+
+            ]
+
+          );
 
         }
 
 
         /*
-          EXISTING CONVERSATION
+          EXISTING CHAT
         */
 
         else {
+
+          const headers =
+            await getAuthHeaders();
+
+
+          headers.set(
+
+            "Content-Type",
+
+            "application/json"
+
+          );
+
 
           const response =
             await fetch(
@@ -560,18 +748,20 @@ const response =
                 method:
                   "POST",
 
-                headers:
-                  requestHeaders,
+                headers,
 
                 body:
                   JSON.stringify({
 
                     text:
-                      text.trim() || null,
+                      text.trim() ||
+                      null,
+
 
                     attachmentUrl:
                       attachmentData?.url ||
                       null,
+
 
                     attachmentType:
                       attachmentData?.type ||
@@ -594,37 +784,49 @@ const response =
 
               data.error ||
 
-              "Unable to send doubt"
+              "Unable to send message"
 
             );
 
           }
 
 
-          setText("");
+          setMessages(
 
-          setAttachment(null);
+            (
+              current
+            ) => [
 
+              ...current,
 
-          if (
-            fileInputRef.current
-          ) {
+              data,
 
-            fileInputRef.current.value =
-              "";
+            ]
 
-          }
-
-
-          await loadMessages(
-            conversation.id
           );
+
+        }
+
+
+        setText("");
+
+        setAttachment(null);
+
+
+        if (
+          fileInputRef.current
+        ) {
+
+          fileInputRef.current.value =
+            "";
 
         }
 
       }
 
-      catch (error: any) {
+      catch (
+        error: any
+      ) {
 
         console.error(
           error
@@ -635,7 +837,7 @@ const response =
 
           error.message ||
 
-          "Unable to send doubt."
+          "Unable to send message."
 
         );
 
@@ -650,15 +852,151 @@ const response =
     };
 
 
+  /* =====================
+     FILE PREVIEW
+  ===================== */
+
+  const renderAttachment =
+    (
+      message:
+        Message
+    ) => {
+
+      if (
+        !message.attachmentUrl
+      ) {
+
+        return null;
+
+      }
+
+
+      if (
+
+        message.attachmentType
+          ?.startsWith(
+            "image/"
+          )
+
+      ) {
+
+        return (
+
+          <img
+
+            src={
+              message.attachmentUrl
+            }
+
+            alt="Attachment"
+
+            className="tg-image"
+
+          />
+
+        );
+
+      }
+
+
+      if (
+
+        message.attachmentType
+          ?.startsWith(
+            "audio/"
+          )
+
+      ) {
+
+        return (
+
+          <audio
+
+            controls
+
+            className="tg-audio"
+
+            src={
+              message.attachmentUrl
+            }
+
+          />
+
+        );
+
+      }
+
+
+      if (
+
+        message.attachmentType
+          ?.startsWith(
+            "video/"
+          )
+
+      ) {
+
+        return (
+
+          <video
+
+            controls
+
+            className="tg-video"
+
+            src={
+              message.attachmentUrl
+            }
+
+          />
+
+        );
+
+      }
+
+
+      return (
+
+        <a
+
+          href={
+            message.attachmentUrl
+          }
+
+          target="_blank"
+
+          rel="noopener noreferrer"
+
+          className="tg-file"
+
+        >
+
+          📄 Open PDF / File
+
+        </a>
+
+      );
+
+    };
+
+
   if (loading) {
 
     return (
 
-      <p className="muted">
+      <main
+        className="tg-page"
+      >
 
-        Loading chat...
+        <p
+          className="muted"
+        >
 
-      </p>
+          Loading chat...
+
+        </p>
+
+      </main>
 
     );
 
@@ -667,181 +1005,259 @@ const response =
 
   return (
 
-    <div className="doubt-chat">
+    <main
+      className="tg-page"
+    >
+
+
+      {/* =====================
+          HEADER
+      ===================== */}
+
+      <header
+        className="tg-header"
+      >
+
+        <button
+
+          className="tg-back"
+
+          onClick={() =>
+
+            router.back()
+
+          }
+
+        >
+
+          ←
+
+        </button>
+
+
+        <div>
+
+          <b>
+
+            Tutor Support
+
+          </b>
+
+
+          <small>
+
+            {batchTitle}
+
+          </small>
+
+        </div>
+
+      </header>
 
 
       {/* =====================
           MESSAGES
       ===================== */}
 
-      <div
-        className="chat-messages"
+      <section
+        className="tg-messages"
       >
+
 
         {messages.length ===
           0 && (
 
-          <p className="muted">
+          <div
+            className="tg-empty"
+          >
 
-            No doubts yet.
+            💬
 
-            <br />
+            <h3>
 
-            Ask your first doubt.
+              Ask your Tutor
 
-          </p>
+            </h3>
+
+            <p>
+
+              Send your doubt.
+              Your tutor will reply here.
+
+            </p>
+
+          </div>
 
         )}
 
 
         {messages.map(
+
           (
-            message
-          ) => (
+            message,
 
-            <div
+            index
 
-              key={
-                message.id
-              }
+          ) => {
 
-              className="chat-message"
-
-            >
-
-              {message.text && (
-
-                <p>
-
-                  {message.text}
-
-                </p>
-
-              )}
+            const previous =
+              messages[
+                index - 1
+              ];
 
 
-              {message.attachmentUrl && (
+            const showDate =
 
-                <>
+              !previous ||
 
-                  {message.attachmentType?.startsWith(
-                    "image/"
-                  ) && (
+              getDateLabel(
+                previous.createdAt
+              ) !==
 
-                    <img
-
-                      src={
-                        message.attachmentUrl
-                      }
-
-                      alt="Attachment"
-
-                      className="chat-attachment-image"
-
-                    />
-
-                  )}
+              getDateLabel(
+                message.createdAt
+              );
 
 
-                  {message.attachmentType?.startsWith(
-                    "audio/"
-                  ) && (
+            const isUser =
 
-                    <audio
-
-                      controls
-
-                      src={
-                        message.attachmentUrl
-                      }
-
-                    />
-
-                  )}
+              message.senderRole ===
+              "USER";
 
 
-                  {!message.attachmentType?.startsWith(
-                    "image/"
-                  ) &&
+            return (
 
-                    !message.attachmentType?.startsWith(
-                      "audio/"
-                    ) && (
+              <div
+
+                key={
+                  message.id
+                }
+
+              >
+
+
+                {showDate && (
+
+                  <div
+                    className="tg-date"
+                  >
+
+                    {
+                      getDateLabel(
+                        message.createdAt
+                      )
+                    }
+
+                  </div>
+
+                )}
+
+
+                <div
+
+                  className={
+                    `tg-row ${
+                      isUser
+                        ? "tg-user-row"
+                        : "tg-tutor-row"
+                    }`
+                  }
+
+                >
+
+
+                  <div
+
+                    className={
+                      `tg-bubble ${
+                        isUser
+                          ? "tg-user-bubble"
+                          : "tg-tutor-bubble"
+                      }`
+                    }
+
+                  >
+
+
+                    {!isUser && (
+
+                      <b
+                        className="tg-sender"
+                      >
+
+                        👨‍🏫 Tutor
+
+                      </b>
+
+                    )}
+
+
+                    {message.text && (
 
                       <p>
 
-                        <a
-
-                          href={
-                            message.attachmentUrl
-                          }
-
-                          target="_blank"
-
-                          rel="noreferrer"
-
-                          className="yellow"
-
-                        >
-
-                          📎 Open PDF / Attachment
-
-                        </a>
+                        {message.text}
 
                       </p>
 
                     )}
 
-                </>
 
-              )}
+                    {
+                      renderAttachment(
+                        message
+                      )
+                    }
 
 
-              <small>
+                    <small>
 
-                {new Date(
+                      {
+                        new Date(
 
-                  message.createdAt
+                          message.createdAt
 
-                ).toLocaleString()}
+                        ).toLocaleTimeString(
 
-              </small>
+                          [],
 
-            </div>
+                          {
 
-          )
+                            hour:
+                              "2-digit",
+
+                            minute:
+                              "2-digit",
+
+                          }
+
+                        )
+                      }
+
+                    </small>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            );
+
+          }
+
         )}
 
-      </div>
+
+        <div
+          ref={bottomRef}
+        />
+
+      </section>
 
 
       {/* =====================
-          INPUT
-      ===================== */}
-
-      <textarea
-
-        className="input"
-
-        placeholder="Write your doubt..."
-
-        value={
-          text
-        }
-
-        onChange={(e) =>
-
-          setText(
-            e.target.value
-          )
-
-        }
-
-      />
-
-
-      {/* =====================
-          ATTACHMENT INPUT
+          ATTACHMENT
       ===================== */}
 
       <input
@@ -855,123 +1271,211 @@ const response =
         accept="
           image/*,
           audio/*,
+          video/*,
           application/pdf
         "
 
-        style={{
+        hidden
 
-          display:
-            "none",
+        onChange={
 
-        }}
+          (
+            event
+          ) =>
 
-        onChange={(e) =>
+            setAttachment(
 
-          setAttachment(
+              event.target.files?.[0] ||
+              null
 
-            e.target.files?.[0] ||
-            null
-
-          )
+            )
 
         }
 
       />
 
 
-      <div className="row">
+      {/* =====================
+          COMPOSER
+      ===================== */}
 
+      <footer
+        className="tg-composer"
+      >
 
-        {/* PLUS BUTTON */}
-
-        <button
-
-          type="button"
-
-          className="btn"
-
-          disabled={
-            sending ||
-            uploading
-          }
-
-          onClick={() =>
-
-            fileInputRef.current?.click()
-
-          }
-
-        >
-
-          ➕
-
-        </button>
-
-
-        {/* FILE NAME */}
 
         {attachment && (
 
-          <span
-            className="muted"
+          <div
+            className="tg-selected-file"
           >
 
-            📎 {attachment.name}
+            📎
 
-          </span>
+            {
+              attachment.name
+            }
+
+
+            <button
+
+              onClick={() => {
+
+                setAttachment(
+                  null
+                );
+
+
+                if (
+                  fileInputRef.current
+                ) {
+
+                  fileInputRef.current.value =
+                    "";
+
+                }
+
+              }}
+
+            >
+
+              ×
+
+            </button>
+
+          </div>
 
         )}
 
 
-        {/* SEND */}
-
-        <button
-
-          type="button"
-
-          className="btn primary"
-
-          disabled={
-
-            sending ||
-
-            uploading ||
-
-            (
-
-              !text.trim() &&
-
-              !attachment
-
-            )
-
-          }
-
-          onClick={
-            sendDoubt
-          }
-
+        <div
+          className="tg-input-row"
         >
 
-          {
 
-            sending ||
+          <button
 
-            uploading
+            type="button"
 
-              ? "Sending..."
+            className="tg-attach"
 
-              : "Send Doubt"
+            disabled={
 
-          }
+              sending ||
 
-        </button>
+              uploading
+
+            }
+
+            onClick={() =>
+
+              fileInputRef.current?.click()
+
+            }
+
+          >
+
+            ➕
+
+          </button>
 
 
-      </div>
+          <textarea
+
+            placeholder="Write a message..."
+
+            value={
+              text
+            }
+
+            onChange={
+
+              (
+                event
+              ) =>
+
+                setText(
+                  event.target.value
+                )
+
+            }
+
+            onKeyDown={
+
+              (
+                event
+              ) => {
+
+                if (
+
+                  event.key ===
+                  "Enter" &&
+
+                  !event.shiftKey
+
+                ) {
+
+                  event.preventDefault();
 
 
-    </div>
+                  sendMessage();
+
+                }
+
+              }
+
+            }
+
+          />
+
+
+          <button
+
+            type="button"
+
+            className="tg-send"
+
+            disabled={
+
+              sending ||
+
+              uploading ||
+
+              (
+
+                !text.trim() &&
+
+                !attachment
+
+              )
+
+            }
+
+            onClick={
+              sendMessage
+            }
+
+          >
+
+            {
+
+              sending ||
+
+              uploading
+
+                ? "..."
+
+                : "➤"
+
+            }
+
+          </button>
+
+        </div>
+
+      </footer>
+
+    </main>
 
   );
 
