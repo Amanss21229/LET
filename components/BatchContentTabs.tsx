@@ -1,9 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import {
 
-import BatchDoubtChat from
-  "@/components/BatchDoubtChat";
+  useEffect,
+
+  useState,
+
+} from "react";
+
+import {
+
+  useRouter,
+
+} from "next/navigation";
+
+import {
+
+  getFirebaseAuthHeaders,
+
+} from "@/lib/firebase-client-auth";
 
 
 type Item = {
@@ -76,6 +91,20 @@ export default function BatchContentTabs({
 }: Props) {
 
 
+  const router =
+    useRouter();
+
+
+  const [
+
+    unreadDoubtCount,
+
+    setUnreadDoubtCount,
+
+  ] =
+    useState(0);
+
+
   const [
     activeTab,
     setActiveTab,
@@ -100,7 +129,107 @@ export default function BatchContentTabs({
 
   };
 
+    /* =====================
+     LOAD UNREAD DOUBTS
+  ===================== */
 
+  useEffect(() => {
+
+    const loadUnreadCount =
+      async () => {
+
+        try {
+
+          const headers =
+            await getFirebaseAuthHeaders();
+
+
+          const response =
+            await fetch(
+
+              "/api/conversations",
+
+              {
+
+                headers,
+
+                cache:
+                  "no-store",
+
+              }
+
+            );
+
+
+          if (!response.ok) {
+
+            return;
+
+          }
+
+
+          const conversations =
+            await response.json();
+
+
+          const current =
+            conversations.find(
+
+              (
+                conversation: any
+              ) =>
+
+                conversation.batchId ===
+                batchId
+
+            );
+
+
+          setUnreadDoubtCount(
+
+            current?.unreadCount ||
+            0
+
+          );
+
+        }
+
+        catch (error) {
+
+          console.error(
+            error
+          );
+
+        }
+
+      };
+
+
+    loadUnreadCount();
+
+
+    const interval =
+      setInterval(
+
+        loadUnreadCount,
+
+        5000
+
+      );
+
+
+    return () => {
+
+      clearInterval(
+        interval
+      );
+
+    };
+
+  }, [
+    batchId
+  ]);
+  
   const getSections = () => {
 
     if (
@@ -257,28 +386,46 @@ export default function BatchContentTabs({
 
 
         <button
-          className={
-            `batch-tab-btn ${
-              activeTab ===
-              "Ask a Doubt"
-                ? "active"
-                : ""
-            }`
-          }
-          onClick={() =>
-            changeTab(
-              "Ask a Doubt"
-            )
-          }
-        >
 
-          <span>
-            💬
-          </span>
+  className="batch-tab-btn"
 
-          Ask a Doubt
+  onClick={() =>
 
-        </button>
+    router.push(
+
+      `/batches/${batchId}/chat`
+
+    )
+
+  }
+
+>
+
+  <span>
+
+    💬
+
+  </span>
+
+
+  Ask a Doubt
+
+
+  {unreadDoubtCount > 0 && (
+
+    <b
+      className="doubt-badge"
+    >
+
+      {
+        unreadDoubtCount
+      }
+
+    </b>
+
+  )}
+
+</button>
 
 
         <button
@@ -1078,44 +1225,6 @@ export default function BatchContentTabs({
 
             )
           )}
-
-        </section>
-
-      )}
-
-
-
-      {/* =====================
-          ASK A DOUBT
-      ===================== */}
-
-      {activeTab ===
-        "Ask a Doubt" && (
-
-        <section
-          className="content-section"
-        >
-
-          <h2>
-            💬 Ask a Doubt
-          </h2>
-
-
-          <div className="card">
-
-            <p className="muted">
-
-              Ask your doubt directly
-              to your teacher.
-
-            </p>
-
-
-            <BatchDoubtChat
-              batchId={batchId}
-            />
-
-          </div>
 
         </section>
 
