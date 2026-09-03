@@ -1,8 +1,4 @@
 import {
-  cookies,
-} from "next/headers";
-
-import {
   NextRequest,
   NextResponse,
 } from "next/server";
@@ -15,6 +11,10 @@ import {
   prisma,
 } from "@/lib/prisma";
 
+import {
+  verifyAdminSession,
+} from "@/lib/admin-auth";
+
 
 export async function GET(
   request: NextRequest
@@ -22,11 +22,8 @@ export async function GET(
 
   try {
 
-    const isAdmin =
-
-      (await cookies())
-        .get("let_admin")
-        ?.value === "true";
+   const isAdmin =
+  await verifyAdminSession(); 
 
 
     /*
