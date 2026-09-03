@@ -4,6 +4,8 @@ import {
 
   useEffect,
 
+  useRef,
+
   useState,
 
 } from "react";
@@ -14,6 +16,11 @@ type Conversation = {
   id:
     string;
 
+
+  unreadCount:
+    number;
+
+
   batch:
     {
 
@@ -22,6 +29,7 @@ type Conversation = {
 
     };
 
+
   user:
     {
 
@@ -29,9 +37,24 @@ type Conversation = {
         string | null;
 
       email:
-        string;
+        string | null;
 
     };
+
+
+  lastMessage:
+    {
+
+      text:
+        string | null;
+
+      attachmentType:
+        string | null;
+
+      createdAt:
+        string;
+
+    } | null;
 
 };
 
@@ -44,13 +67,72 @@ type Message = {
   text:
     string | null;
 
-  senderId:
-    string;
+  attachmentUrl:
+    string | null;
+
+  attachmentType:
+    string | null;
+
+  senderRole:
+    "USER" |
+    "TUTOR";
 
   createdAt:
     string;
 
 };
+
+
+function getDateLabel(
+
+  value:
+    string
+
+) {
+
+  const date =
+    new Date(value);
+
+
+  const today =
+    new Date();
+
+
+  const yesterday =
+    new Date();
+
+  yesterday.setDate(
+    today.getDate() - 1
+  );
+
+
+  if (
+
+    date.toDateString() ===
+    today.toDateString()
+
+  ) {
+
+    return "Today";
+
+  }
+
+
+  if (
+
+    date.toDateString() ===
+    yesterday.toDateString()
+
+  ) {
+
+    return "Yesterday";
+
+  }
+
+
+  return date.toLocaleDateString();
+
+}
 
 
 export default function AdminChatPanel() {
@@ -98,56 +180,100 @@ export default function AdminChatPanel() {
     useState("");
 
 
+  const [
+
+    attachment,
+
+    setAttachment,
+
+  ] =
+    useState<File | null>(
+      null
+    );
+
+
+  const [
+
+    sending,
+
+    setSending,
+
+  ] =
+    useState(false);
+
+
+  const [
+
+    uploading,
+
+    setUploading,
+
+  ] =
+    useState(false);
+
+
+  const fileInputRef =
+    useRef<HTMLInputElement>(
+      null
+    );
+
+
+  const bottomRef =
+    useRef<HTMLDivElement>(
+      null
+    );
+
+
   /* =====================
      LOAD CONVERSATIONS
   ===================== */
 
-const loadConversations =
-  async () => {
+  const loadConversations =
+    async () => {
 
-    try {
+      try {
 
-      const response =
-        await fetch(
-          "/api/conversations",
-          {
-            cache:
-              "no-store",
-          }
+        const response =
+          await fetch(
+
+            "/api/conversations",
+
+            {
+
+              cache:
+                "no-store",
+
+            }
+
+          );
+
+
+        if (!response.ok) {
+
+          return;
+
+        }
+
+
+        const data =
+          await response.json();
+
+
+        setConversations(
+          data
         );
-
-
-      if (!response.ok) {
-
-        console.error(
-          "Unable to load conversations"
-        );
-
-        return;
 
       }
 
+      catch (error) {
 
-      const data =
-        await response.json();
+        console.error(
+          error
+        );
 
+      }
 
-      setConversations(
-        data
-      );
-
-    }
-
-    catch (error) {
-
-      console.error(
-        "Conversation loading error:",
-        error
-      );
-
-    }
-
-  };
+    };
 
 
   /* =====================
@@ -156,46 +282,115 @@ const loadConversations =
 
   const loadMessages =
     async (
-      id: string
+
+      conversationId:
+        string
+
     ) => {
 
-      const response =
-        await fetch(
+      try {
 
-          `/api/conversations/${id}/messages`
+        const response =
+          await fetch(
 
+            `/api/conversations/${conversationId}/messages`,
+
+            {
+
+              cache:
+                "no-store",
+
+            }
+
+          );
+
+
+        if (!response.ok) {
+
+          return;
+
+        }
+
+
+        const data =
+          await response.json();
+
+
+        setMessages(
+          data
         );
 
 
-      if (!response.ok) {
-
-        return;
+        await loadConversations();
 
       }
 
+      catch (error) {
 
-      const data =
-        await response.json();
+        console.error(
+          error
+        );
 
-
-      setMessages(
-        data
-      );
+      }
 
     };
 
+
+  /* =====================
+     INITIAL LOAD
+  ===================== */
 
   useEffect(() => {
 
     loadConversations();
 
-  }, []);
 
+    const interval =
+      setInterval(
+
+        () => {
+
+          loadConversations();
+
+
+          if (selected) {
+
+            loadMessages(
+              selected.id
+            );
+
+          }
+
+        },
+
+        5000
+
+      );
+
+
+    return () => {
+
+      clearInterval(
+        interval
+      );
+
+    };
+
+  }, [
+    selected
+  ]);
+
+
+  /* =====================
+     SELECT CHAT
+  ===================== */
 
   const selectConversation =
     async (
+
       conversation:
         Conversation
+
     ) => {
 
       setSelected(
@@ -211,7 +406,95 @@ const loadConversations =
 
 
   /* =====================
-     SEND ADMIN REPLY
+     UPLOAD
+  ===================== */
+
+  const uploadAttachment =
+    async () => {
+
+      if (!attachment) {
+
+        return null;
+
+      }
+
+
+      try {
+
+        setUploading(true);
+
+
+        const formData =
+          new FormData();
+
+
+        formData.append(
+
+          "file",
+
+          attachment
+
+        );
+
+
+        const response =
+          await fetch(
+
+            "/api/upload",
+
+            {
+
+              method:
+                "POST",
+
+              body:
+                formData,
+
+            }
+
+          );
+
+
+        const data =
+          await response.json();
+
+
+        if (!response.ok) {
+
+          throw new Error(
+
+            data.error ||
+
+            "Upload failed"
+
+          );
+
+        }
+
+
+        return {
+
+          url:
+            data.url,
+
+          type:
+            data.type,
+
+        };
+
+      }
+
+      finally {
+
+        setUploading(false);
+
+      }
+
+    };
+
+
+  /* =====================
+     SEND REPLY
   ===================== */
 
   const sendReply =
@@ -221,7 +504,13 @@ const loadConversations =
 
         !selected ||
 
-        !reply.trim()
+        (
+
+          !reply.trim() &&
+
+          !attachment
+
+        )
 
       ) {
 
@@ -230,57 +519,292 @@ const loadConversations =
       }
 
 
-      const response =
-        await fetch(
+      try {
 
-          `/api/conversations/${selected.id}/messages`,
-
-          {
-
-            method:
-              "POST",
-
-            headers: {
-
-              "Content-Type":
-                "application/json",
-
-            },
+        setSending(true);
 
 
-            body:
-              JSON.stringify({
+        let attachmentData:
+          | {
 
-                text:
-                  reply,
+              url:
+                string;
 
-              }),
+              type:
+                string;
 
-          }
+            }
+
+          | null =
+          null;
+
+
+        if (attachment) {
+
+          attachmentData =
+            await uploadAttachment();
+
+        }
+
+
+        const response =
+          await fetch(
+
+            `/api/conversations/${selected.id}/messages`,
+
+            {
+
+              method:
+                "POST",
+
+
+              headers: {
+
+                "Content-Type":
+                  "application/json",
+
+              },
+
+
+              body:
+                JSON.stringify({
+
+                  text:
+                    reply.trim() ||
+                    null,
+
+
+                  attachmentUrl:
+                    attachmentData?.url ||
+                    null,
+
+
+                  attachmentType:
+                    attachmentData?.type ||
+                    null,
+
+                }),
+
+            }
+
+          );
+
+
+        const data =
+          await response.json();
+
+
+        if (!response.ok) {
+
+          throw new Error(
+
+            data.error ||
+
+            "Unable to send reply"
+
+          );
+
+        }
+
+
+        setMessages(
+
+          (
+            current
+          ) => [
+
+            ...current,
+
+            data,
+
+          ]
 
         );
 
 
-      if (!response.ok) {
+        setReply("");
+
+        setAttachment(null);
+
+
+        if (
+          fileInputRef.current
+        ) {
+
+          fileInputRef.current.value =
+            "";
+
+        }
+
+
+        await loadConversations();
+
+      }
+
+      catch (
+        error: any
+      ) {
 
         alert(
+
+          error.message ||
+
           "Unable to send reply"
+
         );
 
-        return;
+      }
+
+      finally {
+
+        setSending(false);
+
+      }
+
+    };
+
+
+  /* =====================
+     SCROLL
+  ===================== */
+
+  useEffect(() => {
+
+    bottomRef.current
+      ?.scrollIntoView({
+
+        behavior:
+          "smooth",
+
+      });
+
+  }, [
+    messages
+  ]);
+
+
+  /* =====================
+     RENDER FILE
+  ===================== */
+
+  const renderAttachment =
+    (
+      message:
+        Message
+    ) => {
+
+      if (
+        !message.attachmentUrl
+      ) {
+
+        return null;
 
       }
 
 
-      setReply("");
+      if (
+
+        message.attachmentType
+          ?.startsWith(
+            "image/"
+          )
+
+      ) {
+
+        return (
+
+          <img
+
+            src={
+              message.attachmentUrl
+            }
+
+            alt="Attachment"
+
+            className="tg-image"
+
+          />
+
+        );
+
+      }
 
 
-      await loadMessages(
-        selected.id
+      if (
+
+        message.attachmentType
+          ?.startsWith(
+            "audio/"
+          )
+
+      ) {
+
+        return (
+
+          <audio
+
+            controls
+
+            src={
+              message.attachmentUrl
+            }
+
+          />
+
+        );
+
+      }
+
+
+      if (
+
+        message.attachmentType
+          ?.startsWith(
+            "video/"
+          )
+
+      ) {
+
+        return (
+
+          <video
+
+            controls
+
+            className="tg-video"
+
+            src={
+              message.attachmentUrl
+            }
+
+          />
+
+        );
+
+      }
+
+
+      return (
+
+        <a
+
+          href={
+            message.attachmentUrl
+          }
+
+          target="_blank"
+
+          rel="noopener noreferrer"
+
+          className="tg-file"
+
+        >
+
+          📄 Open PDF / File
+
+        </a>
+
       );
-
-
-      await loadConversations();
 
     };
 
@@ -288,29 +812,33 @@ const loadConversations =
   return (
 
     <div
-      className="admin-chat"
+      className="tg-admin"
     >
 
 
-      {/* LEFT */}
+      {/* =====================
+          CONVERSATION LIST
+      ===================== */}
 
-      <div
-        className="admin-chat-list"
+      <aside
+        className="tg-admin-list"
       >
 
-        <h3>
+        <h2>
 
-          Student Doubts
+          💬 Chats
 
-        </h3>
+        </h2>
 
 
         {conversations.length ===
           0 && (
 
-          <p className="muted">
+          <p
+            className="muted"
+          >
 
-            No doubts yet.
+            No conversations yet.
 
           </p>
 
@@ -329,7 +857,16 @@ const loadConversations =
                 conversation.id
               }
 
-              className="chat-user"
+              className={
+                `tg-conversation ${
+                  selected?.id ===
+                  conversation.id
+
+                    ? "selected"
+
+                    : ""
+                }`
+              }
 
               onClick={() =>
 
@@ -341,23 +878,69 @@ const loadConversations =
 
             >
 
-              <b>
 
-                {conversation.user.name ||
+              <div
+                className="tg-conversation-top"
+              >
 
-                  conversation.user.email}
+                <b>
 
-              </b>
+                  {
+                    conversation.user.name ||
+
+                    conversation.user.email ||
+
+                    "Student"
+                  }
+
+                </b>
 
 
-              <br />
+                {conversation.unreadCount >
+                  0 && (
+
+                  <span
+                    className="tg-unread"
+                  >
+
+                    {
+                      conversation.unreadCount
+                    }
+
+                  </span>
+
+                )}
+
+              </div>
 
 
               <small>
 
-                {conversation.batch.title}
+                {
+                  conversation.batch.title
+                }
 
               </small>
+
+
+              <p>
+
+                {
+                  conversation.lastMessage?.text ||
+
+                  (
+
+                    conversation.lastMessage
+                      ?.attachmentType
+
+                      ? "📎 Attachment"
+
+                      : "No messages"
+                  )
+
+                }
+
+              </p>
 
             </button>
 
@@ -365,24 +948,33 @@ const loadConversations =
 
         )}
 
-      </div>
+      </aside>
 
 
-      {/* RIGHT */}
+      {/* =====================
+          CHAT WINDOW
+      ===================== */}
 
-      <div
-        className="admin-chat-window"
+      <section
+        className="tg-admin-window"
       >
 
 
         {!selected && (
 
-          <p className="muted">
+          <div
+            className="tg-empty"
+          >
 
-            Select a student
-            conversation.
+            💬
 
-          </p>
+            <h3>
+
+              Select a conversation
+
+            </h3>
+
+          </div>
 
         )}
 
@@ -392,97 +984,422 @@ const loadConversations =
           <>
 
 
-            <h3>
+            {/* HEADER */}
 
-              {selected.user.name ||
+            <header
+              className="tg-admin-header"
+            >
 
-                selected.user.email}
+              <div>
 
-            </h3>
+                <b>
+
+                  {
+                    selected.user.name ||
+
+                    selected.user.email ||
+
+                    "Student"
+                  }
+
+                </b>
 
 
-            <p className="muted">
+                <small>
 
-              Batch:
+                  {
+                    selected.batch.title
+                  }
 
-              {" "}
+                </small>
 
-              {selected.batch.title}
+              </div>
 
-            </p>
+            </header>
 
+
+            {/* MESSAGES */}
 
             <div
-              className="chat-messages"
+              className="tg-admin-messages"
             >
 
               {messages.map(
 
                 (
-                  message
-                ) => (
+                  message,
 
-                  <div
+                  index
 
-                    key={
-                      message.id
-                    }
+                ) => {
 
-                    className="chat-message"
+                  const previous =
+                    messages[
+                      index - 1
+                    ];
 
-                  >
 
-                    {message.text}
+                  const showDate =
 
-                  </div>
+                    !previous ||
 
-                )
+                    getDateLabel(
+                      previous.createdAt
+                    ) !==
+
+                    getDateLabel(
+                      message.createdAt
+                    );
+
+
+                  const isTutor =
+
+                    message.senderRole ===
+                    "TUTOR";
+
+
+                  return (
+
+                    <div
+
+                      key={
+                        message.id
+                      }
+
+                    >
+
+
+                      {showDate && (
+
+                        <div
+                          className="tg-date"
+                        >
+
+                          {
+                            getDateLabel(
+                              message.createdAt
+                            )
+                          }
+
+                        </div>
+
+                      )}
+
+
+                      <div
+
+                        className={
+                          `tg-row ${
+                            isTutor
+
+                              ? "tg-user-row"
+
+                              : "tg-tutor-row"
+                          }`
+                        }
+
+                      >
+
+
+                        <div
+
+                          className={
+                            `tg-bubble ${
+                              isTutor
+
+                                ? "tg-user-bubble"
+
+                                : "tg-tutor-bubble"
+                            }`
+                          }
+
+                        >
+
+
+                          {!isTutor && (
+
+                            <b
+                              className="tg-sender"
+                            >
+
+                              Student
+
+                            </b>
+
+                          )}
+
+
+                          {message.text && (
+
+                            <p>
+
+                              {message.text}
+
+                            </p>
+
+                          )}
+
+
+                          {
+                            renderAttachment(
+                              message
+                            )
+                          }
+
+
+                          <small>
+
+                            {
+                              new Date(
+
+                                message.createdAt
+
+                              ).toLocaleTimeString(
+
+                                [],
+
+                                {
+
+                                  hour:
+                                    "2-digit",
+
+                                  minute:
+                                    "2-digit",
+
+                                }
+
+                              )
+                            }
+
+                          </small>
+
+                        </div>
+
+                      </div>
+
+                    </div>
+
+                  );
+
+                }
 
               )}
+
+
+              <div
+                ref={bottomRef}
+              />
 
             </div>
 
 
-            <textarea
+            {/* FILE INPUT */}
 
-              className="input"
+            <input
 
-              placeholder="Write your reply..."
-
-              value={
-                reply
+              ref={
+                fileInputRef
               }
 
-              onChange={(e) =>
+              type="file"
 
-                setReply(
-                  e.target.value
-                )
+              accept="
+                image/*,
+                audio/*,
+                video/*,
+                application/pdf
+              "
+
+              hidden
+
+              onChange={
+
+                (
+                  event
+                ) =>
+
+                  setAttachment(
+
+                    event.target.files?.[0] ||
+                    null
+
+                  )
 
               }
 
             />
 
 
-            <button
+            {/* COMPOSER */}
 
-              className="btn primary"
-
-              onClick={
-                sendReply
-              }
-
+            <footer
+              className="tg-composer"
             >
 
-              Send Reply
 
-            </button>
+              {attachment && (
+
+                <div
+                  className="tg-selected-file"
+                >
+
+                  📎
+
+                  {
+                    attachment.name
+                  }
+
+
+                  <button
+
+                    onClick={() =>
+
+                      setAttachment(
+                        null
+                      )
+
+                    }
+
+                  >
+
+                    ×
+
+                  </button>
+
+                </div>
+
+              )}
+
+
+              <div
+                className="tg-input-row"
+              >
+
+
+                <button
+
+                  className="tg-attach"
+
+                  disabled={
+
+                    sending ||
+
+                    uploading
+
+                  }
+
+                  onClick={() =>
+
+                    fileInputRef.current
+                      ?.click()
+
+                  }
+
+                >
+
+                  ➕
+
+                </button>
+
+
+                <textarea
+
+                  placeholder="Reply to student..."
+
+                  value={
+                    reply
+                  }
+
+                  onChange={
+
+                    (
+                      event
+                    ) =>
+
+                      setReply(
+                        event.target.value
+                      )
+
+                  }
+
+                  onKeyDown={
+
+                    (
+                      event
+                    ) => {
+
+                      if (
+
+                        event.key ===
+                        "Enter" &&
+
+                        !event.shiftKey
+
+                      ) {
+
+                        event.preventDefault();
+
+
+                        sendReply();
+
+                      }
+
+                    }
+
+                  }
+
+                />
+
+
+                <button
+
+                  className="tg-send"
+
+                  disabled={
+
+                    sending ||
+
+                    uploading ||
+
+                    (
+
+                      !reply.trim() &&
+
+                      !attachment
+
+                    )
+
+                  }
+
+                  onClick={
+                    sendReply
+                  }
+
+                >
+
+                  {
+
+                    sending ||
+
+                    uploading
+
+                      ? "..."
+
+                      : "➤"
+
+                  }
+
+                </button>
+
+              </div>
+
+            </footer>
 
           </>
 
         )}
 
-      </div>
+      </section>
 
     </div>
 
