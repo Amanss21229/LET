@@ -161,9 +161,6 @@ async function handleLogin() {
           My Profile
         </Link>
 
-        <Link href="/admin">
-          Admin
-        </Link>
 
       </div>
 
