@@ -204,6 +204,274 @@ const [
   setBatchTutorMessage,
 
 ] = useState("");
+
+    /* =========================
+     HERO SLIDER STATES
+  ========================= */
+
+  const [
+
+    heroSlides,
+
+    setHeroSlides,
+
+  ] =
+    useState<{
+
+      id: string;
+
+      imageUrl: string;
+
+    }[]>([]);
+
+
+  const [
+
+    heroMessage,
+
+    setHeroMessage,
+
+  ] =
+    useState("");
+
+
+  /* =========================
+     LOAD HERO SLIDES
+  ========================= */
+
+  const loadHeroSlides =
+    async () => {
+
+      try {
+
+        const response =
+          await fetch(
+            "/api/hero-slides"
+          );
+
+
+        const data =
+          await response.json();
+
+
+        setHeroSlides(
+
+          Array.isArray(
+            data?.slides
+          )
+
+            ? data.slides
+
+            : []
+
+        );
+
+      }
+
+      catch (error) {
+
+        console.error(
+
+          "Unable to load hero slides",
+
+          error
+
+        );
+
+      }
+
+    };
+
+
+  /* =========================
+     SAVE HERO SLIDES
+  ========================= */
+
+  const saveHeroSlides =
+    async (
+
+      slides: {
+
+        id: string;
+
+        imageUrl: string;
+
+      }[]
+
+    ) => {
+
+      try {
+
+        setHeroMessage(
+          "Saving..."
+        );
+
+
+        const response =
+          await fetch(
+
+            "/api/hero-slides",
+
+            {
+
+              method:
+                "PUT",
+
+
+              headers: {
+
+                "Content-Type":
+                  "application/json",
+
+              },
+
+
+              body:
+
+                JSON.stringify({
+
+                  slides,
+
+                }),
+
+            }
+
+          );
+
+
+        const data =
+          await response.json();
+
+
+        if (!response.ok) {
+
+          throw new Error(
+
+            data?.error ||
+
+            "Unable to save hero images"
+
+          );
+
+        }
+
+
+        setHeroSlides(
+
+          data.slides ||
+
+          slides
+
+        );
+
+
+        setHeroMessage(
+
+          "Hero images saved successfully!"
+
+        );
+
+      }
+
+      catch (error: any) {
+
+        console.error(
+          error
+        );
+
+
+        setHeroMessage(
+
+          error.message ||
+
+          "Unable to save hero images"
+
+        );
+
+      }
+
+    };
+
+
+  /* =========================
+     ADD HERO IMAGE
+  ========================= */
+
+  const addHeroSlide =
+    async (
+
+      imageUrl: string
+
+    ) => {
+
+
+      if (
+        heroSlides.length >= 5
+      ) {
+
+        setHeroMessage(
+
+          "Maximum 5 hero images are allowed."
+
+        );
+
+        return;
+
+      }
+
+
+      const nextSlides = [
+
+        ...heroSlides,
+
+        {
+
+          id:
+
+            `${Date.now()}-${Math.random()}`,
+
+          imageUrl,
+
+        },
+
+      ];
+
+
+      await saveHeroSlides(
+        nextSlides
+      );
+
+    };
+
+
+  /* =========================
+     REMOVE HERO IMAGE
+  ========================= */
+
+  const removeHeroSlide =
+    async (
+
+      slideId: string
+
+    ) => {
+
+
+      const nextSlides =
+        heroSlides.filter(
+
+          (slide) =>
+
+            slide.id !==
+            slideId
+
+        );
+
+
+      await saveHeroSlides(
+        nextSlides
+      );
+
+    };
   
   /* =========================
      LOAD BATCHES
@@ -231,6 +499,8 @@ useEffect(() => {
   loadBatches();
 
   loadTutor();
+
+  loadHeroSlides();
 
 }, []);
 
@@ -1253,6 +1523,7 @@ const deleteBatch =
               "Edit / Delete Batch",    
               "Manage Batch",
               "About Tutor",
+              "Hero Slider",
               "Chats",
             ].map((item) => (
               <p key={item}>
@@ -4228,6 +4499,185 @@ const deleteBatch =
   </>
 
 )}
+
+                {/* =====================
+                HERO SLIDER
+            ===================== */}
+
+            {tab ===
+              "Hero Slider" && (
+
+              <>
+
+
+                <h2>
+
+                  🖼️ Home Hero Slider
+
+                </h2>
+
+
+                <p className="muted">
+
+                  Upload up to 5 images.
+
+                  They will automatically change
+                  every 3 seconds on the home page.
+
+                </p>
+
+
+                <p className="muted">
+
+                  {heroSlides.length}
+
+                  {" / 5 images added."}
+
+                </p>
+
+
+                {/* UPLOAD */}
+
+                {heroSlides.length < 5 && (
+
+                  <FileUpload
+
+                    accept="image/*"
+
+                    label="Upload Hero Image"
+
+                    onUploadComplete={
+
+                      (url) =>
+
+                        addHeroSlide(
+                          url
+                        )
+
+                    }
+
+                  />
+
+                )}
+
+
+                {/* EMPTY */}
+
+                {heroSlides.length === 0 ? (
+
+                  <p className="muted">
+
+                    No hero images
+                    added yet.
+
+                  </p>
+
+                ) : (
+
+                  <div className="hero-slide-admin-list">
+
+
+                    {heroSlides.map(
+
+                      (
+                        slide,
+                        index
+                      ) => (
+
+                        <div
+
+                          className="msg hero-slide-admin-item"
+
+                          key={slide.id}
+
+                        >
+
+
+                          <img
+
+                            src={
+                              slide.imageUrl
+                            }
+
+                            alt={
+
+                              `Hero image ${index + 1}`
+
+                            }
+
+                          />
+
+
+                          <div>
+
+                            <b>
+
+                              Hero Image{" "}
+
+                              {index + 1}
+
+                            </b>
+
+
+                            <p className="muted">
+
+                              Home page
+                              slider image
+
+                            </p>
+
+                          </div>
+
+
+                          <button
+
+                            type="button"
+
+                            className="btn"
+
+                            onClick={() =>
+
+                              removeHeroSlide(
+                                slide.id
+                              )
+
+                            }
+
+                          >
+
+                            Remove
+
+                          </button>
+
+
+                        </div>
+
+                      )
+
+                    )}
+
+
+                  </div>
+
+                )}
+
+
+                {/* STATUS */}
+
+                {heroMessage && (
+
+                  <p>
+
+                    {heroMessage}
+
+                  </p>
+
+                )}
+
+
+              </>
+
+            )}
 
             {/* =====================
             CHATS
