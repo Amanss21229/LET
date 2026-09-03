@@ -704,17 +704,24 @@ export default function BatchDoubtChat({
 
           setMessages(
 
-            (
-              current
-            ) => [
+  (
+    current
+  ) => [
 
-              ...current,
+    ...current,
 
-              data.message,
+    {
 
-            ]
+      ...data.message,
 
-          );
+      senderRole:
+        "USER",
+
+    },
+
+  ]
+
+);
 
         }
 
@@ -793,17 +800,24 @@ export default function BatchDoubtChat({
 
           setMessages(
 
-            (
-              current
-            ) => [
+  (
+    current
+  ) => [
 
-              ...current,
+    ...current,
 
-              data,
+    {
 
-            ]
+      ...data,
 
-          );
+      senderRole:
+        "USER",
+
+    },
+
+  ]
+
+);
 
         }
 
