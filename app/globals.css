@@ -2090,3 +2090,87 @@ hr {
   }
 
 }
+
+/* =========================
+   ADMIN USER DETAILS
+========================= */
+
+.user-details-table {
+
+  width:
+    100%;
+
+  border-collapse:
+    collapse;
+
+  min-width:
+    950px;
+
+}
+
+
+.user-details-table th,
+
+.user-details-table td {
+
+  padding:
+    14px;
+
+  text-align:
+    left;
+
+  border-bottom:
+    1px solid
+    rgba(
+      128,
+      128,
+      128,
+      0.25
+    );
+
+  vertical-align:
+    top;
+
+}
+
+
+.user-details-table th {
+
+  white-space:
+    nowrap;
+
+  font-weight:
+    700;
+
+}
+
+
+.batch-access-tag {
+
+  display:
+    inline-block;
+
+  margin-right:
+    6px;
+
+  margin-bottom:
+    6px;
+
+  padding:
+    5px 9px;
+
+  border-radius:
+    999px;
+
+  font-size:
+    12px;
+
+  background:
+    rgba(
+      255,
+      193,
+      7,
+      0.15
+    );
+
+      }
