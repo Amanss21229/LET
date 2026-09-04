@@ -628,4 +628,4 @@ if (body.action === "deleteNotification") {
       }
     );
   }
-
+}
