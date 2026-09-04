@@ -486,6 +486,123 @@ if (body.action === "deleteItem") {
       );
     }
 
+        /* =====================
+   EDIT NOTIFICATION
+===================== */
+
+if (body.action === "editNotification") {
+
+  if (!body.notificationId) {
+    return NextResponse.json(
+      {
+        error: "Notification ID is required",
+      },
+      {
+        status: 400,
+      }
+    );
+  }
+
+  const notification =
+    await prisma.notification.findUnique({
+      where: {
+        id: body.notificationId,
+      },
+    });
+
+  if (
+    !notification ||
+    notification.batchId !== id
+  ) {
+    return NextResponse.json(
+      {
+        error: "Notification not found",
+      },
+      {
+        status: 404,
+      }
+    );
+  }
+
+  const updatedNotification =
+    await prisma.notification.update({
+      where: {
+        id: body.notificationId,
+      },
+
+      data: {
+        text:
+          body.text !== undefined
+            ? body.text || null
+            : notification.text,
+
+        attachmentUrl:
+          body.attachmentUrl !== undefined
+            ? body.attachmentUrl || null
+            : notification.attachmentUrl,
+
+        attachmentType:
+          body.attachmentType !== undefined
+            ? body.attachmentType || null
+            : notification.attachmentType,
+      },
+    });
+
+  return NextResponse.json(
+    updatedNotification
+  );
+}
+
+
+/* =====================
+   DELETE NOTIFICATION
+===================== */
+
+if (body.action === "deleteNotification") {
+
+  if (!body.notificationId) {
+    return NextResponse.json(
+      {
+        error: "Notification ID is required",
+      },
+      {
+        status: 400,
+      }
+    );
+  }
+
+  const notification =
+    await prisma.notification.findUnique({
+      where: {
+        id: body.notificationId,
+      },
+    });
+
+  if (
+    !notification ||
+    notification.batchId !== id
+  ) {
+    return NextResponse.json(
+      {
+        error: "Notification not found",
+      },
+      {
+        status: 404,
+      }
+    );
+  }
+
+  await prisma.notification.delete({
+    where: {
+      id: body.notificationId,
+    },
+  });
+
+  return NextResponse.json({
+    success: true,
+  });
+}
+
     return NextResponse.json(
       {
         error:
@@ -512,130 +629,3 @@ if (body.action === "deleteItem") {
     );
   }
 
-  /* =====================
-   EDIT NOTIFICATION
-===================== */
-
-if (
-  body.action ===
-  "editNotification"
-) {
-
-  if (!body.notificationId) {
-    return NextResponse.json(
-      {
-        error:
-          "Notification ID is required",
-      },
-      {
-        status: 400,
-      }
-    );
-  }
-
-  const notification =
-    await prisma.notification.findUnique({
-      where: {
-        id: body.notificationId,
-      },
-    });
-
-  if (
-    !notification ||
-    notification.batchId !== id
-  ) {
-    return NextResponse.json(
-      {
-        error:
-          "Notification not found",
-      },
-      {
-        status: 404,
-      }
-    );
-  }
-
-  const updatedNotification =
-    await prisma.notification.update({
-      where: {
-        id: body.notificationId,
-      },
-
-      data: {
-
-        text:
-          body.text !== undefined
-            ? body.text || null
-            : notification.text,
-
-        attachmentUrl:
-          body.attachmentUrl !== undefined
-            ? body.attachmentUrl || null
-            : notification.attachmentUrl,
-
-        attachmentType:
-          body.attachmentType !== undefined
-            ? body.attachmentType || null
-            : notification.attachmentType,
-      },
-    });
-
-  return NextResponse.json(
-    updatedNotification
-  );
-}
-
-  /* =====================
-   DELETE NOTIFICATION
-===================== */
-
-if (
-  body.action ===
-  "deleteNotification"
-) {
-
-  if (!body.notificationId) {
-    return NextResponse.json(
-      {
-        error:
-          "Notification ID is required",
-      },
-      {
-        status: 400,
-      }
-    );
-  }
-
-  const notification =
-    await prisma.notification.findUnique({
-      where: {
-        id: body.notificationId,
-      },
-    });
-
-  if (
-    !notification ||
-    notification.batchId !== id
-  ) {
-    return NextResponse.json(
-      {
-        error:
-          "Notification not found",
-      },
-      {
-        status: 404,
-      }
-    );
-  }
-
-  await prisma.notification.delete({
-    where: {
-      id: body.notificationId,
-    },
-  });
-
-  return NextResponse.json({
-    success: true,
-  });
-}
-}
