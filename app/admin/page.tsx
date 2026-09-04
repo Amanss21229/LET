@@ -3329,7 +3329,7 @@ const deleteNotification =
 
   <div className="admin-items-list">
 
-    {section.items.map(
+    {section.items?.map(
       (item: any) => (
 
         <div
