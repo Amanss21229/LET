@@ -1569,6 +1569,117 @@ const deleteBatch =
       }
     };
 
+  const editSection =
+  async (section: Section) => {
+
+    const title =
+      window.prompt(
+        "Edit category name:",
+        section.title
+      );
+
+    if (
+      !title ||
+      !title.trim()
+    ) {
+      return;
+    }
+
+    const response =
+      await fetch(
+        `/api/batches/${selectedBatch}/content`,
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+
+          body: JSON.stringify({
+            action:
+              "editSection",
+
+            sectionId:
+              section.id,
+
+            title:
+              title.trim(),
+          }),
+        }
+      );
+
+    if (response.ok) {
+
+      await loadBatchData(
+        selectedBatch
+      );
+
+      alert(
+        "Category updated!"
+      );
+
+    } else {
+
+      alert(
+        "Unable to update category"
+      );
+
+    }
+  };
+
+  const deleteSection =
+  async (section: Section) => {
+
+    const confirmed =
+      window.confirm(
+        `Delete "${section.title}"?\n\nAll content inside this category will also be deleted.`
+      );
+
+    if (!confirmed) {
+      return;
+    }
+
+    const response =
+      await fetch(
+        `/api/batches/${selectedBatch}/content`,
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+
+          body: JSON.stringify({
+            action:
+              "deleteSection",
+
+            sectionId:
+              section.id,
+          }),
+        }
+      );
+
+    if (response.ok) {
+
+      await loadBatchData(
+        selectedBatch
+      );
+
+      alert(
+        "Category deleted!"
+      );
+
+    } else {
+
+      alert(
+        "Unable to delete category"
+      );
+
+    }
+  };
+
   /* =========================
      FILTER SECTIONS
   ========================= */
