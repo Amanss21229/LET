@@ -1498,6 +1498,140 @@ const deleteBatch =
     };
 
   /* =========================
+   EDIT CONTENT ITEM
+========================= */
+
+const editContentItem =
+  async (item: any) => {
+
+    const title =
+      window.prompt(
+        "Edit content title:",
+        item.title
+      );
+
+    if (
+      !title ||
+      !title.trim()
+    ) {
+      return;
+    }
+
+    const response =
+      await fetch(
+        `/api/batches/${selectedBatch}/content`,
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+
+          body: JSON.stringify({
+
+            action: "editItem",
+
+            itemId: item.id,
+
+            title: title.trim(),
+
+          }),
+        }
+      );
+
+    if (response.ok) {
+
+      await loadBatchData(
+        selectedBatch
+      );
+
+      alert(
+        "Content updated successfully!"
+      );
+
+    } else {
+
+      const data =
+        await response.json();
+
+      alert(
+        data.error ||
+        "Unable to update content"
+      );
+
+    }
+
+  };
+
+  /* =========================
+   DELETE CONTENT ITEM
+========================= */
+
+const deleteContentItem =
+  async (item: any) => {
+
+    const confirmed =
+      window.confirm(
+
+        `Are you sure you want to delete:
+
+${item.title}`
+
+      );
+
+    if (!confirmed) {
+      return;
+    }
+
+
+    const response =
+      await fetch(
+        `/api/batches/${selectedBatch}/content`,
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+
+          body: JSON.stringify({
+
+            action: "deleteItem",
+
+            itemId: item.id,
+
+          }),
+        }
+      );
+
+
+    if (response.ok) {
+
+      await loadBatchData(
+        selectedBatch
+      );
+
+      alert(
+        "Content deleted successfully!"
+      );
+
+    } else {
+
+      const data =
+        await response.json();
+
+      alert(
+        data.error ||
+        "Unable to delete content"
+      );
+
+    }
+
+  };
+  
+  /* =========================
      CREATE NOTIFICATION
   ========================= */
 
@@ -2987,33 +3121,122 @@ const deleteBatch =
                         {/* EXISTING */}
 
                         {getSections(
-                          "CLASS"
-                        ).map(
-                          (
-                            section: Section
-                          ) => (
-                            <div
-                              className="msg"
-                              key={
-                                section.id
-                              }
-                            >
-                              <b>
-                                📁{" "}
-                                {
-                                  section.title
-                                }
-                              </b>
+  "CLASS"
+).map(
+  (
+    section: Section
+  ) => (
+    <div
+      className="msg"
+      key={section.id}
+    >
 
-                              <p>
-                                {section.items
-                                  ?.length ||
-                                  0}{" "}
-                                Classes
-                              </p>
-                            </div>
-                          )
-                        )}
+      <b>
+        📁 {section.title}
+      </b>
+
+      <p>
+        {section.items?.length || 0} Classes
+      </p>
+
+      {/* CATEGORY ACTIONS */}
+
+      <div className="admin-action-row">
+
+        <button
+          className="btn small"
+          onClick={() =>
+            editSection(section)
+          }
+        >
+          ✏️ Edit
+        </button>
+
+        <button
+          className="btn danger small"
+          onClick={() =>
+            deleteSection(section)
+          }
+        >
+          🗑️ Delete
+        </button>
+
+      </div>
+
+      {/* CONTENT ITEMS */}
+
+{section.items?.length > 0 && (
+
+  <div className="admin-items-list">
+
+    {section.items.map(
+      (item: any) => (
+
+        <div
+          className="admin-content-item"
+          key={item.id}
+        >
+
+          <div>
+
+            <b>
+              📌 {item.title}
+            </b>
+
+            {item.scheduledAt && (
+
+              <small>
+
+                <br />
+
+                📅 {
+                  new Date(
+                    item.scheduledAt
+                  ).toLocaleString()
+                }
+
+              </small>
+
+            )}
+
+          </div>
+
+
+          <div className="admin-action-row">
+
+            <button
+              className="btn small"
+              onClick={() =>
+                editContentItem(item)
+              }
+            >
+              ✏️ Edit
+            </button>
+
+
+            <button
+              className="btn danger small"
+              onClick={() =>
+                deleteContentItem(item)
+              }
+            >
+              🗑️ Delete
+            </button>
+
+          </div>
+
+        </div>
+
+      )
+    )}
+
+  </div>
+
+)}
+
+    </div>
+  )
+)}                        
 
                         <hr />
 
@@ -3150,33 +3373,119 @@ const deleteBatch =
                         </div>
 
                         {getSections(
-                          "NOTES"
-                        ).map(
-                          (
-                            section: Section
-                          ) => (
-                            <div
-                              className="msg"
-                              key={
-                                section.id
-                              }
-                            >
-                              <b>
-                                📁{" "}
-                                {
-                                  section.title
-                                }
-                              </b>
+  "NOTES"
+).map(
+  (
+    section: Section
+  ) => (
 
-                              <p>
-                                {section.items
-                                  ?.length ||
-                                  0}{" "}
-                                PDFs
-                              </p>
-                            </div>
-                          )
-                        )}
+    <div
+      className="msg"
+      key={section.id}
+    >
+
+      <b>
+        📁 {section.title}
+      </b>
+
+      <p>
+        {section.items?.length || 0} PDFs
+      </p>
+
+
+      {/* CATEGORY ACTIONS */}
+
+      <div className="admin-action-row">
+
+        <button
+          className="btn small"
+          onClick={() =>
+            editSection(section)
+          }
+        >
+          ✏️ Edit
+        </button>
+
+
+        <button
+          className="btn danger small"
+          onClick={() =>
+            deleteSection(section)
+          }
+        >
+          🗑️ Delete
+        </button>
+
+      </div>
+
+
+      {/* NOTES LIST */}
+
+      {section.items?.map(
+        (item: any) => (
+
+          <div
+            className="admin-content-item"
+            key={item.id}
+          >
+
+            <div>
+
+              <b>
+                📄 {item.title}
+              </b>
+
+              {item.scheduledAt && (
+
+                <small>
+
+                  <br />
+
+                  📅 {
+                    new Date(
+                      item.scheduledAt
+                    ).toLocaleString()
+                  }
+
+                </small>
+
+              )}
+
+            </div>
+
+
+            <div className="admin-action-row">
+
+              <button
+                className="btn small"
+                onClick={() =>
+                  editContentItem(item)
+                }
+              >
+                ✏️ Edit
+              </button>
+
+
+              <button
+                className="btn danger small"
+                onClick={() =>
+                  deleteContentItem(item)
+                }
+              >
+                🗑️ Delete
+              </button>
+
+            </div>
+
+          </div>
+
+        )
+      )}
+
+    </div>
+
+  )
+)}                        
 
                         <hr />
 
@@ -3358,6 +3667,91 @@ const deleteBatch =
                                   0}{" "}
                                 Practice Sheets
                               </p>
+                              <div className="admin-action-row">
+
+  <button
+    className="btn small"
+    onClick={() =>
+      editSection(section)
+    }
+  >
+    ✏️ Edit
+  </button>
+
+  <button
+    className="btn danger small"
+    onClick={() =>
+      deleteSection(section)
+    }
+  >
+    🗑️ Delete
+  </button>
+
+</div>
+
+                              {/* PRACTICE ITEMS */}
+
+      {section.items?.map(
+        (item: any) => (
+
+          <div
+            className="admin-content-item"
+            key={item.id}
+          >
+
+            <div>
+
+              <b>
+                📝 {item.title}
+              </b>
+
+              {item.scheduledAt && (
+
+                <small>
+
+                  <br />
+
+                  📅 {
+                    new Date(
+                      item.scheduledAt
+                    ).toLocaleString()
+                  }
+
+                </small>
+
+              )}
+
+            </div>
+
+
+            <div className="admin-action-row">
+
+              <button
+                className="btn small"
+                onClick={() =>
+                  editContentItem(item)
+                }
+              >
+                ✏️ Edit
+              </button>
+
+
+              <button
+                className="btn danger small"
+                onClick={() =>
+                  deleteContentItem(item)
+                }
+              >
+                🗑️ Delete
+              </button>
+
+            </div>
+
+          </div>
+
+        )
+      )}
+
                             </div>
                           )
                         )}
