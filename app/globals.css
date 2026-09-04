@@ -916,10 +916,7 @@ hr {
   aspect-ratio:
     16 / 9;
 
-  height:
-    auto;
-
-  object-fit:
+    object-fit:
     cover;
 
   object-position:
