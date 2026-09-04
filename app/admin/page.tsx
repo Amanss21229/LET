@@ -2197,27 +2197,17 @@ const deleteBatch =
                       data.imageUrl || "",
 
                     customPoints:
-                      Array.isArray(
-                        data.customPoints
-                      )
-                        ? [
-
-                            ...data.customPoints,
-
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-
-                          ].slice(0, 5)
-                        : [
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                          ],
+                      Array.isArray(data.customPoints)
+                      ? [
+                        ...data.customPoints,
+                        ...Array(
+                          Math.max(
+                            0,
+                            20 - data.customPoints.length
+                          )
+                        ).fill(""),
+                      ].slice(0, 20)
+                      : Array(20).fill(""),
 
                     buyEnabled:
                       data.buyEnabled !==
