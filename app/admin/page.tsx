@@ -1949,7 +1949,7 @@ const deleteBatch =
 
 
                 <p className="muted">
-                  Add up to 5 custom points.
+                  Add up to 20 custom points.
                 </p>
 
 
