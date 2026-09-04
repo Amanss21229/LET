@@ -1814,6 +1814,145 @@ ${item.title}`
     }
   };
 
+/* =========================
+   EDIT NOTIFICATION
+========================= */
+
+const editNotification =
+  async (
+    notification: any
+  ) => {
+
+    const text =
+      window.prompt(
+        "Edit announcement:",
+        notification.text || ""
+      );
+
+
+    if (text === null) {
+      return;
+    }
+
+
+    const response =
+      await fetch(
+        `/api/batches/${selectedBatch}/content`,
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+
+          body: JSON.stringify({
+
+            action:
+              "editNotification",
+
+            notificationId:
+              notification.id,
+
+            text,
+
+          }),
+        }
+      );
+
+
+    if (response.ok) {
+
+      await loadBatchData(
+        selectedBatch
+      );
+
+      alert(
+        "Announcement updated!"
+      );
+
+    } else {
+
+      const data =
+        await response.json();
+
+      alert(
+        data.error ||
+        "Unable to update announcement"
+      );
+
+    }
+
+  };
+
+/* =========================
+   DELETE NOTIFICATION
+========================= */
+
+const deleteNotification =
+  async (
+    notification: any
+  ) => {
+
+    const confirmed =
+      window.confirm(
+        "Are you sure you want to delete this announcement?"
+      );
+
+
+    if (!confirmed) {
+      return;
+    }
+
+
+    const response =
+      await fetch(
+        `/api/batches/${selectedBatch}/content`,
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+
+          body: JSON.stringify({
+
+            action:
+              "deleteNotification",
+
+            notificationId:
+              notification.id,
+
+          }),
+        }
+      );
+
+
+    if (response.ok) {
+
+      await loadBatchData(
+        selectedBatch
+      );
+
+      alert(
+        "Announcement deleted!"
+      );
+
+    } else {
+
+      const data =
+        await response.json();
+
+      alert(
+        data.error ||
+        "Unable to delete announcement"
+      );
+
+    }
+
+  };
+
   /* =========================
      FILTER SECTIONS
   ========================= */
@@ -3979,6 +4118,34 @@ ${item.title}`
                                     notification.createdAt
                                   ).toLocaleString()}
                                 </small>
+
+                                <div className="admin-action-row">
+
+  <button
+    className="btn small"
+    onClick={() =>
+      editNotification(
+        notification
+      )
+    }
+  >
+    ✏️ Edit
+  </button>
+
+
+  <button
+    className="btn danger small"
+    onClick={() =>
+      deleteNotification(
+        notification
+      )
+    }
+  >
+    🗑️ Delete
+  </button>
+
+</div>
+                                
                               </div>
                             )
                           )}
