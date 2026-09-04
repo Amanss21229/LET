@@ -2294,6 +2294,10 @@ hr {
 
 }
 
+.admin-items-list {
+  margin-top: 12px;
+}
+
 
 .admin-content-item {
 
@@ -2307,12 +2311,16 @@ hr {
 
   padding: 12px;
 
-  margin-top: 10px;
+  margin-top: 8px;
 
   border-radius: 12px;
 
   background:
-    rgba(255, 255, 255, 0.04);
+    rgba(255, 255, 255, 0.05);
+
+  border:
+    1px solid
+    rgba(255, 255, 255, 0.08);
 
 }
 
@@ -2362,3 +2370,5 @@ hr {
   }
 
 }
+
+
