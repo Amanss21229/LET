@@ -3325,7 +3325,7 @@ const deleteNotification =
 
       {/* CONTENT ITEMS */}
 
-{section.items?.length > 0 && (
+{(section.items?.length ?? 0) > 0 && (
 
   <div className="admin-items-list">
 
