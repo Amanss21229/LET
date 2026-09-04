@@ -31,13 +31,7 @@ const emptyBatch = {
 
   imageUrl: "",
 
-  customPoints: [
-    "",
-    "",
-    "",
-    "",
-    "",
-  ],
+  customPoints: Array(20).fill(""),
 
   buyEnabled: true,
 };
