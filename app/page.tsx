@@ -125,7 +125,7 @@ export default async function Home() {
 
           .slice(
             0,
-            5
+            20
           )
 
       : [];
