@@ -237,11 +237,7 @@ model StudySubject {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  category StudyCategory @relation(
-    fields: [categoryId],
-    references: [id],
-    onDelete: Cascade
-  )
+  category StudyCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
   materials StudyMaterial[]
 
@@ -249,19 +245,15 @@ model StudySubject {
 }
 
 model StudyMaterial {
-  id          String   @id @default(cuid())
-  subjectId   String
-  title       String
-  slug        String
-  googleDriveUrl String @db.Text
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id             String   @id @default(cuid())
+  subjectId      String
+  title          String
+  slug           String
+  googleDriveUrl String   @db.Text
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
-  subject StudySubject @relation(
-    fields: [subjectId],
-    references: [id],
-    onDelete: Cascade
-  )
+  subject StudySubject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
 
   @@unique([subjectId, slug])
 }
