@@ -157,6 +157,10 @@ async function handleLogin() {
           My Batches
         </Link>
 
+        <Link href="/study-materials">
+          Study Materials
+        </Link>
+
         <Link href="/profile">
           My Profile
         </Link>
