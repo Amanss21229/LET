@@ -82,6 +82,34 @@ export async function PUT(
 
   try {
 
+    const duplicate =
+  await prisma.studyCategory.findFirst({
+
+    where: {
+      slug,
+
+      NOT: {
+        id,
+      },
+    },
+
+  });
+
+
+if (duplicate) {
+
+  return NextResponse.json(
+    {
+      error:
+        "This category already exists",
+    },
+    {
+      status: 400,
+    }
+  );
+
+}
+    
     const category =
       await prisma.studyCategory.update({
 
