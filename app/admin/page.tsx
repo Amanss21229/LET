@@ -9,6 +9,7 @@ import NavClient from "@/components/NavClient";
 import FileUpload from "@/components/FileUpload";
 import AdminChatPanel from
   "@/components/AdminChatPanel";
+import StudyMaterialsAdmin from "@/components/StudyMaterialsAdmin";
 
 const emptyBatch = {
   title: "",
