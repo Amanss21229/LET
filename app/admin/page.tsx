@@ -2061,6 +2061,7 @@ const deleteNotification =
               "Manage Batch",
               "About Tutor",
               "Hero Slider",
+              "Manage Study Materials",
               "Chats",
             ].map((item) => (
               <p key={item}>
