@@ -216,3 +216,52 @@ model TutorPage {
   content   Json
   updatedAt DateTime @updatedAt
 }
+
+model StudyCategory {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  subjects StudySubject[]
+}
+
+model StudySubject {
+  id         String   @id @default(cuid())
+  categoryId String
+  name       String
+  slug       String
+  sortOrder  Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  category StudyCategory @relation(
+    fields: [categoryId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  materials StudyMaterial[]
+
+  @@unique([categoryId, slug])
+}
+
+model StudyMaterial {
+  id          String   @id @default(cuid())
+  subjectId   String
+  title       String
+  slug        String
+  googleDriveUrl String @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  subject StudySubject @relation(
+    fields: [subjectId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  @@unique([subjectId, slug])
+}
