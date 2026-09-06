@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 type MaterialPdf = {
   id: string;
   title: string;
-  driveUrl: string;
+  googleDriveUrl: string;
   createdAt: string;
 };
 
@@ -40,7 +40,7 @@ export default function StudyMaterialsAdmin() {
     try {
       setLoading(true);
 
-      const response = await fetch("/api/study-materials");
+      const response = await fetch("/api/admin/study-materials");
 
       const data = await response.json();
 
@@ -71,7 +71,7 @@ export default function StudyMaterialsAdmin() {
     try {
       setMessage("");
 
-      const response = await fetch("/api/study-materials/category", {
+      const response = await fetch("/api/study-materials/categories", {
         method: "POST",
 
         headers: {
@@ -113,7 +113,7 @@ export default function StudyMaterialsAdmin() {
     try {
       setMessage("");
 
-      const response = await fetch("/api/study-materials/subject", {
+      const response = await fetch("/api/study-materials/subjects", {
         method: "POST",
 
         headers: {
@@ -171,7 +171,7 @@ export default function StudyMaterialsAdmin() {
         body: JSON.stringify({
           subjectId: selectedSubject,
           title: materialTitle.trim(),
-          driveUrl: driveUrl.trim(),
+          googleDriveUrl: driveUrl.trim(),
         }),
       });
 
