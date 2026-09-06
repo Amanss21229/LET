@@ -5783,6 +5783,17 @@ const deleteNotification =
 )}
 
             {/* =====================
+            MANAGE STUDY MATERIALS
+            ===================== */}
+
+            {tab === "Manage Study Materials" && (
+
+              <StudyMaterialsAdmin />
+
+            )}
+
+          
+            {/* =====================
             CHATS
             ===================== */}
 
