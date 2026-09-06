@@ -2363,4 +2363,94 @@ hr {
 
 }
 
+/* =========================
+   STUDY MATERIAL DETAIL
+========================= */
 
+.study-material-detail-card {
+
+  max-width: 760px;
+
+  margin: 0 auto 30px;
+
+}
+
+
+.study-material-file-icon {
+
+  width: 70px;
+
+  height: 70px;
+
+  display: grid;
+
+  place-items: center;
+
+  font-size: 34px;
+
+  border-radius: 18px;
+
+  background:
+    var(--button-bg);
+
+  margin-bottom: 16px;
+
+}
+
+
+.study-material-actions {
+
+  display: flex;
+
+  gap: 12px;
+
+  flex-wrap: wrap;
+
+  margin-top: 20px;
+
+}
+
+
+.study-material-actions .btn {
+
+  min-width: 150px;
+
+  text-align: center;
+
+}
+
+
+.study-material-login-box {
+
+  padding: 18px;
+
+  border-radius: 14px;
+
+  border:
+    1px solid var(--line);
+
+  background:
+    var(--button-bg);
+
+}
+
+
+@media (
+  max-width: 600px
+) {
+
+  .study-material-actions {
+
+    flex-direction:
+      column;
+
+  }
+
+
+  .study-material-actions .btn {
+
+    width: 100%;
+
+  }
+
+}
