@@ -9,7 +9,7 @@ import {
 
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ||
-  "https://your-domain.com";
+  "https://let-edu.onrender.com";
 
 
 export default async function sitemap():
