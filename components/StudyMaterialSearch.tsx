@@ -146,29 +146,29 @@ export default function StudyMaterialSearch({
 
             >
 
-              <span>
+              <span className="study-material-icon">
 
-                📄
+  📄
 
-              </span>
-
-
-              <div>
-
-                <strong>
-
-                  {material.title}
-
-                </strong>
+</span>
 
 
-                <small>
+<div className="study-material-info">
 
-                  View material →
+  <h2>
 
-                </small>
+    {material.title}
 
-              </div>
+  </h2>
+
+</div>
+
+
+<span className="study-material-view">
+
+  View material →
+
+</span>
 
             </Link>
 
