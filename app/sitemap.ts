@@ -8,6 +8,10 @@ import {
 
 import {
   getAppUrl,
+  getCategoryUrl,
+  getMaterialUrl,
+  getStudyMaterialsUrl,
+  getSubjectUrl,
 } from "@/lib/seo";
 
 
@@ -78,7 +82,7 @@ export default async function sitemap():
     {
 
       url:
-        `${siteUrl}/study-materials`,
+        getStudyMaterialsUrl(),
 
       lastModified:
         new Date(),
@@ -107,7 +111,9 @@ export default async function sitemap():
 
       url:
 
-        `${siteUrl}/study-materials/${category.slug}`,
+        getCategoryUrl(
+          category.slug
+        ),
 
       lastModified:
 
@@ -137,7 +143,13 @@ export default async function sitemap():
 
         url:
 
-          `${siteUrl}/study-materials/${category.slug}/${subject.slug}`,
+          getSubjectUrl(
+
+            category.slug,
+
+            subject.slug
+
+          ),
 
         lastModified:
 
@@ -168,7 +180,15 @@ export default async function sitemap():
 
           url:
 
-            `${siteUrl}/study-materials/${category.slug}/${subject.slug}/${material.slug}`,
+            getMaterialUrl(
+
+              category.slug,
+
+              subject.slug,
+
+              material.slug
+
+            ),
 
           lastModified:
 
