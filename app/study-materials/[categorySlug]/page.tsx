@@ -26,6 +26,10 @@ import {
   siteName,
 } from "@/lib/seo";
 
+import {
+  getBreadcrumbStructuredData,
+} from "@/lib/structured-data";
+
 
 export const dynamic =
   "force-dynamic";
