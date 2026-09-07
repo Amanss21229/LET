@@ -7,13 +7,54 @@ import Enquiry from
 import Link from
   "next/link";
 
+import type {
+  Metadata,
+} from "next";
+
 import {
   prisma,
 } from "@/lib/prisma";
 
+import {
+  getStudyMaterialsUrl,
+} from "@/lib/seo";
+
 
 export const dynamic =
   "force-dynamic";
+
+export const metadata: Metadata = {
+
+  title:
+    "Study Materials | LET - Learn Earn Teach",
+
+  description:
+    "Explore free study materials, notes, planners and PDFs organised by class, stream and subject on LET.",
+
+  alternates: {
+
+    canonical:
+      getStudyMaterialsUrl(),
+
+  },
+
+  openGraph: {
+
+    title:
+      "Study Materials | LET - Learn Earn Teach",
+
+    description:
+      "Explore study materials organised by class, stream and subject.",
+
+    url:
+      getStudyMaterialsUrl(),
+
+    type:
+      "website",
+
+  },
+
+};
 
 
 export default async function StudyMaterialsPage() {
