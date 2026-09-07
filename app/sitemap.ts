@@ -6,10 +6,13 @@ import {
   prisma,
 } from "@/lib/prisma";
 
+import {
+  getAppUrl,
+} from "@/lib/seo";
+
 
 const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ||
-  "https://let-edu.onrender.com";
+  getAppUrl();
 
 
 export default async function sitemap():
