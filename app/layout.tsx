@@ -11,27 +11,172 @@ import {
   FirebaseAuthProvider,
 } from "@/components/FirebaseAuthProvider";
 
+import {
+  getAppUrl,
+  siteName,
+} from "@/lib/seo";
+
 
 export const metadata: Metadata = {
 
   metadataBase:
+
     new URL(
-      process.env.NEXT_PUBLIC_APP_URL ||
-      "http://localhost:3000"
+      getAppUrl()
     ),
+
+
+  applicationName:
+
+    siteName,
+
 
   title: {
 
     default:
-      "LET - Learn Earn Teach",
+
+      siteName,
+
 
     template:
-      "%s | LET - Learn Earn Teach",
+
+      "%s | LET",
 
   },
 
+
   description:
-    "LET - Learn Earn Teach provides learning resources, study materials, notes, batches and educational support for students.",
+
+    "LET - Learn Earn Teach provides study materials, notes, educational resources, learning batches and academic support for students.",
+
+
+  keywords: [
+
+    "LET",
+
+    "Learn Earn Teach",
+
+    "study materials",
+
+    "study notes",
+
+    "student notes",
+
+    "educational resources",
+
+    "free study materials",
+
+    "PDF notes",
+
+    "school notes",
+
+    "NEET study materials",
+
+    "JEE study materials",
+
+  ],
+
+
+  authors: [
+
+    {
+
+      name:
+
+        siteName,
+
+    },
+
+  ],
+
+
+  creator:
+
+    siteName,
+
+
+  publisher:
+
+    siteName,
+
+
+  robots: {
+
+    index:
+
+      true,
+
+    follow:
+
+      true,
+
+    googleBot: {
+
+      index:
+
+        true,
+
+      follow:
+
+        true,
+
+      "max-video-preview":
+
+        -1,
+
+      "max-image-preview":
+
+        "large",
+
+      "max-snippet":
+
+        -1,
+
+    },
+
+  },
+
+
+  openGraph: {
+
+    type:
+
+      "website",
+
+
+    siteName:
+
+      siteName,
+
+
+    title:
+
+      siteName,
+
+
+    description:
+
+      "Explore study materials, notes, PDFs and educational resources on LET - Learn Earn Teach.",
+
+  },
+
+
+  twitter: {
+
+    card:
+
+      "summary_large_image",
+
+    title:
+
+      siteName,
+
+
+    description:
+
+      "Explore study materials, notes, PDFs and educational resources on LET.",
+
+  },
 
 };
 
