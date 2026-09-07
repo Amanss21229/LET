@@ -183,69 +183,40 @@ export default async function CategoryPage({
     );
 
 
-  const breadcrumbSchema = {
-
-    "@context":
-      "https://schema.org",
-
-    "@type":
-      "BreadcrumbList",
-
-    itemListElement: [
+    const breadcrumbSchema =
+    getBreadcrumbStructuredData([
 
       {
-
-        "@type":
-          "ListItem",
-
-        position:
-          1,
 
         name:
           "Home",
 
-        item:
+        url:
           getAppUrl(),
 
       },
 
-
       {
-
-        "@type":
-          "ListItem",
-
-        position:
-          2,
 
         name:
           "Study Materials",
 
-        item:
+        url:
           getStudyMaterialsUrl(),
 
       },
 
-
       {
-
-        "@type":
-          "ListItem",
-
-        position:
-          3,
 
         name:
           category.name,
 
-        item:
+        url:
           categoryUrl,
 
       },
 
-    ],
-
-  };
+    ]);
 
 
   const collectionSchema = {
