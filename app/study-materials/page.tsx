@@ -161,9 +161,49 @@ export default async function StudyMaterialsPage() {
 
   return (
 
-    <>
+  <>
 
-      <Nav />
+
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+
+        __html:
+          JSON.stringify(
+            breadcrumbSchema
+          ),
+
+      }}
+    />
+
+
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+
+        __html:
+          JSON.stringify(
+            collectionSchema
+          ),
+
+      }}
+    />
+
+
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+
+        __html:
+          JSON.stringify(
+            categoriesSchema
+          ),
+
+      }}
+    />
+
+
+    <Nav />
 
 
       <main className="wrap">
