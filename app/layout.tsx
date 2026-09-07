@@ -14,11 +14,24 @@ import {
 
 export const metadata: Metadata = {
 
-  title:
-    "LET - Learn Earn Teach",
+  metadataBase:
+    new URL(
+      process.env.NEXT_PUBLIC_APP_URL ||
+      "http://localhost:3000"
+    ),
+
+  title: {
+
+    default:
+      "LET - Learn Earn Teach",
+
+    template:
+      "%s | LET - Learn Earn Teach",
+
+  },
 
   description:
-    "Learn • Earn • Teach",
+    "LET - Learn Earn Teach provides learning resources, study materials, notes, batches and educational support for students.",
 
 };
 
