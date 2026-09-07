@@ -30,6 +30,13 @@ export const metadata: Metadata = {
       getAppUrl()
     ),
 
+    alternates: {
+
+    canonical:
+      getAppUrl(),
+
+  },
+
 
   applicationName:
 
