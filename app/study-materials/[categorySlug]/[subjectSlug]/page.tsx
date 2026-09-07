@@ -17,7 +17,12 @@ import {
 } from "next/navigation";
 
 import {
+  getAppUrl,
+  getCategoryUrl,
+  getMaterialUrl,
+  getStudyMaterialsUrl,
   getSubjectUrl,
+  siteName,
 } from "@/lib/seo";
 
 import StudyMaterialSearch from
