@@ -449,7 +449,7 @@ const creativeWorkSchema = {
 
   inLanguage:
 
-    "en",
+    "en-IN",
 
 
   isAccessibleForFree:
@@ -495,7 +495,7 @@ const creativeWorkSchema = {
 
   learningResourceType:
 
-    "Study Material",
+    "Educational Resource",
 
 
   publisher: {
