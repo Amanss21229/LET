@@ -16,6 +16,11 @@ import {
   siteName,
 } from "@/lib/seo";
 
+import {
+  getOrganizationStructuredData,
+  getWebsiteStructuredData,
+} from "@/lib/structured-data";
+
 
 export const metadata: Metadata = {
 
@@ -192,11 +197,47 @@ export default function Layout({
 
 }) {
 
+
+  const organizationSchema =
+    getOrganizationStructuredData();
+
+
+  const websiteSchema =
+    getWebsiteStructuredData();
+
+
   return (
 
     <html lang="en">
 
       <body>
+
+
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+
+            __html:
+              JSON.stringify(
+                organizationSchema
+              ),
+
+          }}
+        />
+
+
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+
+            __html:
+              JSON.stringify(
+                websiteSchema
+              ),
+
+          }}
+        />
+
 
         <FirebaseAuthProvider>
           
