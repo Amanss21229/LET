@@ -16,8 +16,15 @@ import {
 } from "@/lib/prisma";
 
 import {
+  getAppUrl,
+  getCategoryUrl,
   getStudyMaterialsUrl,
 } from "@/lib/seo";
+
+import {
+  getBreadcrumbStructuredData,
+  getStudyMaterialsCollectionStructuredData,
+} from "@/lib/structured-data";
 
 
 export const dynamic =
@@ -77,6 +84,79 @@ export default async function StudyMaterialsPage() {
       ],
 
     });
+
+  const breadcrumbSchema =
+    getBreadcrumbStructuredData([
+
+      {
+
+        name:
+          "Home",
+
+        url:
+          getAppUrl(),
+
+      },
+
+      {
+
+        name:
+          "Study Materials",
+
+        url:
+          getStudyMaterialsUrl(),
+
+      },
+
+    ]);
+
+
+  const collectionSchema =
+    getStudyMaterialsCollectionStructuredData();
+
+
+  const categoriesSchema = {
+
+    "@context":
+      "https://schema.org",
+
+    "@type":
+      "ItemList",
+
+    name:
+      "LET Study Material Categories",
+
+    numberOfItems:
+      categories.length,
+
+    itemListElement:
+
+      categories.map(
+
+        (
+          category,
+          index
+        ) => ({
+
+          "@type":
+            "ListItem",
+
+          position:
+            index + 1,
+
+          name:
+            category.name,
+
+          url:
+            getCategoryUrl(
+              category.slug
+            ),
+
+        })
+
+      ),
+
+  };
 
 
   return (
