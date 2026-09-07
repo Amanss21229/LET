@@ -24,7 +24,9 @@ import {
 } from "@/lib/study-materials";
 
 import {
+  getAppUrl,
   getMaterialUrl,
+  siteName,
 } from "@/lib/seo";
 
 import {
@@ -163,40 +165,82 @@ export async function generateMetadata({
 
 
   const title =
-    `${material.title} | ${subject.name} Study Material for ${category.name} | LET`;
+  `${material.title} | ${subject.name} Study Material for ${category.name}`;
 
 
-  const description =
-    `Access ${material.title}, a ${subject.name} study material for ${category.name}. Find useful notes, PDFs and learning resources on LET - Learn Earn Teach.`;
+const description =
+  `Access ${material.title}, a ${subject.name} study material for ${category.name}. Explore notes, PDFs, planners and useful educational resources on LET - Learn Earn Teach.`;
 
 
   return {
+
+  title,
+
+  description,
+
+
+  alternates: {
+
+    canonical:
+      url,
+
+  },
+
+
+  openGraph: {
 
     title,
 
     description,
 
-    alternates: {
+    url,
 
-      canonical:
-        url,
+    type:
+      "article",
 
-    },
+    publishedTime:
 
-    openGraph: {
+      material.createdAt.toISOString(),
 
-      title,
 
-      description,
+    modifiedTime:
 
-      url,
+      material.updatedAt.toISOString(),
 
-      type:
-        "article",
 
-    },
+    siteName,
 
-  };
+  },
+
+
+  twitter: {
+
+    card:
+
+      "summary",
+
+
+    title,
+
+    description,
+
+  },
+
+
+  robots: {
+
+    index:
+
+      true,
+
+    follow:
+
+      true,
+
+  },
+
+}; 
+
 
 }
 
@@ -340,12 +384,325 @@ export default async function StudyMaterialPage({
 
     );
 
+  const materialUrl =
+  getMaterialUrl(
+
+    category.slug,
+
+    subject.slug,
+
+    material.slug
+
+  );
+
+
+const appUrl =
+  getAppUrl();
+
+
+const creativeWorkSchema = {
+
+  "@context":
+
+    "https://schema.org",
+
+
+  "@type":
+
+    "CreativeWork",
+
+
+  "@id":
+
+    `${materialUrl}#study-material`,
+
+
+  name:
+
+    material.title,
+
+
+  headline:
+
+    material.title,
+
+
+  description:
+
+    `Study material for ${subject.name} in ${category.name}. ${material.title} is available on ${siteName}.`,
+
+
+  url:
+
+    materialUrl,
+
+
+  datePublished:
+
+    material.createdAt.toISOString(),
+
+
+  dateModified:
+
+    material.updatedAt.toISOString(),
+
+
+  inLanguage:
+
+    "en",
+
+
+  isAccessibleForFree:
+
+    true,
+
+
+  educationalLevel:
+
+    category.name,
+
+
+  about: [
+
+    {
+
+      "@type":
+
+        "Thing",
+
+
+      name:
+
+        subject.name,
+
+    },
+
+    {
+
+      "@type":
+
+        "Thing",
+
+
+      name:
+
+        category.name,
+
+    },
+
+  ],
+
+
+  learningResourceType:
+
+    "Study Material",
+
+
+  publisher: {
+
+    "@type":
+
+      "Organization",
+
+
+    name:
+
+      siteName,
+
+
+    url:
+
+      appUrl,
+
+  },
+
+
+  mainEntityOfPage: {
+
+    "@type":
+
+      "WebPage",
+
+
+    "@id":
+
+      materialUrl,
+
+  },
+
+};
+
+  const breadcrumbSchema = {
+
+  "@context":
+
+    "https://schema.org",
+
+
+  "@type":
+
+    "BreadcrumbList",
+
+
+  itemListElement: [
+
+    {
+
+      "@type":
+
+        "ListItem",
+
+
+      position:
+
+        1,
+
+
+      name:
+
+        "Home",
+
+
+      item:
+
+        appUrl,
+
+    },
+
+
+    {
+
+      "@type":
+
+        "ListItem",
+
+
+      position:
+
+        2,
+
+
+      name:
+
+        "Study Materials",
+
+
+      item:
+
+        `${appUrl}/study-materials`,
+
+    },
+
+
+    {
+
+      "@type":
+
+        "ListItem",
+
+
+      position:
+
+        3,
+
+
+      name:
+
+        category.name,
+
+
+      item:
+
+        `${appUrl}/study-materials/${category.slug}`,
+
+    },
+
+
+    {
+
+      "@type":
+
+        "ListItem",
+
+
+      position:
+
+        4,
+
+
+      name:
+
+        subject.name,
+
+
+      item:
+
+        `${appUrl}/study-materials/${category.slug}/${subject.slug}`,
+
+    },
+
+
+    {
+
+      "@type":
+
+        "ListItem",
+
+
+      position:
+
+        5,
+
+
+      name:
+
+        material.title,
+
+
+      item:
+
+        materialUrl,
+
+    },
+
+  ],
+
+};
+
 
   return (
 
-    <>
+  <>
 
-      <Nav />
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+
+        __html:
+
+          JSON.stringify(
+            creativeWorkSchema
+          ),
+
+      }}
+    />
+
+
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+
+        __html:
+
+          JSON.stringify(
+            breadcrumbSchema
+          ),
+
+      }}
+    />
+
+
+    <Nav />
 
 
       <main className="wrap">
