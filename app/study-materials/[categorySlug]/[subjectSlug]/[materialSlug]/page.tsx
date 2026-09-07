@@ -7,6 +7,10 @@ import BatchLoginButton from "@/components/BatchLoginButton";
 import StudyMaterialActions from
   "@/components/StudyMaterialActions";
 
+import type {
+  Metadata,
+} from "next";
+
 import {
   prisma,
 } from "@/lib/prisma";
@@ -20,12 +24,181 @@ import {
 } from "@/lib/study-materials";
 
 import {
+  getMaterialUrl,
+} from "@/lib/seo";
+
+import {
   notFound,
 } from "next/navigation";
 
 
 export const dynamic =
   "force-dynamic";
+
+export async function generateMetadata({
+
+  params,
+
+}: {
+
+  params: Promise<{
+    categorySlug: string;
+    subjectSlug: string;
+    materialSlug: string;
+  }>;
+
+}): Promise<Metadata> {
+
+  const {
+
+    categorySlug,
+
+    subjectSlug,
+
+    materialSlug,
+
+  } =
+    await params;
+
+
+  const category =
+    await prisma.studyCategory.findUnique({
+
+      where: {
+
+        slug:
+          categorySlug,
+
+      },
+
+    });
+
+
+  if (!category) {
+
+    return {
+
+      title:
+        "Study Material Not Found | LET",
+
+    };
+
+  }
+
+
+  const subject =
+    await prisma.studySubject.findUnique({
+
+      where: {
+
+        categoryId_slug: {
+
+          categoryId:
+            category.id,
+
+          slug:
+            subjectSlug,
+
+        },
+
+      },
+
+    });
+
+
+  if (!subject) {
+
+    return {
+
+      title:
+        "Study Material Not Found | LET",
+
+    };
+
+  }
+
+
+  const material =
+    await prisma.studyMaterial.findUnique({
+
+      where: {
+
+        subjectId_slug: {
+
+          subjectId:
+            subject.id,
+
+          slug:
+            materialSlug,
+
+        },
+
+      },
+
+    });
+
+
+  if (!material) {
+
+    return {
+
+      title:
+        "Study Material Not Found | LET",
+
+    };
+
+  }
+
+
+  const url =
+    getMaterialUrl(
+
+      category.slug,
+
+      subject.slug,
+
+      material.slug
+
+    );
+
+
+  const title =
+    `${material.title} | ${subject.name} Study Material for ${category.name} | LET`;
+
+
+  const description =
+    `Access ${material.title}, a ${subject.name} study material for ${category.name}. Find useful notes, PDFs and learning resources on LET - Learn Earn Teach.`;
+
+
+  return {
+
+    title,
+
+    description,
+
+    alternates: {
+
+      canonical:
+        url,
+
+    },
+
+    openGraph: {
+
+      title,
+
+      description,
+
+      url,
+
+      type:
+        "article",
+
+    },
+
+  };
+
+}
 
 
 export default async function StudyMaterialPage({
