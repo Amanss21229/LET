@@ -201,7 +201,7 @@ export default function StudyMaterialsAdmin() {
 
     try {
       const response = await fetch(
-        `/api/study-materials/categories?id=${id}`,
+        `/api/study-materials/categories/${id}`,
         {
           method: "DELETE",
         }
@@ -230,7 +230,7 @@ export default function StudyMaterialsAdmin() {
 
     try {
       const response = await fetch(
-        `/api/study-materials/subjects?id=${id}`,
+        `/api/study-materials/subjects/${id}`,
         {
           method: "DELETE",
         }
@@ -259,7 +259,7 @@ export default function StudyMaterialsAdmin() {
 
     try {
       const response = await fetch(
-        `/api/study-materials/materials?id=${id}`,
+        `/api/study-materials/materials/${id}`,
         {
           method: "DELETE",
         }
