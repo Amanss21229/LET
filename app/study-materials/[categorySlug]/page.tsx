@@ -7,6 +7,10 @@ import Enquiry from
 import Link from
   "next/link";
 
+import type {
+  Metadata,
+} from "next";
+
 import {
   prisma,
 } from "@/lib/prisma";
@@ -15,9 +19,96 @@ import {
   notFound,
 } from "next/navigation";
 
+import {
+  getCategoryUrl,
+} from "@/lib/seo";
+
 
 export const dynamic =
   "force-dynamic";
+
+export async function generateMetadata({
+
+  params,
+
+}: {
+
+  params: Promise<{
+    categorySlug: string;
+  }>;
+
+}): Promise<Metadata> {
+
+  const {
+    categorySlug,
+  } =
+    await params;
+
+
+  const category =
+    await prisma.studyCategory.findUnique({
+
+      where: {
+
+        slug:
+          categorySlug,
+
+      },
+
+    });
+
+
+  if (!category) {
+
+    return {
+
+      title:
+        "Study Materials Not Found | LET",
+
+    };
+
+  }
+
+
+  const url =
+    getCategoryUrl(
+      category.slug
+    );
+
+
+  return {
+
+    title:
+      `${category.name} Study Materials | LET`,
+
+    description:
+      `Explore ${category.name} study materials organised by subject. Access notes, PDFs, planners and useful learning resources on LET.`,
+
+    alternates: {
+
+      canonical:
+        url,
+
+    },
+
+    openGraph: {
+
+      title:
+        `${category.name} Study Materials | LET`,
+
+      description:
+        `Explore study materials and subjects for ${category.name}.`,
+
+      url,
+
+      type:
+        "website",
+
+    },
+
+  };
+
+}
 
 
 export default async function CategoryPage({
