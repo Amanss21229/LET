@@ -20,7 +20,10 @@ import {
 } from "next/navigation";
 
 import {
+  getAppUrl,
   getCategoryUrl,
+  getStudyMaterialsUrl,
+  siteName,
 } from "@/lib/seo";
 
 
@@ -170,12 +173,195 @@ export default async function CategoryPage({
 
   }
 
+    const categoryUrl =
+    getCategoryUrl(
+      category.slug
+    );
 
+
+  const breadcrumbSchema = {
+
+    "@context":
+      "https://schema.org",
+
+    "@type":
+      "BreadcrumbList",
+
+    itemListElement: [
+
+      {
+
+        "@type":
+          "ListItem",
+
+        position:
+          1,
+
+        name:
+          "Home",
+
+        item:
+          getAppUrl(),
+
+      },
+
+
+      {
+
+        "@type":
+          "ListItem",
+
+        position:
+          2,
+
+        name:
+          "Study Materials",
+
+        item:
+          getStudyMaterialsUrl(),
+
+      },
+
+
+      {
+
+        "@type":
+          "ListItem",
+
+        position:
+          3,
+
+        name:
+          category.name,
+
+        item:
+          categoryUrl,
+
+      },
+
+    ],
+
+  };
+
+
+  const collectionSchema = {
+
+    "@context":
+      "https://schema.org",
+
+    "@type":
+      "CollectionPage",
+
+    name:
+      `${category.name} Study Materials`,
+
+    description:
+      `Study materials, notes, PDFs and learning resources for ${category.name}.`,
+
+    url:
+      categoryUrl,
+
+    isPartOf: {
+
+      "@type":
+        "WebSite",
+
+      name:
+        siteName,
+
+      url:
+        getAppUrl(),
+
+    },
+
+  };
+
+
+  const subjectsSchema = {
+
+    "@context":
+      "https://schema.org",
+
+    "@type":
+      "ItemList",
+
+    name:
+      `${category.name} Subjects`,
+
+    numberOfItems:
+      category.subjects.length,
+
+    itemListElement:
+
+      category.subjects.map(
+
+        (
+          subject,
+          index
+        ) => ({
+
+          "@type":
+            "ListItem",
+
+          position:
+            index + 1,
+
+          name:
+            subject.name,
+
+          url:
+            `${categoryUrl}/${subject.slug}`,
+
+        })
+
+      ),
+
+  };
+  
   return (
 
-    <>
+  <>
 
-      <Nav />
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+
+        __html:
+          JSON.stringify(
+            breadcrumbSchema
+          ),
+
+      }}
+    />
+
+
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+
+        __html:
+          JSON.stringify(
+            collectionSchema
+          ),
+
+      }}
+    />
+
+
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+
+        __html:
+          JSON.stringify(
+            subjectsSchema
+          ),
+
+      }}
+    />
+
+
+    <Nav />
 
 
       <main className="wrap">
