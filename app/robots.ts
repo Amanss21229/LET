@@ -2,10 +2,13 @@ import type {
   MetadataRoute,
 } from "next";
 
+import {
+  getAppUrl,
+} from "@/lib/seo";
+
 
 const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ||
-  "https://your-domain.com";
+  getAppUrl();
 
 
 export default function robots():
