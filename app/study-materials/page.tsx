@@ -33,10 +33,10 @@ export const dynamic =
 export const metadata: Metadata = {
 
   title:
-    "Study Materials | LET - Learn Earn Teach",
+  "Study Materials, Notes & PDFs | LET",
 
   description:
-    "Explore free study materials, notes, planners and PDFs organised by class, stream and subject on LET.",
+  "Explore study materials, notes, PDFs, planners and educational resources organised by class, stream and subject. Find useful learning resources for school, board, NEET and JEE preparation on LET.",
 
   alternates: {
 
