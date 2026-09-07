@@ -265,12 +265,231 @@ export default async function SubjectPage({
 
     );
 
+    const categoryUrl =
+    getCategoryUrl(
+      category.slug
+    );
+
+
+  const subjectUrl =
+    getSubjectUrl(
+
+      category.slug,
+
+      subject.slug
+
+    );
+
+
+  const breadcrumbSchema = {
+
+    "@context":
+      "https://schema.org",
+
+    "@type":
+      "BreadcrumbList",
+
+    itemListElement: [
+
+      {
+
+        "@type":
+          "ListItem",
+
+        position:
+          1,
+
+        name:
+          "Home",
+
+        item:
+          getAppUrl(),
+
+      },
+
+
+      {
+
+        "@type":
+          "ListItem",
+
+        position:
+          2,
+
+        name:
+          "Study Materials",
+
+        item:
+          getStudyMaterialsUrl(),
+
+      },
+
+
+      {
+
+        "@type":
+          "ListItem",
+
+        position:
+          3,
+
+        name:
+          category.name,
+
+        item:
+          categoryUrl,
+
+      },
+
+
+      {
+
+        "@type":
+          "ListItem",
+
+        position:
+          4,
+
+        name:
+          subject.name,
+
+        item:
+          subjectUrl,
+
+      },
+
+    ],
+
+  };
+
+
+  const collectionSchema = {
+
+    "@context":
+      "https://schema.org",
+
+    "@type":
+      "CollectionPage",
+
+    name:
+      `${subject.name} Study Materials`,
+
+    description:
+      `Study materials, notes, PDFs and learning resources for ${subject.name} in ${category.name}.`,
+
+    url:
+      subjectUrl,
+
+    isPartOf: {
+
+      "@type":
+        "CollectionPage",
+
+      name:
+        `${category.name} Study Materials`,
+
+      url:
+        categoryUrl,
+
+    },
+
+  };
+
+
+  const materialsSchema = {
+
+    "@context":
+      "https://schema.org",
+
+    "@type":
+      "ItemList",
+
+    name:
+      `${subject.name} Study Materials`,
+
+    numberOfItems:
+      materials.length,
+
+    itemListElement:
+
+      materials.map(
+
+        (
+          material,
+          index
+        ) => ({
+
+          "@type":
+            "ListItem",
+
+          position:
+            index + 1,
+
+          name:
+            material.title,
+
+          url:
+            getMaterialUrl(
+
+              category.slug,
+
+              subject.slug,
+
+              material.slug
+
+            ),
+
+        })
+
+      ),
+
+  };
+  
 
   return (
 
-    <>
+  <>
 
-      <Nav />
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+
+        __html:
+          JSON.stringify(
+            breadcrumbSchema
+          ),
+
+      }}
+    />
+
+
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+
+        __html:
+          JSON.stringify(
+            collectionSchema
+          ),
+
+      }}
+    />
+
+
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+
+        __html:
+          JSON.stringify(
+            materialsSchema
+          ),
+
+      }}
+    />
+
+
+    <Nav />
 
 
       <main className="wrap">
