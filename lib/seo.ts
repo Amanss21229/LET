@@ -1,8 +1,17 @@
 const appUrl =
   (
     process.env.NEXT_PUBLIC_APP_URL ||
-    "http://localhost:3000"
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    "https://let-edu.onrender.com"
   ).replace(/\/$/, "");
+
+
+export const siteName =
+  "LET - Learn Earn Teach";
+
+
+export const siteShortName =
+  "LET";
 
 
 export function getAppUrl() {
