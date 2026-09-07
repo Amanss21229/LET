@@ -2716,6 +2716,18 @@ hr {
   text-align: left;
 }
 
+.study-material-view {
+  flex-shrink: 0;
+
+  margin-left: auto;
+
+  font-weight: 600;
+
+  color: #ffffff;
+
+  white-space: nowrap;
+}
+
 
 /* ========================================
    ACTION BUTTONS
