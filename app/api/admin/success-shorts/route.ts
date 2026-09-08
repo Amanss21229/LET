@@ -260,9 +260,7 @@ if (!isYouTubeUrl) {
 
           youtubeUrl,
 
-          seoKeywords:
-
-            seoKeywords || null,
+          seoKeywords,
 
         },
 
