@@ -280,6 +280,7 @@ model SuccessShort {
 
   seoDescription String? @db.Text
 
+  viewCount Int @default(0)
 
   createdAt DateTime @default(now())
 
