@@ -85,8 +85,14 @@ export async function GET() {
           youtubeUrl:
             short.youtubeUrl,
 
+          youtubeVideoId:
+            short.youtubeVideoId,
+
           seoKeywords:
             short.seoKeywords,
+
+          seoDescription:
+            short.seoDescription,
 
           viewCount:
             short.viewCount,
