@@ -189,6 +189,30 @@ async function handleLogin() {
 
     <nav className="nav wrap">
 
+      <button
+  type="button"
+  className="mobile-menu-button"
+  onClick={() =>
+
+    setMobileMenuOpen(
+      !mobileMenuOpen
+    )
+
+  }
+  aria-label="Open navigation menu"
+  aria-expanded={
+    mobileMenuOpen
+  }
+>
+
+  <span />
+
+  <span />
+
+  <span />
+
+</button>
+
       <Link
         className="brand"
         href="/"
