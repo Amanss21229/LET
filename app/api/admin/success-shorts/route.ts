@@ -197,6 +197,10 @@ export async function POST(
         body?.seoKeywords || ""
       ).trim();
 
+    const seoDescription =
+      String(
+        body?.seoDescription || ""
+      ).trim();
 
     if (
   !title ||
@@ -286,6 +290,9 @@ if (!youtubeVideoId) {
           youtubeVideoId,
 
           seoKeywords,
+
+          seoDescription:
+            seoDescription || null,
 
         },
 
