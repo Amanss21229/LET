@@ -336,7 +336,7 @@ model SuccessShortView {
   short SuccessShort @relation( fields: [shortId], references: [id], onDelete: Cascade)
 
 
-  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 
 
   @@index([shortId])
