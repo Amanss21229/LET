@@ -10,6 +10,8 @@ import type {
 
 import {
   getAppUrl,
+  getSuccessShortsUrl,
+  getSuccessShortsUrl,
   siteName,
 } from "@/lib/seo";
 
@@ -33,7 +35,7 @@ export const metadata:
     alternates: {
 
       canonical:
-        `${getAppUrl()}/success-shorts`,
+        getSuccessShortsUrl()
 
     },
 
@@ -46,7 +48,7 @@ export const metadata:
         "Watch the latest educational and motivational Success Shorts.",
 
       url:
-        `${getAppUrl()}/success-shorts`,
+        getSuccessShortsUrl()
 
       type:
         "website",
