@@ -87,6 +87,12 @@ type ShortPlayerProps = {
   isActive:
     boolean;
 
+  soundEnabled:
+    boolean;
+
+  onSoundEnabled:
+    () => void;
+
 };
 
 function
@@ -95,6 +101,10 @@ SuccessShortPlayer({
   short,
 
   isActive,
+
+  soundEnabled,
+
+  onSoundEnabled,
 
 }: ShortPlayerProps) {
 
@@ -107,41 +117,22 @@ SuccessShortPlayer({
     );
 
 
-  useEffect(
+  const [
 
-    () => {
+    playerReady,
 
-      if (!isActive) {
+    setPlayerReady,
 
-        return;
-
-      }
-
-
-      /*
-        The autoplay parameter
-        starts the currently active
-        Success Short.
-
-        muted=1 improves autoplay
-        compatibility in browsers.
-      */
-
-    },
-
-    [
-
-      isActive,
-
-    ]
-
-  );
+  ] =
+    useState(
+      false
+    );
 
 
   const playerUrl =
     `https://www.youtube.com/embed/${encodeURIComponent(
       short.youtubeVideoId
-    )}?autoplay=${
+    )}?enablejsapi=1&autoplay=${
 
       isActive
 
@@ -149,7 +140,188 @@ SuccessShortPlayer({
 
         : "0"
 
-    }&mute=1&playsinline=1&controls=1&rel=0&modestbranding=1`;
+    }&playsinline=1&controls=1&rel=0&modestbranding=1&mute=${
+
+      soundEnabled
+
+        ? "0"
+
+        : "1"
+
+    }`;
+
+
+  function
+  sendPlayerCommand(
+
+    command:
+      string,
+
+    args:
+      unknown[] =
+        []
+
+  ) {
+
+    if (
+      !iframeRef.current
+    ) {
+
+      return;
+
+    }
+
+
+    iframeRef.current.contentWindow?.postMessage(
+
+      JSON.stringify({
+
+        event:
+          "command",
+
+        func:
+          command,
+
+        args,
+
+      }),
+
+      "*"
+
+    );
+
+  }
+
+
+  useEffect(
+
+    () => {
+
+      if (
+        !playerReady
+      ) {
+
+        return;
+
+      }
+
+
+      if (
+        isActive
+      ) {
+
+        sendPlayerCommand(
+          "playVideo"
+        );
+
+      }
+
+      else {
+
+        sendPlayerCommand(
+          "pauseVideo"
+        );
+
+      }
+
+    },
+
+    [
+
+      isActive,
+
+      playerReady,
+
+    ]
+
+  );
+
+
+  useEffect(
+
+    () => {
+
+      if (
+        !playerReady
+      ) {
+
+        return;
+
+      }
+
+
+      if (
+        soundEnabled
+      ) {
+
+        sendPlayerCommand(
+          "unMute"
+        );
+
+
+        sendPlayerCommand(
+          "setVolume",
+
+          [
+            100,
+          ]
+
+        );
+
+      }
+
+      else {
+
+        sendPlayerCommand(
+          "mute"
+        );
+
+      }
+
+    },
+
+    [
+
+      soundEnabled,
+
+      playerReady,
+
+    ]
+
+  );
+
+
+  function
+  handleEnableSound() {
+
+    onSoundEnabled();
+
+
+    window.setTimeout(
+
+      () => {
+
+        sendPlayerCommand(
+          "unMute"
+        );
+
+
+        sendPlayerCommand(
+          "setVolume",
+
+          [
+            100,
+          ]
+
+        );
+
+      },
+
+      100
+
+    );
+
+  }
 
 
   return (
@@ -174,6 +346,16 @@ SuccessShortPlayer({
           short.title
         }
 
+        onLoad={
+
+          () =>
+
+            setPlayerReady(
+              true
+            )
+
+        }
+
         allow={
           "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         }
@@ -182,12 +364,52 @@ SuccessShortPlayer({
 
       />
 
+
+      {
+
+        isActive &&
+
+        !soundEnabled && (
+
+          <button
+
+            type="button"
+
+            className={
+              "success-short-sound-button"
+            }
+
+            onClick={
+              handleEnableSound
+            }
+
+          >
+
+            <span>
+
+              🔊
+
+            </span>
+
+
+            <strong>
+
+              Tap for Sound
+
+            </strong>
+
+          </button>
+
+        )
+
+      }
+
     </div>
 
   );
 
 }
-
+  
 export default function
 SuccessShortsFeed() {
 
@@ -211,6 +433,29 @@ SuccessShortsFeed() {
 
   ] =
     useState<SuccessShort[]>([]);
+
+  const [
+
+  soundEnabled,
+
+  setSoundEnabled,
+
+] =
+  useState(
+    false
+  );
+
+
+const [
+
+  soundPreferenceLoaded,
+
+  setSoundPreferenceLoaded,
+
+] =
+  useState(
+    false
+  );
 
   const [
 
@@ -429,6 +674,61 @@ SuccessShortsFeed() {
     []
 
   );
+
+  useEffect(
+
+  () => {
+
+    try {
+
+      const savedPreference =
+        window.localStorage.getItem(
+
+          "successShortsSoundEnabled"
+
+        );
+
+
+      if (
+        savedPreference ===
+        "true"
+      ) {
+
+        setSoundEnabled(
+          true
+        );
+
+      }
+
+    }
+
+    catch (
+      error
+    ) {
+
+      console.error(
+
+        "Unable to load sound preference:",
+
+        error
+
+      );
+
+    }
+
+    finally {
+
+      setSoundPreferenceLoaded(
+        true
+      );
+
+    }
+
+  },
+
+  []
+
+);
 
   
   /*
@@ -722,6 +1022,42 @@ SuccessShortsFeed() {
   ]
 
 );
+
+  function
+handleEnableGlobalSound() {
+
+  setSoundEnabled(
+    true
+  );
+
+
+  try {
+
+    window.localStorage.setItem(
+
+      "successShortsSoundEnabled",
+
+      "true"
+
+    );
+
+  }
+
+  catch (
+    error
+  ) {
+
+    console.error(
+
+      "Unable to save sound preference:",
+
+      error
+
+    );
+
+  }
+
+}
 
   async function
   handleLogin() {
@@ -1173,6 +1509,18 @@ SuccessShortsFeed() {
     activeShortId ===
     short.id
 
+  }
+
+                soundEnabled={
+
+    soundPreferenceLoaded &&
+
+    soundEnabled
+
+  }
+
+  onSoundEnabled={
+    handleEnableGlobalSound
   }
 
 />
