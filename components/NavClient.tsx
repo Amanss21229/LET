@@ -187,31 +187,34 @@ async function handleLogin() {
 
   return (
 
+  <>
+
     <nav className="nav wrap">
 
       <button
-  type="button"
-  className="mobile-menu-button"
-  onClick={() =>
+        type="button"
+        className="mobile-menu-button"
+        onClick={() =>
 
-    setMobileMenuOpen(
-      !mobileMenuOpen
-    )
+          setMobileMenuOpen(
+            !mobileMenuOpen
+          )
 
-  }
-  aria-label="Open navigation menu"
-  aria-expanded={
-    mobileMenuOpen
-  }
->
+        }
+        aria-label="Open navigation menu"
+        aria-expanded={
+          mobileMenuOpen
+        }
+      >
 
-  <span />
+        <span />
 
-  <span />
+        <span />
 
-  <span />
+        <span />
 
-</button>
+      </button>
+
 
       <Link
         className="brand"
@@ -305,6 +308,62 @@ async function handleLogin() {
 
     </nav>
 
-  );
+
+    {mobileMenuOpen && (
+
+      <>
+
+        <button
+          type="button"
+          className="mobile-menu-overlay"
+          onClick={closeMobileMenu}
+          aria-label="Close navigation menu"
+        />
+
+
+        <aside
+          className="mobile-menu-drawer"
+        >
+
+          <div
+            className="mobile-menu-header"
+          >
+
+            <span>
+              Navigation
+            </span>
+
+
+            <button
+              type="button"
+              className="mobile-menu-close"
+              onClick={closeMobileMenu}
+              aria-label="Close navigation menu"
+            >
+
+              ×
+
+            </button>
+
+          </div>
+
+
+          <div
+            className="mobile-menu-links"
+          >
+
+            {navigationLinks}
+
+          </div>
+
+        </aside>
+
+      </>
+
+    )}
+
+  </>
+
+);
 
 }
