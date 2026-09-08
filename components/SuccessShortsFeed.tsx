@@ -567,6 +567,19 @@ const [
       {}
     );
 
+  const [
+
+  viewedShorts,
+
+  setViewedShorts,
+
+] =
+  useState<
+    Record<string, boolean>
+  >(
+    {}
+  );
+
 
   async function
   loadShorts() {
@@ -1036,6 +1049,33 @@ const [
 
       );
 
+                useEffect(
+
+  () => {
+
+    if (
+      !activeShortId
+    ) {
+
+      return;
+
+    }
+
+
+    recordView(
+      activeShortId
+    );
+
+  },
+
+  [
+
+    activeShortId,
+
+  ]
+
+);
+
 
     const shortCards =
       document.querySelectorAll(
@@ -1362,6 +1402,26 @@ handleEnableGlobalSound() {
       string
   ) {
 
+    return;
+
+  }
+
+
+  setViewedShorts(
+
+    (
+      previous
+    ) => ({
+
+      ...previous,
+
+      [shortId]:
+        true,
+
+    })
+
+  );
+
     try {
 
       await firebaseFetch(
@@ -1538,7 +1598,6 @@ handleEnableGlobalSound() {
               className={
                 "success-short-card"
               }
-
               
               >
 
