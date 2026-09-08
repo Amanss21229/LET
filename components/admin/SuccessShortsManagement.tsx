@@ -31,6 +31,9 @@ type SuccessShort = {
   likeCount:
     number;
 
+  shareCount:
+    number;
+
   createdAt:
     string;
 
