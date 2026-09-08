@@ -2064,6 +2064,7 @@ const deleteNotification =
               "Manage Batch",
               "About Tutor",
               "Hero Slider",
+              "Success Shorts",
               "Manage Study Materials",
               "Chats",
             ].map((item) => (
@@ -5783,6 +5784,12 @@ const deleteNotification =
   </>
 
 )}
+
+            {tab === "Success Shorts" && (
+
+              <SuccessShortsManagement />
+
+            )}
 
             {/* =====================
             MANAGE STUDY MATERIALS
