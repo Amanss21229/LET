@@ -114,51 +114,104 @@ export async function GET() {
 
       );
 
+    const formattedShorts =
+      shorts.map(
+        ...
+      );
 
-    formattedShorts.sort(
-
-      (
-        a,
-        b
-      ) => {
-
-        const timeDifference =
-          new Date(
-            b.createdAt
-          ).getTime()
-
-          -
-
-          new Date(
-            a.createdAt
-          ).getTime();
+    const latestThreshold =
+  Date.now() -
+  7 * 24 * 60 * 60 * 1000;
 
 
-        /*
-          Latest shorts remain
-          the primary priority.
-        */
+formattedShorts.sort(
 
-        if (timeDifference !== 0) {
+  (
+    a,
+    b
+  ) => {
 
-          return timeDifference;
+    const aCreatedAt =
+      new Date(
+        a.createdAt
+      ).getTime();
 
-        }
+
+    const bCreatedAt =
+      new Date(
+        b.createdAt
+      ).getTime();
 
 
-        return (
+    const aIsLatest =
+      aCreatedAt >=
+      latestThreshold;
 
-          b.reachScore
 
-          -
+    const bIsLatest =
+      bCreatedAt >=
+      latestThreshold;
 
-          a.reachScore
 
-        );
+    /*
+      Latest shorts stay
+      at the top.
+    */
 
-      }
+    if (
+      aIsLatest &&
+      !bIsLatest
+    ) {
+
+      return -1;
+
+    }
+
+
+    if (
+      !aIsLatest &&
+      bIsLatest
+    ) {
+
+      return 1;
+
+    }
+
+
+    /*
+      Among latest shorts,
+      newest comes first.
+    */
+
+    if (
+      aIsLatest &&
+      bIsLatest
+    ) {
+
+      return (
+        bCreatedAt -
+        aCreatedAt
+      );
+
+    }
+
+
+    /*
+      Older shorts are ranked
+      by overall reach.
+    */
+
+    return (
+
+      b.reachScore -
+
+      a.reachScore
 
     );
+
+  }
+
+);
 
 
     return NextResponse.json(
