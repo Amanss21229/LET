@@ -41,6 +41,12 @@ export default function NavClient() {
   ] =
     useState(false);
 
+  const [
+    mobileMenuOpen,
+    setMobileMenuOpen,
+  ] =
+    useState(false);
+
 
 async function handleLogin() {
 
@@ -125,10 +131,87 @@ async function handleLogin() {
 
   }
 
+    const closeMobileMenu = () => {
+
+    setMobileMenuOpen(false);
+
+  };
+
+
+  const navigationLinks = (
+
+    <>
+
+      <Link
+        href="/"
+        onClick={closeMobileMenu}
+      >
+        All Batches
+      </Link>
+
+
+      <Link
+        href="/my-batches"
+        onClick={closeMobileMenu}
+      >
+        My Batches
+      </Link>
+
+
+      <Link
+        href="/success-shorts"
+        onClick={closeMobileMenu}
+      >
+        Success Shorts
+      </Link>
+
+
+      <Link
+        href="/study-materials"
+        onClick={closeMobileMenu}
+      >
+        Study Materials
+      </Link>
+
+
+      <Link
+        href="/profile"
+        onClick={closeMobileMenu}
+      >
+        My Profile
+      </Link>
+
+    </>
+
+  );
 
   return (
 
     <nav className="nav wrap">
+
+      <button
+  type="button"
+  className="mobile-menu-button"
+  onClick={() =>
+
+    setMobileMenuOpen(
+      !mobileMenuOpen
+    )
+
+  }
+  aria-label="Open navigation menu"
+  aria-expanded={
+    mobileMenuOpen
+  }
+>
+
+  <span />
+
+  <span />
+
+  <span />
+
+</button>
 
       <Link
         className="brand"
@@ -149,30 +232,9 @@ async function handleLogin() {
 
       <div className="links">
 
-        <Link href="/">
-          All Batches
-        </Link>
-
-        <Link href="/my-batches">
-          My Batches
-        </Link>
-
-        <Link href="/success-shorts">
-          Success Shorts
-        </Link>
-
-
-        <Link href="/study-materials">
-          Study Materials
-        </Link>
-
-        <Link href="/profile">
-          My Profile
-        </Link>
-
+        {navigationLinks}
 
       </div>
-
 
       <div className="nav-actions">
 
@@ -241,6 +303,62 @@ async function handleLogin() {
       </div>
 
     </nav>
+
+                     
+    {mobileMenuOpen && (
+
+      <>
+
+        <button
+          type="button"
+          className="mobile-menu-overlay"
+          onClick={closeMobileMenu}
+          aria-label="Close navigation menu"
+        />
+
+
+        <aside
+          className="mobile-menu-drawer"
+        >
+
+          <div
+            className="mobile-menu-header"
+          >
+
+            <span>
+              Navigation
+            </span>
+
+
+            <button
+              type="button"
+              className="mobile-menu-close"
+              onClick={closeMobileMenu}
+              aria-label="Close navigation menu"
+            >
+
+              ×
+
+            </button>
+
+          </div>
+
+
+          <div
+            className="mobile-menu-links"
+          >
+
+            {navigationLinks}
+
+          </div>
+
+        </aside>
+
+      </>
+
+    )}
+
+    <>
 
   );
 
