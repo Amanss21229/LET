@@ -3692,21 +3692,6 @@ hr {
   600px
 ) {
 
-  .success-short-sound-button {
-
-    min-width:
-      140px;
-
-    padding:
-      14px 18px;
-
-    border-radius:
-      16px;
-
-  }
-
-} 
-  
 .success-shorts-page {
 
     padding:
@@ -3755,4 +3740,17 @@ hr {
 
   }
 
+    .success-short-sound-button {
+
+    min-width:
+      140px;
+
+    padding:
+      14px 18px;
+
+    border-radius:
+      16px;
+
+  }
+  
 }
