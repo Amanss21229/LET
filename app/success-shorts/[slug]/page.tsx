@@ -2,28 +2,22 @@ import type {
   Metadata,
 } from "next";
 
-
 import {
   notFound,
 } from "next/navigation";
 
-
 import Nav from
   "@/components/Nav";
-
 
 import Enquiry from
   "@/components/Enquiry";
 
-
 import SuccessShortsFeed from
   "@/components/SuccessShortsFeed";
-
 
 import {
   prisma,
 } from "@/lib/prisma";
-
 
 import {
   getAppUrl,
@@ -37,7 +31,8 @@ export const dynamic =
   "force-dynamic";
 
 
-export async function generateMetadata({
+export async function
+generateMetadata({
 
   params,
 
@@ -49,11 +44,8 @@ export async function generateMetadata({
 
 }): Promise<Metadata> {
 
-
   const {
-
     slug,
-
   } =
     await params;
 
@@ -62,17 +54,13 @@ export async function generateMetadata({
     await prisma.successShort.findUnique({
 
       where: {
-
         slug,
-
       },
 
     });
 
 
-  if (
-    !short
-  ) {
+  if (!short) {
 
     return {
 
@@ -96,10 +84,16 @@ export async function generateMetadata({
     `Watch ${short.title} on Success Shorts by ${siteName}.`;
 
 
+  const thumbnailUrl =
+    `https://i.ytimg.com/vi/${encodeURIComponent(
+      short.youtubeVideoId
+    )}/hqdefault.jpg`;
+
+
   return {
 
     title:
-      `${short.title} | Success Shorts | ${siteName}`,
+      `${short.title} | Success Shorts`,
 
     description,
 
@@ -108,13 +102,8 @@ export async function generateMetadata({
       short.seoKeywords
         .split(",")
         .map(
-
-          (
-            keyword
-          ) =>
-
+          (keyword) =>
             keyword.trim()
-
         )
         .filter(
           Boolean
@@ -141,51 +130,44 @@ export async function generateMetadata({
 
       siteName,
 
-        images: [
+      images: [
 
-    {
+        {
 
-      url:
-        `https://i.ytimg.com/vi/${encodeURIComponent(
-          short.youtubeVideoId
-        )}/hqdefault.jpg`,
+          url:
+            thumbnailUrl,
 
-      width:
-        480,
+          width:
+            480,
 
-      height:
-        360,
+          height:
+            360,
 
-      alt:
-        short.title,
+          alt:
+            short.title,
 
-    },
+        },
 
-  ],
-
-},
+      ],
 
     },
 
     twitter: {
 
-  card:
-    "summary_large_image",
+      card:
+        "summary_large_image",
 
-  title:
-    short.title,
+      title:
+        short.title,
 
-  description,
+      description,
 
-  images: [
+      images:
+        [
+          thumbnailUrl,
+        ],
 
-    `https://i.ytimg.com/vi/${encodeURIComponent(
-      short.youtubeVideoId
-    )}/hqdefault.jpg`,
-
-  ],
-
-},
+    },
 
   };
 
@@ -205,218 +187,212 @@ SuccessShortDetailPage({
 
 }) {
 
-
   const {
-
     slug,
-
   } =
     await params;
 
 
   const short =
-  await prisma.successShort.findUnique({
+    await prisma.successShort.findUnique({
 
-    where: {
+      where: {
+        slug,
+      },
 
-      slug,
+      select: {
 
-    },
+        id:
+          true,
 
-    select: {
+        title:
+          true,
 
-      id:
-        true,
+        slug:
+          true,
 
-      title:
-        true,
+        youtubeUrl:
+          true,
 
-      slug:
-        true,
+        youtubeVideoId:
+          true,
 
-      youtubeUrl:
-        true,
+        seoDescription:
+          true,
 
-      youtubeVideoId:
-        true,
+        createdAt:
+          true,
 
-      seoDescription:
-        true,
+      },
 
-      createdAt:
-        true,
-
-      updatedAt:
-        true,
-
-    },
-
-  });
+    });
 
 
-  if (
-    !short
-  ) {
+  if (!short) {
 
     return notFound();
 
   }
 
+
   const shortUrl =
-  getSuccessShortUrl(
-    short.slug
-  );
+    getSuccessShortUrl(
+      short.slug
+    );
 
 
-const description =
-  short.seoDescription ||
+  const description =
+    short.seoDescription ||
 
-  `Watch ${short.title} on Success Shorts by ${siteName}.`;
+    `Watch ${short.title} on Success Shorts by ${siteName}.`;
 
 
-const breadcrumbSchema = {
+  const breadcrumbSchema = {
 
-  "@context":
-    "https://schema.org",
+    "@context":
+      "https://schema.org",
 
-  "@type":
-    "BreadcrumbList",
+    "@type":
+      "BreadcrumbList",
 
-  itemListElement: [
+    itemListElement: [
 
-    {
+      {
+
+        "@type":
+          "ListItem",
+
+        position:
+          1,
+
+        name:
+          "Home",
+
+        item:
+          getAppUrl(),
+
+      },
+
+      {
+
+        "@type":
+          "ListItem",
+
+        position:
+          2,
+
+        name:
+          "Success Shorts",
+
+        item:
+          getSuccessShortsUrl(),
+
+      },
+
+      {
+
+        "@type":
+          "ListItem",
+
+        position:
+          3,
+
+        name:
+          short.title,
+
+        item:
+          shortUrl,
+
+      },
+
+    ],
+
+  };
+
+
+  const videoSchema = {
+
+    "@context":
+      "https://schema.org",
+
+    "@type":
+      "VideoObject",
+
+    name:
+      short.title,
+
+    description,
+
+    embedUrl:
+      `https://www.youtube.com/embed/${encodeURIComponent(
+        short.youtubeVideoId
+      )}`,
+
+    contentUrl:
+      short.youtubeUrl,
+
+    url:
+      shortUrl,
+
+    uploadDate:
+      short.createdAt.toISOString(),
+
+    thumbnailUrl:
+      `https://i.ytimg.com/vi/${encodeURIComponent(
+        short.youtubeVideoId
+      )}/hqdefault.jpg`,
+
+    publisher: {
 
       "@type":
-        "ListItem",
-
-      position:
-        1,
+        "Organization",
 
       name:
-        "Home",
+        siteName,
 
-      item:
+      url:
         getAppUrl(),
 
     },
 
-
-    {
-
-      "@type":
-        "ListItem",
-
-      position:
-        2,
-
-      name:
-        "Success Shorts",
-
-      item:
-        getSuccessShortsUrl(),
-
-    },
-
-
-    {
-
-      "@type":
-        "ListItem",
-
-      position:
-        3,
-
-      name:
-        short.title,
-
-      item:
-        shortUrl,
-
-    },
-
-  ],
-
-};
-
-
-const videoSchema = {
-
-  "@context":
-    "https://schema.org",
-
-  "@type":
-    "VideoObject",
-
-  name:
-    short.title,
-
-  description,
-
-  embedUrl:
-    `https://www.youtube.com/embed/${short.youtubeVideoId}`,
-
-  contentUrl:
-    short.youtubeUrl,
-
-  url:
-    shortUrl,
-
-  uploadDate:
-    short.createdAt.toISOString(),
-
-  publisher: {
-
-    "@type":
-      "Organization",
-
-    name:
-      siteName,
-
-    url:
-      getAppUrl(),
-
-  },
-
-};
+  };
 
 
   return (
 
-  <>
+    <>
 
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
 
-        __html:
-          JSON.stringify(
-            breadcrumbSchema
-          ),
+          __html:
+            JSON.stringify(
+              breadcrumbSchema
+            ),
 
-      }}
-    />
-
-
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{
-
-        __html:
-          JSON.stringify(
-            videoSchema
-          ),
-
-      }}
-    />
+        }}
+      />
 
 
-    <Nav />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+
+          __html:
+            JSON.stringify(
+              videoSchema
+            ),
+
+        }}
+      />
+
+
+      <Nav />
 
 
       <main
-        className={
-          "success-shorts-page"
-        }
+        className="success-shorts-page"
       >
 
         <SuccessShortsFeed
