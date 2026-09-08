@@ -189,30 +189,6 @@ async function handleLogin() {
 
     <nav className="nav wrap">
 
-      <button
-  type="button"
-  className="mobile-menu-button"
-  onClick={() =>
-
-    setMobileMenuOpen(
-      !mobileMenuOpen
-    )
-
-  }
-  aria-label="Open navigation menu"
-  aria-expanded={
-    mobileMenuOpen
-  }
->
-
-  <span />
-
-  <span />
-
-  <span />
-
-</button>
-
       <Link
         className="brand"
         href="/"
@@ -232,9 +208,30 @@ async function handleLogin() {
 
       <div className="links">
 
-        {navigationLinks}
+        <Link href="/">
+          All Batches
+        </Link>
+
+        <Link href="/my-batches">
+          My Batches
+        </Link>
+
+        <Link href="/success-shorts">
+          Success Shorts
+        </Link>
+
+
+        <Link href="/study-materials">
+          Study Materials
+        </Link>
+
+        <Link href="/profile">
+          My Profile
+        </Link>
+
 
       </div>
+
 
       <div className="nav-actions">
 
@@ -303,62 +300,6 @@ async function handleLogin() {
       </div>
 
     </nav>
-
-                     
-    {mobileMenuOpen && (
-
-      <>
-
-        <button
-          type="button"
-          className="mobile-menu-overlay"
-          onClick={closeMobileMenu}
-          aria-label="Close navigation menu"
-        />
-
-
-        <aside
-          className="mobile-menu-drawer"
-        >
-
-          <div
-            className="mobile-menu-header"
-          >
-
-            <span>
-              Navigation
-            </span>
-
-
-            <button
-              type="button"
-              className="mobile-menu-close"
-              onClick={closeMobileMenu}
-              aria-label="Close navigation menu"
-            >
-
-              ×
-
-            </button>
-
-          </div>
-
-
-          <div
-            className="mobile-menu-links"
-          >
-
-            {navigationLinks}
-
-          </div>
-
-        </aside>
-
-      </>
-
-    )}
-
-    <>
 
   );
 
