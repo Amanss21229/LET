@@ -26,7 +26,9 @@ import {
 
 
 import {
+  getAppUrl,
   getSuccessShortUrl,
+  getSuccessShortsUrl,
   siteName,
 } from "@/lib/seo";
 
@@ -181,22 +183,43 @@ SuccessShortDetailPage({
 
 
   const short =
-    await prisma.successShort.findUnique({
+  await prisma.successShort.findUnique({
 
-      where: {
+    where: {
 
-        slug,
+      slug,
 
-      },
+    },
 
-      select: {
+    select: {
 
-        id:
-          true,
+      id:
+        true,
 
-      },
+      title:
+        true,
 
-    });
+      slug:
+        true,
+
+      youtubeUrl:
+        true,
+
+      youtubeVideoId:
+        true,
+
+      seoDescription:
+        true,
+
+      createdAt:
+        true,
+
+      updatedAt:
+        true,
+
+    },
+
+  });
 
 
   if (
@@ -207,12 +230,155 @@ SuccessShortDetailPage({
 
   }
 
+  const shortUrl =
+  getSuccessShortUrl(
+    short.slug
+  );
+
+
+const description =
+  short.seoDescription ||
+
+  `Watch ${short.title} on Success Shorts by ${siteName}.`;
+
+
+const breadcrumbSchema = {
+
+  "@context":
+    "https://schema.org",
+
+  "@type":
+    "BreadcrumbList",
+
+  itemListElement: [
+
+    {
+
+      "@type":
+        "ListItem",
+
+      position:
+        1,
+
+      name:
+        "Home",
+
+      item:
+        getAppUrl(),
+
+    },
+
+
+    {
+
+      "@type":
+        "ListItem",
+
+      position:
+        2,
+
+      name:
+        "Success Shorts",
+
+      item:
+        getSuccessShortsUrl(),
+
+    },
+
+
+    {
+
+      "@type":
+        "ListItem",
+
+      position:
+        3,
+
+      name:
+        short.title,
+
+      item:
+        shortUrl,
+
+    },
+
+  ],
+
+};
+
+
+const videoSchema = {
+
+  "@context":
+    "https://schema.org",
+
+  "@type":
+    "VideoObject",
+
+  name:
+    short.title,
+
+  description,
+
+  embedUrl:
+    `https://www.youtube.com/embed/${short.youtubeVideoId}`,
+
+  contentUrl:
+    short.youtubeUrl,
+
+  url:
+    shortUrl,
+
+  uploadDate:
+    short.createdAt.toISOString(),
+
+  publisher: {
+
+    "@type":
+      "Organization",
+
+    name:
+      siteName,
+
+    url:
+      getAppUrl(),
+
+  },
+
+};
+
 
   return (
 
-    <>
+  <>
 
-      <Nav />
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+
+        __html:
+          JSON.stringify(
+            breadcrumbSchema
+          ),
+
+      }}
+    />
+
+
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+
+        __html:
+          JSON.stringify(
+            videoSchema
+          ),
+
+      }}
+    />
+
+
+    <Nav />
 
 
       <main
