@@ -274,6 +274,8 @@ if (!isYouTubeUrl) {
 
           youtubeUrl,
 
+          youtubeVideoId,
+
           seoKeywords,
 
         },
