@@ -114,11 +114,7 @@ export async function GET() {
 
       );
 
-    const formattedShorts =
-      shorts.map(
-        ...
-      );
-
+    
     const latestThreshold =
   Date.now() -
   7 * 24 * 60 * 60 * 1000;
