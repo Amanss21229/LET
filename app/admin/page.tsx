@@ -10,6 +10,8 @@ import FileUpload from "@/components/FileUpload";
 import AdminChatPanel from
   "@/components/AdminChatPanel";
 import StudyMaterialsAdmin from "@/components/StudyMaterialsAdmin";
+import SuccessShortsManagement from
+  "@/components/admin/SuccessShortsManagement";
 
 const emptyBatch = {
   title: "",
