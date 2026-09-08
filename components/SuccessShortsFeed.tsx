@@ -86,10 +86,14 @@ type ShortPlayerProps = {
 
   isActive:
     boolean;
+  
+  playbackBlocked:
+    boolean;
+
 
   soundEnabled:
     boolean;
-
+  
   onSoundEnabled:
     () => void;
 
@@ -101,6 +105,8 @@ SuccessShortPlayer({
   short,
 
   isActive,
+
+  playbackBlocked,
 
   soundEnabled,
 
@@ -207,7 +213,8 @@ SuccessShortPlayer({
 
 
       if (
-        isActive
+        isActive &&
+        !playbackBlocked
       ) {
 
         sendPlayerCommand(
@@ -1532,17 +1539,8 @@ handleEnableGlobalSound() {
                 "success-short-card"
               }
 
-              onMouseEnter={
-
-                () =>
-
-                  recordView(
-                    short.id
-                  )
-
-              }
-
-            >
+              
+              >
 
               <SuccessShortPlayer
 
@@ -1557,6 +1555,11 @@ handleEnableGlobalSound() {
 
   }
 
+                playbackBlocked={
+                  loginPopup &&
+                  !firebaseUser
+                }
+                
                 soundEnabled={
 
     soundPreferenceLoaded &&
