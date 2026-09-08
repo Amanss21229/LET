@@ -1049,34 +1049,7 @@ const [
 
       );
 
-                useEffect(
-
-  () => {
-
-    if (
-      !activeShortId
-    ) {
-
-      return;
-
-    }
-
-
-    recordView(
-      activeShortId
-    );
-
-  },
-
-  [
-
-    activeShortId,
-
-  ]
-
-);
-
-
+                
     const shortCards =
       document.querySelectorAll(
         "[data-success-short]"
@@ -1109,6 +1082,33 @@ const [
   [
 
     filteredShorts,
+
+  ]
+
+);
+
+  useEffect(
+
+  () => {
+
+    if (
+      !activeShortId
+    ) {
+
+      return;
+
+    }
+
+
+    recordView(
+      activeShortId
+    );
+
+  },
+
+  [
+
+    activeShortId,
 
   ]
 
