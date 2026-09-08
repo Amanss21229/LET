@@ -25,6 +25,9 @@ type SuccessShort = {
   seoKeywords:
     string | null;
 
+  seoDescription:
+  string | null;
+
   viewCount:
     number;
 
@@ -93,6 +96,14 @@ SuccessShortsManagement() {
   ] =
     useState("");
 
+  const [
+    
+    seoDescription,
+    
+    setSeoDescription,
+
+  ] =    
+    useState("");
 
   const [
 
@@ -225,6 +236,8 @@ SuccessShortsManagement() {
 
     setSeoKeywords("");
 
+    setSeoDescription("");
+
     setEditingId(
       null
     );
@@ -307,6 +320,8 @@ SuccessShortsManagement() {
                 youtubeUrl,
 
                 seoKeywords,
+
+                seoDescription,
 
               }),
 
@@ -437,6 +452,9 @@ if (text) {
       short.seoKeywords || ""
     );
 
+    setSeoDescription(
+      short.seoDescription || ""
+    );
 
     window.scrollTo({
 
@@ -733,6 +751,47 @@ if (text) {
           />
 
         </div>
+
+        <div
+  className="form-group"
+>
+
+  <label>
+
+    SEO Description
+
+  </label>
+
+
+  <textarea
+
+    value={
+      seoDescription
+    }
+
+    onChange={
+
+      (
+        event
+      ) =>
+
+        setSeoDescription(
+          event.target.value
+        )
+
+    }
+
+    placeholder={
+      "Optional short description for Google and social sharing"
+    }
+
+    rows={
+      3
+    }
+
+  />
+
+</div>
 
 
         {error && (
