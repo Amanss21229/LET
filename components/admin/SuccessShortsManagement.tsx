@@ -312,19 +312,50 @@ SuccessShortsManagement() {
         );
 
 
-      const data =
-        await response.json();
+      const text =
+  await response.text();
+
+
+let data:
+  unknown = null;
+
+
+if (text) {
+
+  try {
+
+    data =
+      JSON.parse(
+        text
+      );
+
+  }
+
+  catch {
+
+    data =
+      null;
+
+  }
+
+}
 
 
       if (!response.ok) {
 
-        throw new Error(
+  const errorData =
+    data as {
+      error?: string;
+    } | null;
 
-          data?.error ||
 
-          "Unable to save Success Short"
+  throw new Error(
 
-        );
+    errorData?.error ||
+
+    "Unable to save Success Short"
+
+  );
 
       }
 
