@@ -208,27 +208,7 @@ async function handleLogin() {
 
       <div className="links">
 
-        <Link href="/">
-          All Batches
-        </Link>
-
-        <Link href="/my-batches">
-          My Batches
-        </Link>
-
-        <Link href="/success-shorts">
-          Success Shorts
-        </Link>
-
-
-        <Link href="/study-materials">
-          Study Materials
-        </Link>
-
-        <Link href="/profile">
-          My Profile
-        </Link>
-
+        {navigationLinks}
 
       </div>
 
