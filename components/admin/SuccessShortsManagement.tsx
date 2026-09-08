@@ -910,6 +910,14 @@ if (text) {
 
                 }
 
+                 {" · "}
+
+                🔗 Shares: {
+
+                  short.shareCount
+
+                }
+
               </p>
 
 
