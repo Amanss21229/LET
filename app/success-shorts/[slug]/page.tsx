@@ -141,19 +141,51 @@ export async function generateMetadata({
 
       siteName,
 
+        images: [
+
+    {
+
+      url:
+        `https://i.ytimg.com/vi/${encodeURIComponent(
+          short.youtubeVideoId
+        )}/hqdefault.jpg`,
+
+      width:
+        480,
+
+      height:
+        360,
+
+      alt:
+        short.title,
+
+    },
+
+  ],
+
+},
+
     },
 
     twitter: {
 
-      card:
-        "summary",
+  card:
+    "summary_large_image",
 
-      title:
-        short.title,
+  title:
+    short.title,
 
-      description,
+  description,
 
-    },
+  images: [
+
+    `https://i.ytimg.com/vi/${encodeURIComponent(
+      short.youtubeVideoId
+    )}/hqdefault.jpg`,
+
+  ],
+
+},
 
   };
 
