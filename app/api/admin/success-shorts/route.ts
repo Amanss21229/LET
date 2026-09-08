@@ -60,6 +60,12 @@ export async function GET() {
 
               likes:
                 true,
+              
+              views:
+                true,
+
+              shares:
+                true,
 
             },
 
@@ -99,10 +105,13 @@ export async function GET() {
             short.seoDescription,
 
           viewCount:
-            short.viewCount,
+            short._count.views,
 
           likeCount:
             short._count.likes,
+
+          shareCount:
+            short._count.shares,
 
           createdAt:
             short.createdAt,
