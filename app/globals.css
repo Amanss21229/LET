@@ -3253,6 +3253,22 @@ hr {
     border-radius:
       34px;
 
+  box-shadow:
+
+      0 0 0 2px rgba(
+        255,
+        255,
+        255,
+        0.08
+      ),
+
+      0 28px 70px rgba(
+        0,
+        0,
+        0,
+        0.35
+      );
+
   }
 
 }
@@ -3676,7 +3692,22 @@ hr {
   600px
 ) {
 
-  .success-shorts-page {
+  .success-short-sound-button {
+
+    min-width:
+      140px;
+
+    padding:
+      14px 18px;
+
+    border-radius:
+      16px;
+
+  }
+
+} 
+  
+.success-shorts-page {
 
     padding:
       12px;
