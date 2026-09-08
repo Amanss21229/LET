@@ -73,6 +73,10 @@ export async function PUT(
         body?.youtubeUrl || ""
       ).trim();
 
+    const youtubeVideoId =
+      getYouTubeVideoId(
+        youtubeUrl
+      );
 
     const seoKeywords =
       String(
@@ -203,6 +207,8 @@ if (!isYouTubeUrl) {
           slug,
 
           youtubeUrl,
+
+          youtubeVideoId,
 
           seoKeywords,
 
