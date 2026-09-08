@@ -14,6 +14,10 @@ import {
   createSlug,
 } from "@/lib/study-materials";
 
+import {
+  getYouTubeVideoId,
+} from "@/lib/success-shorts";
+
 
 export async function GET() {
 
@@ -174,6 +178,10 @@ export async function POST(
         body?.youtubeUrl || ""
       ).trim();
 
+        const youtubeVideoId =
+          getYouTubeVideoId(
+            youtubeUrl
+          );
 
     const seoKeywords =
       String(
