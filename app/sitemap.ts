@@ -12,6 +12,8 @@ import {
   getMaterialUrl,
   getStudyMaterialsUrl,
   getSubjectUrl,
+  getSuccessShortUrl,
+  getSuccessShortsUrl,
 } from "@/lib/seo";
 
 
@@ -49,6 +51,27 @@ export default async function sitemap():
 
     });
 
+  const successShorts =
+  await prisma.successShort.findMany({
+
+    select: {
+
+      slug:
+        true,
+
+      updatedAt:
+        true,
+
+    },
+
+    orderBy: {
+
+      createdAt:
+        "desc",
+
+    },
+
+  });
 
   const urls:
     MetadataRoute.Sitemap = [
