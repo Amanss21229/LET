@@ -67,3 +67,20 @@ export function getMaterialUrl(
   )}`;
 
 }
+
+export function getSuccessShortsUrl() {
+
+  return `${appUrl}/success-shorts`;
+
+}
+
+
+export function getSuccessShortUrl(
+  shortSlug: string
+) {
+
+  return `${getSuccessShortsUrl()}/${encodeURIComponent(
+    shortSlug
+  )}`;
+
+}
