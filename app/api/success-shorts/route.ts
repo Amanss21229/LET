@@ -7,13 +7,12 @@ import {
 } from "@/lib/prisma";
 
 import {
-  verifyAdminSession,
-} from "@/lib/admin-auth";
-
-import {
-  createSuccessShortSlug,
-  getYouTubeVideoId,
+  getSuccessShortReachScore,
 } from "@/lib/success-shorts";
+
+
+export const dynamic =
+  "force-dynamic";
 
 
 export async function GET() {
@@ -41,234 +40,162 @@ export async function GET() {
 
         },
 
-        orderBy: {
-
-          createdAt:
-            "desc",
-
-        },
-
       });
 
 
+    const formattedShorts =
+      shorts.map(
+
+        (
+          short
+        ) => {
+
+          const likes =
+            short._count.likes;
+
+
+          const views =
+            short._count.views;
+
+
+          const shares =
+            short._count.shares;
+
+
+          const reachScore =
+            getSuccessShortReachScore(
+
+              views,
+
+              likes,
+
+              shares
+
+            );
+
+
+          return {
+
+            id:
+              short.id,
+
+            title:
+              short.title,
+
+            slug:
+              short.slug,
+
+            youtubeUrl:
+              short.youtubeUrl,
+
+            youtubeVideoId:
+              short.youtubeVideoId,
+
+            seoKeywords:
+              short.seoKeywords,
+
+            seoDescription:
+              short.seoDescription,
+
+            createdAt:
+              short.createdAt,
+
+            likes,
+
+            views,
+
+            shares,
+
+            reachScore,
+
+          };
+
+        }
+
+      );
+
+
+    formattedShorts.sort(
+
+      (
+        a,
+        b
+      ) => {
+
+        const timeDifference =
+          new Date(
+            b.createdAt
+          ).getTime()
+
+          -
+
+          new Date(
+            a.createdAt
+          ).getTime();
+
+
+        /*
+          Latest shorts remain
+          the primary priority.
+        */
+
+        if (timeDifference !== 0) {
+
+          return timeDifference;
+
+        }
+
+
+        return (
+
+          b.reachScore
+
+          -
+
+          a.reachScore
+
+        );
+
+      }
+
+    );
+
+
     return NextResponse.json(
-      shorts
+      formattedShorts
     );
 
   }
 
-  catch (error) {
+  catch (
+    error
+  ) {
 
     console.error(
+
       "Success Shorts GET error:",
+
       error
+
     );
 
 
     return NextResponse.json(
+
       {
+
         error:
           "Unable to load Success Shorts",
+
       },
+
       {
-        status: 500,
+
+        status:
+          500,
+
       }
-    );
 
-  }
-
-}
-
-
-export async function POST(
-  req: Request
-) {
-
-  const isAdmin =
-    await verifyAdminSession();
-
-
-  if (!isAdmin) {
-
-    return NextResponse.json(
-      {
-        error:
-          "Forbidden",
-      },
-      {
-        status: 403,
-      }
-    );
-
-  }
-
-
-  try {
-
-    const body =
-      await req.json();
-
-
-    const title =
-      String(
-        body?.title || ""
-      ).trim();
-
-
-    const youtubeUrl =
-      String(
-        body?.youtubeUrl || ""
-      ).trim();
-
-
-    const seoKeywords =
-      String(
-        body?.seoKeywords || ""
-      ).trim();
-
-
-    const seoDescription =
-      String(
-        body?.seoDescription || ""
-      ).trim();
-
-
-    if (
-      !title ||
-      !youtubeUrl ||
-      !seoKeywords
-    ) {
-
-      return NextResponse.json(
-        {
-          error:
-            "Title, YouTube URL and SEO keywords are required",
-        },
-        {
-          status: 400,
-        }
-      );
-
-    }
-
-
-    const youtubeVideoId =
-      getYouTubeVideoId(
-        youtubeUrl
-      );
-
-
-    if (!youtubeVideoId) {
-
-      return NextResponse.json(
-        {
-          error:
-            "Please enter a valid YouTube or YouTube Shorts URL",
-        },
-        {
-          status: 400,
-        }
-      );
-
-    }
-
-
-    const slug =
-      createSuccessShortSlug(
-        title
-      );
-
-
-    if (!slug) {
-
-      return NextResponse.json(
-        {
-          error:
-            "Invalid short title",
-        },
-        {
-          status: 400,
-        }
-      );
-
-    }
-
-
-    const existing =
-      await prisma.successShort.findUnique({
-
-        where: {
-
-          slug,
-
-        },
-
-      });
-
-
-    if (existing) {
-
-      return NextResponse.json(
-        {
-          error:
-            "A Success Short with this title already exists",
-        },
-        {
-          status: 400,
-        }
-      );
-
-    }
-
-
-    const short =
-      await prisma.successShort.create({
-
-        data: {
-
-          title,
-
-          slug,
-
-          youtubeUrl,
-
-          youtubeVideoId,
-
-          seoKeywords,
-
-          seoDescription:
-            seoDescription || null,
-
-        },
-
-      });
-
-
-    return NextResponse.json(
-      short,
-      {
-        status: 201,
-      }
-    );
-
-  }
-
-  catch (error) {
-
-    console.error(
-      "Success Shorts POST error:",
-      error
-    );
-
-
-    return NextResponse.json(
-      {
-        error:
-          "Unable to create Success Short",
-      },
-      {
-        status: 500,
-      }
     );
 
   }
