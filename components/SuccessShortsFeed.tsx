@@ -627,7 +627,7 @@ const [
 ) {
 
   const requestedShort =
-    data.shorts.find(
+    loadedShorts.find(
 
       (
         short:
