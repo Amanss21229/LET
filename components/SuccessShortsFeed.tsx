@@ -1402,6 +1402,18 @@ handleEnableGlobalSound() {
       string
   ) {
 
+    /*
+    Do not count the same
+    short repeatedly during
+    the current page session.
+  */
+
+  if (
+    viewedShorts[
+      shortId
+    ]
+  ) {
+
     return;
 
   }
