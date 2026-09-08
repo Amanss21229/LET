@@ -3026,3 +3026,488 @@ hr {
   }
 
 }
+
+/* =========================
+   SUCCESS SHORTS
+========================= */
+
+.success-shorts-page {
+
+  width:
+    100%;
+
+  min-height:
+    100vh;
+
+  padding:
+    20px;
+
+}
+
+
+.success-shorts-header {
+
+  position:
+    sticky;
+
+  top:
+    0;
+
+  z-index:
+    20;
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  gap:
+    16px;
+
+  padding:
+    12px 0;
+
+  background:
+    var(--bg);
+
+}
+
+
+.success-shorts-header h1 {
+
+  margin:
+    0;
+
+  font-size:
+    24px;
+
+  white-space:
+    nowrap;
+
+}
+
+
+.success-shorts-back {
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  width:
+    42px;
+
+  height:
+    42px;
+
+  border-radius:
+    50%;
+
+  text-decoration:
+    none;
+
+  font-size:
+    28px;
+
+}
+
+
+.success-shorts-search {
+
+  margin-left:
+    auto;
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  gap:
+    8px;
+
+  padding:
+    8px 12px;
+
+  border:
+    1px solid var(--border);
+
+  border-radius:
+    12px;
+
+}
+
+
+.success-shorts-search input {
+
+  width:
+    180px;
+
+  border:
+    none;
+
+  outline:
+    none;
+
+  background:
+    transparent;
+
+  color:
+    inherit;
+
+}
+
+
+.success-shorts-feed {
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  align-items:
+    center;
+
+  gap:
+    24px;
+
+}
+
+
+.success-short-card {
+
+  position:
+    relative;
+
+  width:
+    min(
+      100%,
+      460px
+    );
+
+  aspect-ratio:
+    9 / 16;
+
+  overflow:
+    hidden;
+
+  border-radius:
+    20px;
+
+  background:
+    #000;
+
+}
+
+
+.success-short-video {
+
+  width:
+    100%;
+
+  height:
+    100%;
+
+}
+
+
+.success-short-video iframe {
+
+  width:
+    100%;
+
+  height:
+    100%;
+
+  border:
+    none;
+
+}
+
+
+.success-short-info {
+
+  position:
+    absolute;
+
+  left:
+    16px;
+
+  bottom:
+    18px;
+
+  right:
+    90px;
+
+  color:
+    white;
+
+  z-index:
+    5;
+
+  text-shadow:
+    0 2px 8px rgba(
+      0,
+      0,
+      0,
+      0.8
+    );
+
+}
+
+
+.success-short-info h2 {
+
+  margin:
+    0;
+
+  font-size:
+    17px;
+
+}
+
+
+.success-short-info p {
+
+  margin:
+    6px 0 0;
+
+  font-size:
+    13px;
+
+}
+
+
+.success-short-actions {
+
+  position:
+    absolute;
+
+  right:
+    14px;
+
+  bottom:
+    20px;
+
+  z-index:
+    10;
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  align-items:
+    center;
+
+  gap:
+    16px;
+
+}
+
+
+.success-short-action {
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  gap:
+    4px;
+
+  color:
+    white;
+
+  text-decoration:
+    none;
+
+  background:
+    transparent;
+
+  border:
+    none;
+
+  cursor:
+    pointer;
+
+}
+
+
+.success-short-action span {
+
+  font-size:
+    27px;
+
+}
+
+
+.success-short-action small {
+
+  color:
+    white;
+
+  font-size:
+    11px;
+
+}
+
+
+.success-short-action.liked span {
+
+  transform:
+    scale(
+      1.1
+    );
+
+}
+
+
+.success-shorts-login-overlay {
+
+  position:
+    fixed;
+
+  inset:
+    0;
+
+  z-index:
+    9999;
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  padding:
+    20px;
+
+  background:
+    rgba(
+      0,
+      0,
+      0,
+      0.65
+    );
+
+}
+
+
+.success-shorts-login-popup {
+
+  width:
+    min(
+      100%,
+      380px
+    );
+
+  padding:
+    28px;
+
+  text-align:
+    center;
+
+  border-radius:
+    20px;
+
+  background:
+    var(--card);
+
+}
+
+
+.success-shorts-login-popup h2 {
+
+  margin-top:
+    0;
+
+}
+
+
+.success-shorts-login-popup p {
+
+  margin-bottom:
+    22px;
+
+}
+
+
+.success-shorts-loading,
+.success-shorts-error,
+.success-shorts-empty {
+
+  padding:
+    40px;
+
+  text-align:
+    center;
+
+}
+
+
+@media (
+  max-width:
+  600px
+) {
+
+  .success-shorts-page {
+
+    padding:
+      12px;
+
+  }
+
+
+  .success-shorts-header {
+
+    gap:
+      10px;
+
+  }
+
+
+  .success-shorts-header h1 {
+
+    font-size:
+      18px;
+
+  }
+
+
+  .success-shorts-search input {
+
+    width:
+      120px;
+
+  }
+
+
+  .success-short-card {
+
+    width:
+      100%;
+
+    border-radius:
+      16px;
+
+  }
+
+}
