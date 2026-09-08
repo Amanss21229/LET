@@ -190,44 +190,44 @@ export async function POST(
 
 
     if (
-      !title ||
-      !youtubeUrl
-    ) {
-
-    const isYouTubeUrl =
-  youtubeUrl.includes(
-    "youtube.com"
-  ) ||
-  youtubeUrl.includes(
-    "youtu.be"
-  );
-
-
-if (!isYouTubeUrl) {
+  !title ||
+  !youtubeUrl
+) {
 
   return NextResponse.json(
+
     {
       error:
-        "Please enter a valid YouTube URL",
+        "Title and YouTube URL are required",
     },
+
     {
-      status: 400,
+      status:
+        400,
     }
+
   );
 
 }
 
-      return NextResponse.json(
-        {
-          error:
-            "Title and YouTube URL are required",
-        },
-        {
-          status: 400,
-        }
-      );
 
+if (!youtubeVideoId) {
+
+  return NextResponse.json(
+
+    {
+      error:
+        "Please enter a valid YouTube URL",
+    },
+
+    {
+      status:
+        400,
     }
+
+  );
+
+}
 
 
     const slug =
