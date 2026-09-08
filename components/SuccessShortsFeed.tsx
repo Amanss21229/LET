@@ -410,8 +410,20 @@ SuccessShortPlayer({
 
 }
   
+type SuccessShortsFeedProps = {
+
+  initialShortSlug?:
+    string;
+
+};
+
+
 export default function
-SuccessShortsFeed() {
+SuccessShortsFeed({
+
+  initialShortSlug,
+
+}: SuccessShortsFeedProps) {
 
 
   const {
@@ -607,6 +619,38 @@ const [
       setShorts(
         loadedShorts
       );
+
+          if (
+
+  initialShortSlug
+
+) {
+
+  const requestedShort =
+    data.shorts.find(
+
+      (
+        short:
+          SuccessShort
+      ) =>
+
+        short.slug ===
+        initialShortSlug
+
+    );
+
+
+  if (
+    requestedShort
+  ) {
+
+    setActiveShortId(
+      requestedShort.id
+    );
+
+  }
+
+}
 
 
       const initialLikeCounts:
@@ -1231,7 +1275,9 @@ handleEnableGlobalSound() {
 
 
     const shareUrl =
-      `${window.location.origin}/success-shorts#${short.slug}`;
+  `${window.location.origin}/success-shorts/${encodeURIComponent(
+    short.slug
+  )}`;
 
 
     try {
