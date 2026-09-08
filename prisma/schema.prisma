@@ -26,6 +26,10 @@ model User {
   accesses      BatchAccess[]
   conversations Conversation[]
   messages      Message[]
+
+  successShortLikes  SuccessShortLike[]
+  successShortViews  SuccessShortView[]
+  successShortShares SuccessShortShare[]
 }
 
 model Account {
@@ -256,4 +260,137 @@ model StudyMaterial {
   subject StudySubject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
 
   @@unique([subjectId, slug])
+}
+
+
+
+model SuccessShort {
+
+  id String @id @default(cuid())
+
+  title String
+
+  slug String @unique
+
+  youtubeUrl String @db.Text
+
+  youtubeVideoId String
+
+  seoKeywords String @db.Text
+
+  seoDescription String? @db.Text
+
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+
+  likes SuccessShortLike[]
+
+  views SuccessShortView[]
+
+  shares SuccessShortShare[]
+
+}
+
+
+
+model SuccessShortLike {
+
+  id String @id @default(cuid())
+
+  shortId String
+
+  userId String
+
+  createdAt DateTime @default(now())
+
+
+  short SuccessShort @relation(
+    fields: [shortId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+
+  user User @relation(
+    fields: [userId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+
+  @@unique([shortId, userId])
+
+}
+
+
+
+model SuccessShortView {
+
+  id String @id @default(cuid())
+
+  shortId String
+
+  userId String?
+
+  viewerKey String?
+
+  createdAt DateTime @default(now())
+
+
+  short SuccessShort @relation(
+    fields: [shortId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+
+  user User? @relation(
+    fields: [userId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+
+  @@index([shortId])
+
+  @@index([userId])
+
+  @@index([viewerKey])
+
+}
+
+
+
+model SuccessShortShare {
+
+  id String @id @default(cuid())
+
+  shortId String
+
+  userId String?
+
+  createdAt DateTime @default(now())
+
+
+  short SuccessShort @relation(
+    fields: [shortId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+
+  user User? @relation(
+    fields: [userId],
+    references: [id],
+    onDelete: SetNull
+  )
+
+
+  @@index([shortId])
+
+  @@index([userId])
+
 }
