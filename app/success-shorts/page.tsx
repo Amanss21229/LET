@@ -9,8 +9,6 @@ import type {
 } from "next";
 
 import {
-  getAppUrl,
-  getSuccessShortsUrl,
   getSuccessShortsUrl,
   siteName,
 } from "@/lib/seo";
@@ -35,7 +33,7 @@ export const metadata:
     alternates: {
 
       canonical:
-        getSuccessShortsUrl()
+        getSuccessShortsUrl(),
 
     },
 
@@ -48,10 +46,25 @@ export const metadata:
         "Watch the latest educational and motivational Success Shorts.",
 
       url:
-        getSuccessShortsUrl()
+        getSuccessShortsUrl(),
 
       type:
         "website",
+
+      siteName,
+
+    },
+
+    twitter: {
+
+      card:
+        "summary_large_image",
+
+      title:
+        `Success Shorts | ${siteName}`,
+
+      description:
+        "Watch the latest educational and motivational Success Shorts.",
 
     },
 
