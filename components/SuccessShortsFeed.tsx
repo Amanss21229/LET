@@ -7,6 +7,8 @@ import {
 
   useMemo,
 
+  useRef,
+
   useState,
 
 } from "react";
@@ -77,6 +79,114 @@ type SuccessShort = {
 
 };
 
+type ShortPlayerProps = {
+
+  short:
+    SuccessShort;
+
+  isActive:
+    boolean;
+
+};
+
+function
+SuccessShortPlayer({
+
+  short,
+
+  isActive,
+
+}: ShortPlayerProps) {
+
+
+  const iframeRef =
+    useRef<
+      HTMLIFrameElement | null
+    >(
+      null
+    );
+
+
+  useEffect(
+
+    () => {
+
+      if (!isActive) {
+
+        return;
+
+      }
+
+
+      /*
+        The autoplay parameter
+        starts the currently active
+        Success Short.
+
+        muted=1 improves autoplay
+        compatibility in browsers.
+      */
+
+    },
+
+    [
+
+      isActive,
+
+    ]
+
+  );
+
+
+  const playerUrl =
+    `https://www.youtube.com/embed/${encodeURIComponent(
+      short.youtubeVideoId
+    )}?autoplay=${
+
+      isActive
+
+        ? "1"
+
+        : "0"
+
+    }&mute=1&playsinline=1&controls=1&rel=0&modestbranding=1`;
+
+
+  return (
+
+    <div
+      className={
+        "success-short-video"
+      }
+    >
+
+      <iframe
+
+        ref={
+          iframeRef
+        }
+
+        src={
+          playerUrl
+        }
+
+        title={
+          short.title
+        }
+
+        allow={
+          "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        }
+
+        allowFullScreen
+
+      />
+
+    </div>
+
+  );
+
+}
 
 export default function
 SuccessShortsFeed() {
@@ -101,6 +211,19 @@ SuccessShortsFeed() {
 
   ] =
     useState<SuccessShort[]>([]);
+
+  const [
+
+  activeShortId,
+
+  setActiveShortId,
+
+] =
+  useState<
+    string | null
+  >(
+    null
+  );
 
 
   const [
@@ -307,7 +430,7 @@ SuccessShortsFeed() {
 
   );
 
-
+  
   /*
     Show login popup after
     10 seconds only for
@@ -429,6 +552,176 @@ SuccessShortsFeed() {
 
     );
 
+  useEffect(
+
+  () => {
+
+    if (
+
+      filteredShorts.length ===
+      0
+
+    ) {
+
+      setActiveShortId(
+        null
+      );
+
+      return;
+
+    }
+
+
+    setActiveShortId(
+
+      (
+        currentId
+      ) =>
+
+        currentId ||
+
+        filteredShorts[0].id
+
+    );
+
+  },
+
+  [
+
+    filteredShorts,
+
+  ]
+
+);
+
+  useEffect(
+
+  () => {
+
+    if (
+
+      typeof window ===
+      "undefined"
+
+    ) {
+
+      return;
+
+    }
+
+
+    const observer =
+      new IntersectionObserver(
+
+        (
+
+          entries
+
+        ) => {
+
+          const visibleEntry =
+            entries
+
+              .filter(
+
+                (
+                  entry
+                ) =>
+
+                  entry.isIntersecting
+
+              )
+
+              .sort(
+
+                (
+                  a,
+                  b
+                ) =>
+
+                  b.intersectionRatio
+
+                  -
+
+                  a.intersectionRatio
+
+              )[0];
+
+
+          if (
+
+            visibleEntry
+
+          ) {
+
+            const shortId =
+              visibleEntry.target.getAttribute(
+                "data-short-id"
+              );
+
+
+            if (
+
+              shortId
+
+            ) {
+
+              setActiveShortId(
+                shortId
+              );
+
+            }
+
+          }
+
+        },
+
+        {
+
+          threshold:
+            0.65,
+
+        }
+
+      );
+
+
+    const shortCards =
+      document.querySelectorAll(
+        "[data-success-short]"
+      );
+
+
+    shortCards.forEach(
+
+      (
+        card
+      ) => {
+
+        observer.observe(
+          card
+        );
+
+      }
+
+    );
+
+
+    return () => {
+
+      observer.disconnect();
+
+    };
+
+  },
+
+  [
+
+    filteredShorts,
+
+  ]
+
+);
 
   async function
   handleLogin() {
@@ -847,6 +1140,12 @@ SuccessShortsFeed() {
                 short.slug
               }
 
+              data-success-short
+
+              data-short-id={
+                short.id
+              }
+
               className={
                 "success-short-card"
               }
@@ -863,33 +1162,20 @@ SuccessShortsFeed() {
 
             >
 
-              <div
-                className={
-                  "success-short-video"
-                }
-              >
+              <SuccessShortPlayer
 
-                <iframe
+  short={
+    short
+  }
 
-                  src={
-                    `https://www.youtube.com/embed/${encodeURIComponent(
-                      short.youtubeVideoId
-                    )}`
-                  }
+  isActive={
 
-                  title={
-                    short.title
-                  }
+    activeShortId ===
+    short.id
 
-                  allow={
-                    "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  }
+  }
 
-                  allowFullScreen
-
-                />
-
-              </div>
+/>
 
 
               <div
