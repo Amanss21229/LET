@@ -233,6 +233,33 @@ export default async function sitemap():
 
   }
 
+  for (
+  const short of successShorts
+) {
+
+  urls.push({
+
+    url:
+
+      getSuccessShortUrl(
+        short.slug
+      ),
+
+    lastModified:
+
+      short.updatedAt,
+
+    changeFrequency:
+
+      "weekly",
+
+    priority:
+
+      0.7,
+
+  });
+
+}
 
   return urls;
 
