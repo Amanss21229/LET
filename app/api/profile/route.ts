@@ -63,6 +63,15 @@ export async function GET(
       className:
         user.className || "",
 
+      city:
+        user.city || "",
+
+      state:
+        user.state || "",
+
+      stream:
+        user.stream || "",
+
       profileComplete:
         user.profileComplete,
 
@@ -141,6 +150,23 @@ export async function PATCH(
         body.className || ""
       ).trim();
 
+    const city =
+  String(
+    body.city || ""
+  ).trim();
+
+
+const state =
+  String(
+    body.state || ""
+  ).trim();
+
+
+const stream =
+  String(
+    body.stream || ""
+  ).trim();
+
 
     if (
       !name ||
@@ -177,6 +203,15 @@ export async function PATCH(
 
           className,
 
+          city:
+            city || null,
+
+          state:
+        state || null,
+
+          stream:
+            stream || null,
+
           profileComplete:
             true,
 
@@ -204,6 +239,15 @@ export async function PATCH(
 
       className:
         updatedUser.className || "",
+
+      city:
+        updatedUser.city || "",
+
+      state:
+        updatedUser.state || "",
+
+      stream:
+        updatedUser.stream || "",
 
       profileComplete:
         updatedUser.profileComplete,
