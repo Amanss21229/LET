@@ -77,6 +77,9 @@ type SuccessShort = {
   shares:
     number;
 
+  comments:
+    number;
+
   reachScore:
     number;
 
@@ -1736,12 +1739,13 @@ handleEnableGlobalSound() {
 
                 </button>
 
-                <SuccessShortComments
-
+              <SuccessShortComments
   shortId={
     short.id
   }
-
+  initialCount={
+    short.comments
+  }
 />
 
 
