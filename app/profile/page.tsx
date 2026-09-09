@@ -613,6 +613,132 @@ export default function Profile() {
 
           <br />
 
+          <label>
+  Stream
+</label>
+
+
+<select
+
+  className="input"
+
+  value={
+    profile.stream
+  }
+
+  onChange={(
+    event
+  ) =>
+
+    setProfile({
+
+      ...profile,
+
+      stream:
+        event.target.value,
+
+    })
+
+  }
+
+>
+
+  <option value="">
+    Select Stream
+  </option>
+
+  <option value="Science">
+    Science
+  </option>
+
+  <option value="Commerce">
+    Commerce
+  </option>
+
+  <option value="Arts">
+    Arts
+  </option>
+
+  <option value="Other">
+    Other
+  </option>
+
+</select>
+
+
+<br />
+
+
+<label>
+  City
+</label>
+
+
+<input
+
+  className="input"
+
+  value={
+    profile.city
+  }
+
+  onChange={(
+    event
+  ) =>
+
+    setProfile({
+
+      ...profile,
+
+      city:
+        event.target.value,
+
+    })
+
+  }
+
+  placeholder="Enter your city"
+
+/>
+
+
+<br />
+
+
+<label>
+  State
+</label>
+
+
+<input
+
+  className="input"
+
+  value={
+    profile.state
+  }
+
+  onChange={(
+    event
+  ) =>
+
+    setProfile({
+
+      ...profile,
+
+      state:
+        event.target.value,
+
+    })
+
+  }
+
+  placeholder="Enter your state"
+
+/>
+
+
+<br />        
 
           <label>
             Mobile Number
