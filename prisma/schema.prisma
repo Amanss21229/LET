@@ -395,17 +395,9 @@ model SuccessShortComment {
   updatedAt DateTime @updatedAt
 
 
-  short SuccessShort @relation(
-    fields: [shortId],
-    references: [id],
-    onDelete: Cascade
-  )
+  short SuccessShort @relation(fields: [shortId], references: [id], onDelete: Cascade)
 
-  user User @relation(
-    fields: [userId],
-    references: [id],
-    onDelete: Cascade
-  )
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   likes SuccessShortCommentLike[]
 
