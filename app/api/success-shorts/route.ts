@@ -34,6 +34,8 @@ export async function GET() {
 
               shares: true,
 
+              comments: true,
+
             },
 
           },
@@ -60,6 +62,9 @@ export async function GET() {
 
           const shares =
             short._count.shares;
+
+          const comments =
+            short._count.comments;
 
 
           const reachScore =
@@ -105,6 +110,8 @@ export async function GET() {
             views,
 
             shares,
+
+            comments,
 
             reachScore,
 
