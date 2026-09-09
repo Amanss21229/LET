@@ -173,6 +173,14 @@ SuccessShortComments({
   ] =
     useState("");
 
+    const [
+  openMenuId,
+  setOpenMenuId,
+] =
+  useState<string | null>(
+    null
+  );
+
 
   const [
 
@@ -226,13 +234,21 @@ SuccessShortComments({
 
 
       const response =
-        await fetch(
-          `/api/success-shorts/${shortId}/comments`,
-          {
-            cache:
-              "no-store",
-          }
-        );
+  firebaseUser
+    ? await firebaseFetch(
+        `/api/success-shorts/${shortId}/comments`,
+        {
+          cache:
+            "no-store",
+        }
+      )
+    : await fetch(
+        `/api/success-shorts/${shortId}/comments`,
+        {
+          cache:
+            "no-store",
+        }
+      );
 
 
       const data =
@@ -294,16 +310,20 @@ SuccessShortComments({
 
   useEffect(() => {
 
-    if (!open) {
+  if (!open) {
 
-      return;
+    return;
 
-    }
+  }
 
 
-    loadComments();
+  loadComments();
 
-  }, [open, shortId]);
+}, [
+  open,
+  shortId,
+  firebaseUser,
+]);
 
 
   async function
@@ -1118,106 +1138,139 @@ SuccessShortComments({
 
 
                       <div
-                        className="success-short-comment-actions"
-                      >
+  className="success-short-comment-actions"
+>
 
-                        <button
-
-                          type="button"
-
-                          className={
-                            comment.likedByCurrentUser
-                              ? "comment-liked"
-                              : ""
-                          }
-
-                          onClick={() =>
-                            handleLike(
-                              comment.id
-                            )
-                          }
-
-                        >
-
-                          {comment.likedByCurrentUser
-                            ? "♥"
-                            : "♡"}
-
-                          {" "}
-
-                          {comment.likeCount}
-
-                        </button>
+  <button
+    type="button"
+    className={
+      comment.likedByCurrentUser
+        ? "comment-liked"
+        : ""
+    }
+    onClick={() =>
+      handleLike(
+        comment.id
+      )
+    }
+  >
+    {comment.likedByCurrentUser
+      ? "♥"
+      : "♡"}
+    {" "}
+    {comment.likeCount}
+  </button>
 
 
-                        {comment.canEdit && (
-
-                          <button
-
-                            type="button"
-
-                            onClick={() =>
-                              startEdit(
-                                comment
-                              )
-                            }
-
-                          >
-                            Edit
-                          </button>
-
-                        )}
+  {!isModerator &&
+    comment.canEdit && (
+      <button
+        type="button"
+        onClick={() =>
+          startEdit(
+            comment
+          )
+        }
+      >
+        Edit
+      </button>
+    )}
 
 
-                        {comment.canDelete && (
-
-                          <button
-
-                            type="button"
-
-                            onClick={() =>
-                              deleteComment(
-                                comment.id
-                              )
-                            }
-
-                          >
-                            Delete
-                          </button>
-
-                        )}
+  {!isModerator &&
+    comment.canDelete && (
+      <button
+        type="button"
+        onClick={() =>
+          deleteComment(
+            comment.id
+          )
+        }
+      >
+        Delete
+      </button>
+    )}
 
 
-                        {isModerator && (
+  {isModerator && (
+    <div
+      className="success-short-comment-menu"
+    >
 
-                          <button
+      <button
+        type="button"
+        className="success-short-comment-menu-trigger"
+        aria-label="Comment moderation options"
+        aria-expanded={
+          openMenuId ===
+          comment.id
+        }
+        onClick={() =>
+          setOpenMenuId(
+            previous =>
+              previous ===
+              comment.id
+                ? null
+                : comment.id
+          )
+        }
+      >
+        ⋮
+      </button>
 
-                            type="button"
 
-                            className={
-                              comment.isBlocked
-                                ? "comment-unblock"
-                                : "comment-block"
-                            }
+      {openMenuId ===
+        comment.id && (
+        <div
+          className="success-short-comment-menu-dropdown"
+        >
 
-                            onClick={() =>
-                              toggleBlock(
-                                comment.user.id,
-                                comment.isBlocked
-                              )
-                            }
+          <button
+            type="button"
+            onClick={() => {
+              setOpenMenuId(
+                null
+              );
 
-                          >
+              deleteComment(
+                comment.id
+              );
+            }}
+          >
+            🗑 Delete Comment
+          </button>
 
-                            {comment.isBlocked
-                              ? "Unblock"
-                              : "Block"}
 
-                          </button>
+          <button
+            type="button"
+            className={
+              comment.isBlocked
+                ? "comment-unblock"
+                : "comment-block"
+            }
+            onClick={() => {
+              setOpenMenuId(
+                null
+              );
 
-                        )}
+              toggleBlock(
+                comment.user.id,
+                comment.isBlocked
+              );
+            }}
+          >
+            {comment.isBlocked
+              ? "✅ Unblock User"
+              : "🚫 Block User"}
+          </button>
 
-                      </div>
+        </div>
+      )}
+
+    </div>
+  )}
+
+</div>
 
                     </article>
 
