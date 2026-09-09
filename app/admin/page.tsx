@@ -58,6 +58,12 @@ type UserDetails = {
 
   className: string;
 
+  stream: string;
+
+  city: string;
+
+  state: string;
+
   createdAt: string;
 
   profileComplete: boolean;
@@ -5632,6 +5638,21 @@ const deleteNotification =
                 Mobile No.
               </th>
 
+              
+                <th>
+                  Stream
+                </th>
+
+              
+              <th>
+                City
+              </th>
+
+              
+              <th>
+                State
+              </th>
+
 
               <th>
                 Account Created
@@ -5656,7 +5677,7 @@ const deleteNotification =
               <tr>
 
                 <td
-                  colSpan={6}
+                  colSpan={9}
                 >
 
                   No users found.
@@ -5705,6 +5726,27 @@ const deleteNotification =
                     <td>
 
                       {user.phone}
+
+                    </td>
+
+
+                    <td>
+                      
+                      {user.stream}
+
+                    </td>
+
+
+                    <td>
+
+                      {user.city}
+
+                    </td>
+
+
+                    <td>
+
+                      {user.state}
 
                     </td>
 
