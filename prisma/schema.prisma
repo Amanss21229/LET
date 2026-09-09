@@ -21,6 +21,7 @@ model User {
   state           String?
   stream          String?
   profileComplete Boolean        @default(false)
+  commentBlocked Boolean        @default(false)
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
 
@@ -33,6 +34,8 @@ model User {
   successShortLikes  SuccessShortLike[]
   successShortViews  SuccessShortView[]
   successShortShares SuccessShortShare[]
+  successShortComments      SuccessShortComment[]
+  successShortCommentLikes  SuccessShortCommentLike[]
 }
 
 model Account {
@@ -296,6 +299,8 @@ model SuccessShort {
 
   shares SuccessShortShare[]
 
+  comments SuccessShortComment[]
+
 }
 
 
@@ -370,6 +375,75 @@ model SuccessShortShare {
 
 
   @@index([shortId])
+
+  @@index([userId])
+
+}
+
+model SuccessShortComment {
+
+  id String @id @default(cuid())
+
+  shortId String
+
+  userId String
+
+  text String @db.Text
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+
+  short SuccessShort @relation(
+    fields: [shortId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  user User @relation(
+    fields: [userId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  likes SuccessShortCommentLike[]
+
+
+  @@index([shortId, createdAt])
+
+  @@index([userId])
+
+}
+
+
+model SuccessShortCommentLike {
+
+  id String @id @default(cuid())
+
+  commentId String
+
+  userId String
+
+  createdAt DateTime @default(now())
+
+
+  comment SuccessShortComment @relation(
+    fields: [commentId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  user User @relation(
+    fields: [userId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+
+  @@unique([commentId, userId])
+
+  @@index([commentId])
 
   @@index([userId])
 
