@@ -38,6 +38,9 @@ import {
 
 } from "@/lib/firebase-auth";
 
+import SuccessShortComments from
+  "@/components/SuccessShortComments";
+
 
 type SuccessShort = {
 
@@ -1732,6 +1735,14 @@ handleEnableGlobalSound() {
                   </small>
 
                 </button>
+
+                <SuccessShortComments
+
+  shortId={
+    short.id
+  }
+
+/>
 
 
                 <button
