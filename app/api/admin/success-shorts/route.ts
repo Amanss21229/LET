@@ -193,14 +193,16 @@ export async function POST(
           );
 
     const seoKeywords =
-      String(
-        body?.seoKeywords || ""
-      ).trim();
+  String(
+    body?.seoKeywords || ""
+  ).trim() ||
+  `${title}, Success Shorts, LET, Learn Earn Teach`;
 
-    const seoDescription =
-      String(
-        body?.seoDescription || ""
-      ).trim();
+const seoDescription =
+  String(
+    body?.seoDescription || ""
+  ).trim() ||
+  `Watch ${title} on LET Success Shorts - Learn Earn Teach.`;
 
     if (
   !title ||
