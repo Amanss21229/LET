@@ -428,17 +428,9 @@ model SuccessShortCommentLike {
   createdAt DateTime @default(now())
 
 
-  comment SuccessShortComment @relation(
-    fields: [commentId],
-    references: [id],
-    onDelete: Cascade
-  )
+  comment SuccessShortComment @relation(fields: [commentId], references: [id], onDelete: Cascade)
 
-  user User @relation(
-    fields: [userId],
-    references: [id],
-    onDelete: Cascade
-  )
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
 
   @@unique([commentId, userId])
