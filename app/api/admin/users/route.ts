@@ -59,6 +59,12 @@ export async function GET() {
           phone: true,
 
           className: true,
+          
+          stream: true,
+
+          city: true,
+
+          state: true,
 
           createdAt: true,
 
@@ -116,6 +122,21 @@ export async function GET() {
 
           className:
             user.className ||
+            "-",
+
+
+          stream:
+            user.stream ||
+            "-",
+
+          
+          city:
+            user.city ||
+            "-",
+
+          
+          state:
+            user.state ||
             "-",
 
 
