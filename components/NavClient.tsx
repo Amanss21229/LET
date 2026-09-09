@@ -138,53 +138,6 @@ async function handleLogin() {
   };
 
 
-  const navigationLinks = (
-
-    <>
-
-      <Link
-        href="/"
-        onClick={closeMobileMenu}
-      >
-        All Batches
-      </Link>
-
-
-      <Link
-        href="/my-batches"
-        onClick={closeMobileMenu}
-      >
-        My Batches
-      </Link>
-
-
-      <Link
-        href="/success-shorts"
-        onClick={closeMobileMenu}
-      >
-        Success Shorts
-      </Link>
-
-
-      <Link
-        href="/study-materials"
-        onClick={closeMobileMenu}
-      >
-        Study Materials
-      </Link>
-
-
-      <Link
-        href="/profile"
-        onClick={closeMobileMenu}
-      >
-        My Profile
-      </Link>
-
-    </>
-
-  );
-
   return (
 
   <>
@@ -231,13 +184,6 @@ async function handleLogin() {
         </span>
 
       </Link>
-
-
-      <div className="links">
-
-        {navigationLinks}
-
-      </div>
 
 
       <div className="nav-actions">
@@ -311,57 +257,149 @@ async function handleLogin() {
 
     {mobileMenuOpen && (
 
-      <>
+  <>
 
-        <button
-          type="button"
-          className="mobile-menu-overlay"
-          onClick={closeMobileMenu}
-          aria-label="Close navigation menu"
+    <button
+      type="button"
+      className="mobile-menu-overlay"
+      onClick={closeMobileMenu}
+      aria-label="Close navigation menu"
+    />
+
+
+    <aside
+      className="mobile-menu-drawer"
+    >
+
+      <div
+        className="mobile-menu-header"
+      >
+
+        <img
+          src="/let-logo.png"
+          alt="LET Online"
+          style={{
+            width: 92,
+            height: 68,
+            objectFit: "contain",
+            borderRadius: 12,
+          }}
         />
 
 
-        <aside
-          className="mobile-menu-drawer"
+        <strong
+          style={{
+            fontSize: 22,
+            letterSpacing: 1,
+          }}
         >
-
-          <div
-            className="mobile-menu-header"
-          >
-
-            <span>
-              Navigation
-            </span>
+          LET ONLINE
+        </strong>
 
 
-            <button
-              type="button"
-              className="mobile-menu-close"
-              onClick={closeMobileMenu}
-              aria-label="Close navigation menu"
-            >
-
-              ×
-
-            </button>
-
-          </div>
+        <small
+          style={{
+            color:
+              "var(--muted)",
+            fontSize: 12,
+            letterSpacing: 2,
+          }}
+        >
+          LEARN • EARN • TEACH
+        </small>
 
 
-          <div
-            className="mobile-menu-links"
-          >
+        <button
+          type="button"
+          className="mobile-menu-close"
+          onClick={closeMobileMenu}
+          aria-label="Close navigation menu"
+        >
+          ×
+        </button>
 
-            {navigationLinks}
+      </div>
 
-          </div>
 
-        </aside>
+      <nav
+        className="mobile-menu-links"
+      >
 
-      </>
+        <Link
+          href="/"
+          onClick={
+            closeMobileMenu
+          }
+        >
+          All Batches
+        </Link>
 
-    )}
 
+        <Link
+          href="/my-batches"
+          onClick={
+            closeMobileMenu
+          }
+        >
+          My Batches
+        </Link>
+
+
+        <Link
+          href="/success-shorts"
+          onClick={
+            closeMobileMenu
+          }
+        >
+          Success Shorts
+        </Link>
+
+
+        <Link
+          href="/study-materials"
+          onClick={
+            closeMobileMenu
+          }
+        >
+          Study Materials
+        </Link>
+
+
+        <a
+          href={
+            "https://wa.me/9153021229" +
+            "?text=" +
+            encodeURIComponent(
+              "Hello LET Support, I need help regarding the LET website/classes. Please assist me."
+            )
+          }
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={
+            closeMobileMenu
+          }
+        >
+          Contact for Help / Support
+        </a>
+
+
+        <Link
+          href="/profile"
+          onClick={
+            closeMobileMenu
+          }
+        >
+          My Profile
+        </Link>
+
+      </nav>
+
+    </aside>
+
+  </>
+
+)}
+      
   </>
 
 );
