@@ -34,6 +34,12 @@ type ProfileData = {
 
   className: string;
 
+  city: string;
+
+  state: string;
+
+  stream: string;
+
   profileComplete: boolean;
 
 };
@@ -270,6 +276,16 @@ export default function Profile() {
 
                 className:
                   profile.className,
+
+                city:
+      profile.city,
+
+    state:
+      profile.state,
+
+    stream:
+      profile.stream,
+
 
               }),
 
