@@ -11,6 +11,9 @@ import Enquiry from "@/components/Enquiry";
 import BatchLoginButton from
   "@/components/BatchLoginButton";
 
+import FreeBatchButton from
+  "@/components/FreeBatchButton";
+
 import {
   prisma,
 } from "@/lib/prisma";
@@ -370,27 +373,41 @@ const tutorContent: any =
           </h2>
 
 
-          {batch.buyEnabled && (
+          {batch.buyEnabled &&
+  !access && (
 
-            <a
+  batch.price === 0 ? (
 
-              className="btn primary"
+    user ? (
 
-              href={
-                `https://wa.me/919153021229?text=${whatsappMessage}`
-              }
+      <FreeBatchButton
+        batchId={batch.id}
+      />
 
-              target="_blank"
+    ) : (
 
-              rel="noopener noreferrer"
+      <BatchLoginButton />
 
-            >
+    )
 
-              Buy Now
+  ) : (
 
-            </a>
+    <a
+      className="btn primary"
+      href={
+        `https://wa.me/919153021229?text=${whatsappMessage}`
+      }
+      target="_blank"
+      rel="noopener noreferrer"
+    >
 
-          )}
+      Buy Now
+
+    </a>
+
+  )
+
+)}
 
 
         </section>
