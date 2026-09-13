@@ -1,6 +1,9 @@
 import ProfileCompletionPopup
   from "@/components/ProfileCompletionPopup";
 
+import AppDownloadPrompt
+  from "@/components/AppDownloadPrompt";
+
 import "./globals.css";
 
 import type {
@@ -277,6 +280,18 @@ export default function Layout({
 
 
           <ProfileCompletionPopup />
+
+        <FirebaseAuthProvider>
+
+  {children}
+
+
+  <ProfileCompletionPopup />
+
+
+  <AppDownloadPrompt />
+
+</FirebaseAuthProvider>
 
         </FirebaseAuthProvider>
 
