@@ -30,7 +30,7 @@ export const metadata: Metadata = {
       getAppUrl()
     ),
 
-    alternates: {
+  alternates: {
 
     canonical:
       getAppUrl(),
@@ -39,54 +39,56 @@ export const metadata: Metadata = {
 
 
   applicationName:
-
     siteName,
 
 
   title: {
 
     default:
-
-      siteName,
-
+      "LET Online — Learn • Earn • Teach",
 
     template:
-
-      "%s | LET",
+      "%s | LET Online",
 
   },
 
 
   description:
 
-    "LET - Learn Earn Teach provides study materials, notes, educational resources, learning batches and academic support for students.",
+    "LET Online — Learn, Earn, Teach is an educational platform for students offering study materials, notes, learning batches, practice resources and academic support for NEET, JEE and school education.",
 
 
   keywords: [
 
-    "LET",
+  "LET Online",
 
-    "Learn Earn Teach",
+  "LET Learn Earn Teach",
 
-    "study materials",
+  "LET Education",
 
-    "study notes",
+  "study materials",
 
-    "student notes",
+  "study notes",
 
-    "educational resources",
+  "student notes",
 
-    "free study materials",
+  "educational resources",
 
-    "PDF notes",
+  "free study materials",
 
-    "school notes",
+  "PDF notes",
 
-    "NEET study materials",
+  "school notes",
 
-    "JEE study materials",
+  "NEET study materials",
 
-  ],
+  "JEE study materials",
+
+  "NEET preparation",
+
+  "JEE preparation",
+
+],
 
 
   authors: [
@@ -158,17 +160,20 @@ export const metadata: Metadata = {
 
     siteName:
 
-      siteName,
+      "LET Online",
 
 
     title:
 
-      siteName,
+       "LET Online — Learn • Earn • Teach",
 
 
     description:
 
-      "Explore study materials, notes, PDFs and educational resources on LET - Learn Earn Teach.",
+       "Explore Study materials, notes, learning batches, practice resources and academic support for NEET, JEE and school students.",
+
+    url:
+    getAppUrl(),
 
   },
 
@@ -181,12 +186,12 @@ export const metadata: Metadata = {
 
     title:
 
-      siteName,
+      "LET Online — Learn • Earn • Teach",
 
 
     description:
 
-      "Explore study materials, notes, PDFs and educational resources on LET.",
+         "Explore Study materials, notes, learning batches, practice resources and academic support for NEET, JEE and school students.",
 
   },
 
