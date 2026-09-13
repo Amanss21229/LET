@@ -2,6 +2,7 @@ import {
   getAppUrl,
   getStudyMaterialsUrl,
   siteName,
+  siteLegalName,
 } from "@/lib/seo";
 
 
@@ -19,11 +20,30 @@ export function getOrganizationStructuredData() {
     "@type":
       "Organization",
 
+    "@id":
+      `${appUrl}/#organization`,
+
     name:
       siteName,
 
+    alternateName:
+      siteLegalName,
+
     url:
       appUrl,
+
+    logo: {
+
+      "@type":
+        "ImageObject",
+
+      url:
+        `${appUrl}/let-icon.png`,
+
+    },
+
+    image:
+      `${appUrl}/let-icon.png`,
 
   };
 
