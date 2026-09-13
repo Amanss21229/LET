@@ -7,12 +7,15 @@ const appUrl =
 
 
 export const siteName =
-  "LET - Learn Earn Teach";
+  "LET Online";
 
 
 export const siteShortName =
   "LET";
 
+
+export const siteLegalName =
+  "LET - Learn Earn Teach";
 
 export function getAppUrl() {
 
