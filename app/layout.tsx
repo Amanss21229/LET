@@ -41,6 +41,26 @@ export const metadata: Metadata = {
   applicationName:
     siteName,
 
+    icons: {
+
+    icon: [
+      {
+        url:
+          "/favicon.ico",
+      },
+      {
+        url:
+          "/let-icon.png",
+        type:
+          "image/png",
+      },
+    ],
+
+    apple:
+      "/apple-touch-icon.png",
+
+  },
+
 
   title: {
 
