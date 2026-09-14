@@ -281,19 +281,8 @@ export default function Layout({
 
           <ProfileCompletionPopup />
 
-        <FirebaseAuthProvider>
-
-  {children}
-
-
-  <ProfileCompletionPopup />
-
-
-  <AppDownloadPrompt />
-
+        <AppDownloadPrompt />
 </FirebaseAuthProvider>
-
-        </FirebaseAuthProvider>
 
       </body>
 
